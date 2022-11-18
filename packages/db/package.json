@@ -1,0 +1,28 @@
+{
+  "name": "@vent/db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./built/index.js",
+  "types": "./built/index.d.ts",
+  "scripts": {
+    "build": "ttsc -p ./tsconfig.json"
+  },
+  "keywords": [],
+  "author": "yupix",
+  "license": "ISC",
+  "dependencies": {
+    "@mikro-orm/core": "^5.5.3",
+    "@mikro-orm/postgresql": "^5.5.3",
+    "@mikro-orm/reflection": "^5.5.3",
+    "@vent/shared": "workspace:^0.0.1",
+    "add": "^2.0.6",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.4",
+    "ttypescript": "^1.5.13"
+  },
+  "files": [
+    "dist"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@vent/register",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mikro-orm/core": "^5.5.3",
+    "@mikro-orm/postgresql": "^5.5.3",
+    "@vent/db": "workspace:^1.0.0",
+    "@vent/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "ttypescript": "^1.5.13"
+  }
+}
