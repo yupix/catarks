@@ -1,6 +1,6 @@
 import { EntityRepository, MikroORM } from "@mikro-orm/core";
 import { Items, DropAries, OPEffects, OPS } from "@vent/db";
-// import { Logger } from "@ngs-market/log";
+import { Logger } from "@vent/shared";
 import ops from "../assets/ops.json";
 import { ORM } from "../db/session";
 import { BaseRegister } from "../types/register";
@@ -74,10 +74,10 @@ export class RegisterOP implements BaseRegister {
 
     async run() {
         for (const op of ops) {
-            // const logger = Logger.getInstance
+            const logger = Logger.getInstance
             const getItem = await this.itemRepository.find({ name: op.name });
             if (getItem.length > 0) {
-                // logger.info(`${op.name} is already exists. skip`)
+                logger.info(`${op.name} is already exists. skip`)
                 continue
             }
             const newItem = new Items()
@@ -88,7 +88,7 @@ export class RegisterOP implements BaseRegister {
             await this.registerOP(newItem, op.name, op.effect)
             console.log(newItem)
             await this.orm.em.fork().persistAndFlush(newItem)
-            // logger.info(`successed register ${op.name}.`)
+            logger.info(`successed register ${op.name}.`)
         }
     }
 
