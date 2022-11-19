@@ -104,6 +104,7 @@ built
 # vuepress v2.x temp and cache directory
 .temp
 .cache
+temp
 
 # Docusaurus cache and generated files
 .docusaurus
