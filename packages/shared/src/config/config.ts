@@ -19,8 +19,7 @@ interface IConfig {
 }
 
 function loadConfig() {
-  console.log(__dirname)
-  const file = readFileSync('../../../../.config/default.yml', 'utf-8')
+  const file = readFileSync(`${__dirname}/../../../../.config/default.yml`, 'utf-8')
   return yaml.load(file) as IConfig;
 }
 

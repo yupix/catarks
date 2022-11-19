@@ -12,7 +12,7 @@ const options: Options<PostgreSqlDriver> = {
 	driver: PostgreSqlDriver,
 	metadataProvider: TsMorphMetadataProvider,
 	entities: [DropAries, ItemTags, Items, OPEffects, OPS, Users],
-	entitiesTs: ["./packages/db/src/entities/*.entity.ts"],
+	entitiesTs: [`${__dirname}/entities/*.entity.d.ts`],
 	clientUrl: `postgresql://${config.db.user}:${config.db.pass}@${config.db.host}:${config.db.port}/${config.db.db}`,
 };
 
