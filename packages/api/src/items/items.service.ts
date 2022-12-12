@@ -7,6 +7,10 @@ export class ItemsService {
         private prisma: PrismaService
     ) {}
 
+    async getItems() {
+        return await this.prisma.items.findMany()
+    }
+
     async getItem(id: string) {
         return await this.prisma.items.findFirst({where: {
             id

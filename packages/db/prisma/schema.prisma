@@ -40,5 +40,5 @@ model Users {
 }
 
 enum ItemTypes {
-  op
+  ability
 }

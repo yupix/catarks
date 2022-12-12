@@ -8,8 +8,9 @@ export class ItemsController {
         private itemsService: ItemsService
     ){}
 
-    @Get()
+    @Get('/')
     async getItems() {
+        return await this.itemsService.getItems()
     }
 
     @Get('/:itemId')

@@ -1,7 +1,7 @@
-import { RegisterOP } from "./app/ops";
+import { RegisterAbility } from "./app/ability";
 
 const registers = [
-    RegisterOP
+    RegisterAbility
 ]
 
 async function main() {

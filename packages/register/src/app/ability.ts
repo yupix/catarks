@@ -1,6 +1,6 @@
 import { Abilities, AbilityEffects, PrismaClient } from "@vent/db";
 import { Logger } from "@vent/shared";
-import ops from "../assets/ops.json";
+import abilities from "../assets/ops.json";
 import { ORM } from "../db/session";
 import { BaseRegister } from "../types/register";
 
@@ -10,7 +10,7 @@ interface IEffect {
     effect: string | number
 }
 
-export class RegisterOP implements BaseRegister {
+export class RegisterAbility implements BaseRegister {
     orm!: PrismaClient
     constructor() {
         this.orm = ORM.instance()
@@ -19,13 +19,13 @@ export class RegisterOP implements BaseRegister {
     async registerEffect(effects: IEffect[]) {
         let effect_ids = []
         for (const effect of effects) {
-            const hitEffect = await this.orm.abilityEffects.findFirst({where: {name: effect.name}})
+            const existsEffect = await this.orm.abilityEffects.findFirst({where: {name: effect.name}})
             
-            let opEffect: AbilityEffects
-            if (hitEffect) {
-                opEffect = hitEffect
+            let abilityEffect: AbilityEffects
+            if (existsEffect) {
+                abilityEffect = existsEffect
             } else {
-                opEffect = await this.orm.abilityEffects.create({
+                abilityEffect = await this.orm.abilityEffects.create({
                     data: {
                         name: effect.name,
                         effect: String(effect.effect),
@@ -33,29 +33,29 @@ export class RegisterOP implements BaseRegister {
                     }
                 })
             }
-            effect_ids.push({name: opEffect.name})
+            effect_ids.push({name: abilityEffect.name})
         }
         return effect_ids
     }
 
-    async registerOP(name: string, effects: IEffect[]) {
-        let op: Abilities
-        const hitOP = await this.orm.abilities.findFirst({where: {
+    async registerAbility(name: string, effects: IEffect[]) {
+        let ability: Abilities
+        const existsAbility = await this.orm.abilities.findFirst({where: {
             name
         }})
-        if (hitOP) {
-            op = hitOP
+        if (existsAbility) {
+            ability = existsAbility
         } else {
             const effect_ids = await this.registerEffect(effects)
-            op = await this.orm.abilities.create({data: {
+            ability = await this.orm.abilities.create({data: {
                 name,
                 effects: {
                     connect: effect_ids
                 }
             }});
-            op.name = name
+            ability.name = name
         }
-        return {name: op.name}
+        return {name: ability.name}
     }
 
     // async registerDropAria(aries: string[]) {
@@ -76,22 +76,22 @@ export class RegisterOP implements BaseRegister {
     // }
 
     async run() {
-        for (const op of ops) {
+        for (const ability of abilities) {
             const logger = Logger.getInstance
-            const getItem = await this.orm.items.findFirst({where:{ name: op.name }});
-            if (getItem) {
-                logger.info(`${op.name} is already exists. skip`)
+            const existsItem = await this.orm.items.findFirst({where:{ name: ability.name }});
+            if (existsItem) {
+                logger.info(`${ability.name} is already exists. skip`)
                 continue
             }
             // await this.registerDropAria(newItem, op.aries)
-            const ability_ids = await this.registerOP(op.name, op.effect)
-            const newItem = await this.orm.items.create({data: {
-                name: op.name,
+            const ability_ids = await this.registerAbility(ability.name, ability.effect)
+            await this.orm.items.create({data: {
+                name: ability.name,
                 rarity: 1,
-                type: 'op',
+                type: 'ability',
                 ability: {connect: ability_ids}
             }})
-            logger.info(`successed register ${op.name}.`)
+            logger.info(`successed register ${ability.name}.`)
         }
     }
 
