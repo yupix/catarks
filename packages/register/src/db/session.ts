@@ -1,13 +1,12 @@
-import { MikroORM } from "@mikro-orm/core";
-import { mikroConfig } from "@vent/db";
+import { PrismaClient } from "@vent/db";
 
 export class ORM {
-	private static _instance: MikroORM;
+	private static _instance: PrismaClient;
 	private constructor() {}
 
-	public static async instance(): Promise<MikroORM> {
+	public static instance(): PrismaClient {
 		if (!this._instance) {
-			this._instance = await MikroORM.init(mikroConfig);
+			this._instance = new PrismaClient();
 			return this._instance;
 		}
 		return this._instance;

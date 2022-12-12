@@ -1,5 +1,4 @@
-import { EntityRepository, MikroORM } from "@mikro-orm/core";
-import { Items, DropAries, OPEffects, OPS } from "@vent/db";
+import { Abilities, AbilityEffects, PrismaClient } from "@vent/db";
 import { Logger } from "@vent/shared";
 import ops from "../assets/ops.json";
 import { ORM } from "../db/session";
@@ -12,91 +11,88 @@ interface IEffect {
 }
 
 export class RegisterOP implements BaseRegister {
-    itemRepository!: EntityRepository<Items>
-    dropariaRepository!: EntityRepository<DropAries>
-    opRepository!: EntityRepository<OPS>
-    opEffectRepository!: EntityRepository<OPEffects>
-    orm!: MikroORM
-    constructor() { }
+    orm!: PrismaClient
+    constructor() {
+        this.orm = ORM.instance()
+    }
 
-    async registerEffect(op: OPS, effects: IEffect[]) {
+    async registerEffect(effects: IEffect[]) {
+        let effect_ids = []
         for (const effect of effects) {
-            console.log(effect)
-            const hitEffect = await this.opEffectRepository.findOne({
-                name: effect.name
-            })
-
-            let opEffect: OPEffects
+            const hitEffect = await this.orm.abilityEffects.findFirst({where: {name: effect.name}})
+            
+            let opEffect: AbilityEffects
             if (hitEffect) {
                 opEffect = hitEffect
             } else {
-                opEffect = new OPEffects()
-                opEffect.name = effect.name
-                opEffect.effect = effect.effect
-                opEffect.percent = effect.percent
+                opEffect = await this.orm.abilityEffects.create({
+                    data: {
+                        name: effect.name,
+                        effect: String(effect.effect),
+                        percent: effect.percent
+                    }
+                })
             }
-            op.effects.add(opEffect)
+            effect_ids.push({name: opEffect.name})
         }
+        return effect_ids
     }
 
-    async registerOP(item: Items, name: string, effects: IEffect[]) {
-        let op: OPS
-        const hitOP = await this.opRepository.findOne({
+    async registerOP(name: string, effects: IEffect[]) {
+        let op: Abilities
+        const hitOP = await this.orm.abilities.findFirst({where: {
             name
-        })
+        }})
         if (hitOP) {
             op = hitOP
         } else {
-
-            op = new OPS();
+            const effect_ids = await this.registerEffect(effects)
+            op = await this.orm.abilities.create({data: {
+                name,
+                effects: {
+                    connect: effect_ids
+                }
+            }});
             op.name = name
-            await this.registerEffect(op, effects)
         }
-        item.op?.add(op)
+        return {name: op.name}
     }
 
-    async registerDropAria(item: Items, aries: string[]) {
-        for (const aria of aries) {
-            let addAria: DropAries
-            const hitAria = await this.dropariaRepository.findOne({
-                name: aria
-            })
-            if (hitAria) {
-                addAria = hitAria
-            } else {
-                addAria = new DropAries();
-                addAria.name = aria
-            }
-            item.droparies.add(addAria)
-        }
-        return item
-    }
+    // async registerDropAria(aries: string[]) {
+    //     for (const aria of aries) {
+    //         let addAria: DropAries
+    //         const hitAria = await this.dropariaRepository.findOne({
+    //             name: aria
+    //         })
+    //         if (hitAria) {
+    //             addAria = hitAria
+    //         } else {
+    //             addAria = new DropAries();
+    //             addAria.name = aria
+    //         }
+    //         item.droparies.add(addAria)
+    //     }
+    //     return item
+    // }
 
     async run() {
         for (const op of ops) {
             const logger = Logger.getInstance
-            const getItem = await this.itemRepository.find({ name: op.name });
-            if (getItem.length > 0) {
+            const getItem = await this.orm.items.findFirst({where:{ name: op.name }});
+            if (getItem) {
                 logger.info(`${op.name} is already exists. skip`)
                 continue
             }
-            const newItem = new Items()
-            newItem.name = op.name
-            newItem.rarity = 1
-            newItem.type = 'op'
-            await this.registerDropAria(newItem, op.aries)
-            await this.registerOP(newItem, op.name, op.effect)
-            console.log(newItem)
-            await this.orm.em.fork().persistAndFlush(newItem)
+            // await this.registerDropAria(newItem, op.aries)
+            const ability_ids = await this.registerOP(op.name, op.effect)
+            const newItem = await this.orm.items.create({data: {
+                name: op.name,
+                rarity: 1,
+                type: 'op',
+                ability: {connect: ability_ids}
+            }})
             logger.info(`successed register ${op.name}.`)
         }
     }
 
-    async setup() {
-        this.orm = await ORM.instance()
-        this.itemRepository = this.orm.em.fork().getRepository(Items)
-        this.dropariaRepository = this.orm.em.fork().getRepository(DropAries)
-        this.opRepository = this.orm.em.fork().getRepository(OPS)
-        this.opEffectRepository = this.orm.em.fork().getRepository(OPEffects)
-    }
 }

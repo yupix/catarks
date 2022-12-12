@@ -7,7 +7,6 @@ const registers = [
 async function main() {
     for (const register of registers) {
         const instance = new register()
-        await instance.setup()
         await instance.run()
     }
 }
