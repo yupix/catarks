@@ -11,8 +11,8 @@ import { Users } from "./entities/user.entity";
 const options: Options<PostgreSqlDriver> = {
 	driver: PostgreSqlDriver,
 	metadataProvider: TsMorphMetadataProvider,
-	entities: [DropAries, ItemTags, Items, OPEffects, OPS, Users],
-	entitiesTs: [`${__dirname}/entities/*.entity.d.ts`],
+	entities: [DropAries],
+	entitiesTs: [`${__dirname}/../built/entities/*.entity.d.ts`],
 	clientUrl: `postgresql://${config.db.user}:${config.db.pass}@${config.db.host}:${config.db.port}/${config.db.db}`,
 };
 
