@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AbilityEffects {
+  name      String      @id
+  percent   Boolean
+  effect    String
+  abilities Abilities[]
+}
+
+model Abilities {
+  name    String           @id
+  effects AbilityEffects[]
+  items   Items[]
+}
+
+model Items {
+  id            String    @id @default(uuid())
+  name          String    @unique
+  rarity        Int
+  type          ItemTypes
+  ability       Abilities? @relation(fields: [abilitiesName], references: [name])
+  abilitiesName String?
+}
+
+model Users {
+  id        String  @id @default(uuid())
+  username  String  @unique
+  password  String
+  avatarUrl String?
+}
+
+enum ItemTypes {
+  op
+}
