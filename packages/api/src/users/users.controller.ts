@@ -1,4 +1,10 @@
-import { Controller, Get, Param, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Users } from '@vent/db';
 import { AuthGuard } from '../auth.guard';
 import { CurrentUser } from '../current-user.decorator';
@@ -8,17 +14,15 @@ import { UsersService } from './users.service';
 @UseInterceptors(CurrentUserInterceptor)
 @Controller('users')
 export class UsersController {
-  constructor(
-    private usersService: UsersService
-  ) {}
+  constructor(private usersService: UsersService) {}
   @Get('/whoami')
   @UseGuards(AuthGuard)
   whoAmi(@CurrentUser() user: Users) {
-    return user
+    return user;
   }
 
   @Get(':userId')
   async getProfile(@Param('userId') userId: string) {
-    return await this.usersService.findOne(userId)
+    return await this.usersService.findOne(userId);
   }
 }
