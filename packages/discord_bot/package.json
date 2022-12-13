@@ -1,0 +1,21 @@
+{
+  "name": "@vent/discord_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "ttsc -p ./tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "yupix",
+  "dependencies": {
+    "@vent/db": "workspace:^1.0.0",
+    "@vent/shared": "workspace:^0.0.1",
+    "discord.js": "^14.7.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.0.0",
+    "ttypescript": "^1.5.13"
+  }
+}

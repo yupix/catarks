@@ -16,6 +16,9 @@ interface IConfig {
     secret: string,
     salt: string
   }
+  discord: {
+    token: string
+  }
 }
 
 function loadConfig() {

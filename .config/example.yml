@@ -9,3 +9,5 @@ db:
 auth:
   secret: ''
   salt: ''
+discord:
+  token: ''
