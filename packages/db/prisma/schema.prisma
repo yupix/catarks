@@ -30,6 +30,13 @@ model Items {
   type          ItemTypes
   ability       Abilities? @relation(fields: [abilitiesName], references: [name])
   abilitiesName String?
+  prices ItemPrices[]
+}
+
+model ItemPrices {
+  id            String    @id @default(uuid())
+  price Int
+  items Items[]
 }
 
 model Users {
