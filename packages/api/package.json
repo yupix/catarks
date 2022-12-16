@@ -22,10 +22,12 @@
   },
   "dependencies": {
     "@fastify/secure-session": "^5.2.0",
+    "@fastify/static": "^6.6.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-fastify": "^9.2.0",
+    "@nestjs/swagger": "^6.1.4",
     "@vent/db": "workspace:^1.0.0",
     "@vent/shared": "workspace:^0.0.1",
     "class-transformer": "^0.5.1",
