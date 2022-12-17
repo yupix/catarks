@@ -130,6 +130,7 @@ importers:
       isbot: ^3.6.5
       react: ^18.2.0
       react-dom: ^18.2.0
+      strictcat: 0.0.1-alpha.11
       typescript: ^4.8.4
     dependencies:
       '@emotion/react': 11.10.5_fan5qbzahqtxlm5dzefqlqx5ia
@@ -159,6 +160,7 @@ importers:
       isbot: 3.6.5
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      strictcat: 0.0.1-alpha.11
     devDependencies:
       '@remix-run/dev': 1.7.6_4vz2e3qrixth2olsykapxulhwu
       '@remix-run/eslint-config': 1.7.6_u5s2ztivgin3yy4srvdhm3tgpm
@@ -11588,6 +11590,10 @@ packages:
   /streamsearch/1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
     engines: {node: '>=10.0.0'}
+
+  /strictcat/0.0.1-alpha.11:
+    resolution: {integrity: sha512-GeQK5yTYkzICgRpL4WhvEsvwFSTVM5e/02rA1GWxl13ZPSoWxzHcJugi4JzmmPYmC0Ur18WL4JZtGbU9uHTAZQ==}
+    dev: false
 
   /string-argv/0.3.1:
     resolution: {integrity: sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==}
