@@ -1,1 +1,1 @@
-export const ItemTypes = ['ability'] as const;
+export type ItemTypes = Array<'ability' | 'weapon'>;
