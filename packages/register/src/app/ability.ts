@@ -89,7 +89,8 @@ export class RegisterAbility implements BaseRegister {
                 name: ability.name,
                 rarity: 1,
                 type: 'ability',
-                ability: {connect: ability_ids}
+                ability: {connect: ability_ids},
+                iconUrl: `https://s3.akarinext.org/assets/*/pso2/op/${ability.image_type}.webp`
             }})
             logger.info(`successed register ${ability.name}.`)
         }
