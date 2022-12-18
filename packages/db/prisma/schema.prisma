@@ -28,6 +28,7 @@ model Items {
   abilitiesName String?
   ability       Abilities?   @relation(fields: [abilitiesName], references: [name])
   prices        ItemPrices[]
+  iconUrl       String
 }
 
 model ItemPrices {
