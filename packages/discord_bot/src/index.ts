@@ -1,27 +1,30 @@
-import { CacheType, ChatInputCommandInteraction, Client, Collection, Events, GatewayIntentBits, REST, Routes } from "discord.js";
+import { AutocompleteInteraction, CacheType, ChatInputCommandInteraction, Client, Collection, Events, GatewayIntentBits, REST, Routes } from "discord.js";
 
 import {config} from "@vent/shared";
 import * as fs from 'node:fs';
-import { ORM } from "./db/session";
+import { ORM } from "./db/session.js";
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { ItemsCommand } from "./commands/items.js";
+import { UsersCommand } from "./commands/users.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const orm = ORM.instance()
 
 const commands = [];
 const commandCollection = new Collection();
 // Grab all the command files from the commands directory you created earlier
 const commandFiles = fs.readdirSync(`${__dirname}/commands`).filter(file => file.endsWith('.ts'));
-
+const COMMANDS = [ItemsCommand, UsersCommand]
 
 
 
 const client = new Client({intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds]})
 const rest = new REST({ version: '10' }).setToken(config.discord.token);
-
-
-for (const file of commandFiles) {
-
-	const command = require(`${__dirname}/commands/${file}`);
-	const data = command.data()
+for (const _command of COMMANDS) {
+  const command = await _command()
+	const data = command.data
     commandCollection.set(data.name, command)
 	commands.push(data.toJSON());
 }
@@ -49,12 +52,20 @@ client.once(Events.ClientReady, (c) => {
     console.log(c.user.tag)
 })
 
-client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
+client.on(Events.InteractionCreate, async (interaction) => {
+  const getCommandName = (commandName: string) => {
+    return commandCollection.get(commandName) as {execute: (interaction: ChatInputCommandInteraction<CacheType>) => void, autocomplete?: (interaction: AutocompleteInteraction<CacheType>) => void};
+  }
+  // console.log('1', interaction.isChatInputCommand())
+  if (interaction.isAutocomplete()) {
+    const command = getCommandName(interaction.commandName)
+    if (!command?.autocomplete) return
+    await command?.autocomplete(interaction)
+  }
+	if (!interaction.isChatInputCommand()) return
+  
 
-	const command = commandCollection.get(interaction.commandName) as {execute: (interaction: ChatInputCommandInteraction<CacheType>
-        ) => void};
-
+  const command = getCommandName(interaction.commandName)
 	if (!command) {
 		console.error(`No command matching ${interaction.commandName} was found.`);
 		return;
@@ -63,10 +74,9 @@ client.on(Events.InteractionCreate, async interaction => {
 	try {
 		await command.execute(interaction);
 	} catch (error) {
-		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
-});
+	}}
+);
 
 client.login(config.discord.token)
 

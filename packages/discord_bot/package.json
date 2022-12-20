@@ -4,18 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "ttsc -p ./tsconfig.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./built/index.js",
+    "dev": "node --loader ts-node/esm ./src/index.ts",
+    "build": "ttsc -p ./tsconfig.json"
   },
   "keywords": [],
   "author": "yupix",
+  "type": "module",
   "dependencies": {
     "@vent/db": "workspace:^1.0.0",
     "@vent/shared": "workspace:^0.0.1",
     "discord.js": "^14.7.1"
   },
   "devDependencies": {
-    "ts-node": "^10.0.0",
+    "ts-node": "^10.9.1",
     "ttypescript": "^1.5.13"
   }
 }
