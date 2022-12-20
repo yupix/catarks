@@ -1,21 +1,23 @@
 
-export interface AbilityEffectDto {name: string, percent: boolean, effect: string}
+interface AbilityEffectDto {name: string, percent: boolean, effect: string}
 
-export interface AbilityDto {name: string, effects: AbilityEffectDto[]}
+interface AbilityDto {name: string, effects: AbilityEffectDto[]}
 
-export interface ItemPriceDto {id: string}
+interface ItemPriceDto {id: string}
 
-export interface ItemDto {type: 'ability' |'weapon' , ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: ItemPriceDto[]}
+interface ItemDto {type: 'ability' |'weapon' , ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: ItemPriceDto[]}
 
-export interface getItemsDto {max: number, items: ItemDto[]}
+interface getItemsDto {max: number, items: ItemDto[]}
 
-export interface createItemPriceDto {itemId: string, price: number}
+interface createItemPriceDto {itemId: string, price: number}
 
-export interface CreatedItemPriceDto {price: number}
+interface CreatedItemPriceDto {price: number}
 
-export type CreateUserDto = any
+type CreateUserDto = any
 
-export type Schema = {resource: {
+
+interface UserDto {id: string, username: string, avatarUrl: string, useDarkTheme: boolean}
+type Schema = {resource: {
 "/api": {
     GET: {
         response: any
@@ -61,14 +63,14 @@ export type Schema = {resource: {
 "/api/auth/signup": {
     POST: {
         body: CreateUserDto,
-        response: any
+        response: UserDto
     }
 }
 
 "/api/auth/signin": {
     POST: {
         body: CreateUserDto,
-        response: any
+        response: UserDto
     }
 }
 
@@ -80,7 +82,7 @@ export type Schema = {resource: {
 
 "/api/users/whoami": {
     GET: {
-        response: any
+        response: object
     }
 }
 
@@ -89,7 +91,7 @@ export type Schema = {resource: {
         params: {
             userId: string
         },
-        response: any
+        response: object
     }
 }
 }}
