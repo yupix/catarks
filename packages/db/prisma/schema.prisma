@@ -40,11 +40,13 @@ model ItemPrices {
 }
 
 model Users {
-  id         String       @id @default(uuid())
-  username   String       @unique
-  password   String
-  avatarUrl  String?
-  ItemPrices ItemPrices[]
+  id           String       @id @default(uuid())
+  username     String       @unique
+  password     String
+  avatarUrl    String?
+  useDarkTheme Boolean      @default(false)
+  ItemPrices   ItemPrices[]
+  discordId    String?
 }
 
 enum ItemTypes {
