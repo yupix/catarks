@@ -8,6 +8,9 @@ import {
   Text,
   Anchor,
 } from '@mantine/core';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { Form } from '@remix-run/react';
+import { authenticator } from '~/auth.server';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -43,33 +46,48 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+export async function loader({ request }: LoaderArgs) {
+  // If the user is already authenticated redirect to /dashboard directly
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/dashboard",
+  });
+};
+
+export async function action({ request }: ActionArgs) {
+
+  return await authenticator.authenticate("form", request, {
+    successRedirect: "/dashboard",
+    failureRedirect: "/signin",
+  });
+}
+
 export default function Authentication() {
   const example_users = ["yupix", "ikaros", "Alumis"]
   const { classes } = useStyles();
   return (
-    <div>
-      <div className={classes.wrapper}>
-        <Paper className={classes.form} radius={0} p={30}>
-          <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
-            Welcome back to Vent!
-          </Title>
+    <div className={classes.wrapper}>
+      <Paper className={classes.form} radius={0} p={30}>
+        <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
+          Welcome back to Vent!
+        </Title>
+        <Form method="post">
 
-          <TextInput label="ユーザー名" placeholder={example_users[Math.floor(Math.random() * example_users.length)]} type="text" size="md" />
-          <PasswordInput label="パスワード" autoComplete='current-password' type="password" placeholder="Your password" mt="md" size="md" />
-          <Button fullWidth mt="xl" size="md">
+          <TextInput label="ユーザー名" name="username" placeholder={example_users[Math.floor(Math.random() * example_users.length)]} required type="text" size="md" />
+          <PasswordInput label="パスワード" name="password" autoComplete='current-password' type="password" placeholder="Your password" required mt="md" size="md" />
+          <Button fullWidth mt="xl" size="md" type="submit">
             Login
           </Button>
+        </Form>
 
-          <Text align="center" mt="md">
-            アカウントを持っていませんか?{' '}
-            <Anchor<'a'> href="#" weight={700} onClick={(event) => event.preventDefault()}>
-              登録
-            </Anchor>
-          </Text>
-        </Paper>
-      </div>
-
-
+        <Text align="center" mt="md">
+          アカウントを持っていませんか?{' '}
+          <Anchor<'a'> href="#" weight={700} onClick={(event) => event.preventDefault()}>
+            登録
+          </Anchor>
+        </Text>
+      </Paper>
     </div>
+
+
   );
 }
