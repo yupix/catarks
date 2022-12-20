@@ -1,8 +1,7 @@
-
 import type { ColorScheme } from "@mantine/core";
 import { ColorSchemeProvider, createEmotionCache, MantineProvider } from "@mantine/core";
 import { StylesPlaceholder } from "@mantine/remix";
-import type { MetaFunction } from "@remix-run/node";
+import { LoaderArgs, MetaFunction, json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -10,9 +9,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
+  useTransition,
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import styles from "./assets/main.css";
+import { authenticator } from "./auth.server";
+import { useSessionState } from "./states/common";
+import ProgressBar from "./components/ProgressBar";
 
 
 export const meta: MetaFunction = () => ({
@@ -21,15 +25,25 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
+
+
 export function links() {
   return [{ rel: "stylesheet", href: styles }]
+}
+
+export async function loader({ request }: LoaderArgs) {
+  const user = await authenticator.isAuthenticated(request);
+  return json(user);
 }
 
 createEmotionCache({ key: 'mantine' });
 
 
 export default function App() {
+  const currentUser = useLoaderData<typeof loader>();
+  useSessionState.user = currentUser
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
+  const transition = useTransition();
   const toggleColorScheme = (value?: ColorScheme) => {
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
   }
@@ -37,7 +51,7 @@ export default function App() {
   useEffect(() => {
     const warningMessage = () => {
       console.log('%cSTOP\n', 'color:red;font-size:8em')
-      console.log('%cここに何かを貼り付けろといわれているならそれは%c11/10%cあなたに損をもたらします。何をしているか理解している場合は一緒にこのプロジェクトを盛り上げませんか?\n%cGitLab: https://lab.teamblackcrystal.com/yupix/vent', 'color: blue;font-size:2em;', 'color:black;font-size:4em;', 'color: blue;font-size:2em;', 'color:orange;font-size:2em;')
+      console.log('%cここに何かを貼り付けろといわれているならそれは%c11/10%cあなたに損をもたらします。何をしているか理解している場合は一緒にこのプロジェクトを盛り上げませんか?\n%cGitLab:  https://discord.gg/CcT997U', 'color: blue;font-size:2em;', 'color:black;font-size:4em;', 'color: blue;font-size:2em;', 'color:orange;font-size:2em;')
     }
     warningMessage()
   }, [])
@@ -52,6 +66,7 @@ export default function App() {
           </head>
           <body>
             <Outlet />
+            {transition.state === 'loading' && <ProgressBar />}
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
