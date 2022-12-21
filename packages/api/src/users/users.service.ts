@@ -1,14 +1,39 @@
+import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { Users } from '@vent/db';
 import { PrismaService } from 'src/prisma.service';
+import { getRandomIntInclusive } from 'src/utils';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectRedis() private redis: Redis,
+  ) {}
 
   async findOne(userId: string) {
     const user = await this.prisma.users.findFirst({ where: { id: userId } });
     return user;
+  }
+
+  async create_integration_request(userId: string) {
+    const create_code = async () => {
+      const code = getRandomIntInclusive(12345, 99999);
+      const existsIntegrationCode = await this.redis.get(userId);
+
+      if (existsIntegrationCode) create_code();
+      return code;
+    };
+
+    const key = `integration_request_${userId}`;
+    const alreadyCode = await this.redis.get(key);
+
+    const code = alreadyCode ? Number(alreadyCode) : await create_code();
+    if (!alreadyCode) {
+      await this.redis.set(key, code);
+      await this.redis.expire(key, 900);
+    }
+    return { code };
   }
 
   async create(username: string, password: string): Promise<Users> {
