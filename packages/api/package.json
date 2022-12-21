@@ -23,6 +23,7 @@
   "dependencies": {
     "@fastify/secure-session": "^5.2.0",
     "@fastify/static": "^6.6.0",
+    "@nestjs-modules/ioredis": "^1.0.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
@@ -32,6 +33,7 @@
     "@vent/shared": "workspace:^0.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "ioredis": "^5.2.4",
     "nestjs-pino": "^3.1.1",
     "pino-http": "^8.2.1",
     "pino-pretty": "^9.1.1",
