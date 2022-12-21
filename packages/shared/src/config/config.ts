@@ -1,29 +1,38 @@
-import { readFileSync } from 'fs';
-import * as yaml from 'js-yaml';
+import { readFileSync } from "fs";
+import * as yaml from "js-yaml";
 
 interface IConfig {
   main: {
-    'log-level': string
-  }
+    "log-level": string;
+  };
   db: {
-    user: string
-    pass: string
-    host: string
-    port: number
-    db: string
-  }
+    user: string;
+    pass: string;
+    host: string;
+    port: number;
+    db: string;
+  };
+  redis: {
+    host: string;
+    port: number;
+    password?: string;
+    db?: number;
+  };
   auth: {
-    secret: string,
-    salt: string
-  }
+    secret: string;
+    salt: string;
+  };
   discord: {
-    token: string
-  }
+    token: string;
+  };
 }
 
 function loadConfig() {
-  const file = readFileSync(`${__dirname}/../../../../.config/default.yml`, 'utf-8')
+  const file = readFileSync(
+    `${__dirname}/../../../../.config/default.yml`,
+    "utf-8"
+  );
   return yaml.load(file) as IConfig;
 }
 
-export const config = loadConfig()
+export const config = loadConfig();
