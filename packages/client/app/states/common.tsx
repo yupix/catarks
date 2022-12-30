@@ -1,5 +1,5 @@
 import { proxy } from "valtio";
 
-export const useSessionState = proxy<{ user: TUserSession | null }>({
+export const useSessionState = proxy<{ user: MeDto | null }>({
   user: null
 })
