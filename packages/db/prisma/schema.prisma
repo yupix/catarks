@@ -20,6 +20,11 @@ model Abilities {
   effects AbilityEffects[]
 }
 
+model DropArias {
+  name  String  @id
+  Items Items[]
+}
+
 model Items {
   id            String       @id @default(uuid())
   name          String       @unique
@@ -27,8 +32,9 @@ model Items {
   type          ItemTypes
   abilitiesName String?
   ability       Abilities?   @relation(fields: [abilitiesName], references: [name])
-  prices        ItemPrices[]
   iconUrl       String
+  prices        ItemPrices[]
+  droparias     DropArias[]
 }
 
 model ItemPrices {
@@ -40,13 +46,20 @@ model ItemPrices {
 }
 
 model Users {
-  id           String       @id @default(uuid())
-  username     String       @unique
-  password     String
-  avatarUrl    String?
-  useDarkTheme Boolean      @default(false)
-  ItemPrices   ItemPrices[]
-  discordId    String?
+  id         String        @id @default(uuid())
+  username   String        @unique
+  password   String
+  avatarUrl  String?
+  ItemPrices ItemPrices[]
+  discordId  String?
+  settings   UserSettings?
+}
+
+model UserSettings {
+  id           String  @id @default(uuid())
+  useDarkTheme Boolean @default(false)
+  Users        Users   @relation(fields: [usersId], references: [id])
+  usersId      String  @unique
 }
 
 enum ItemTypes {
