@@ -1,1 +1,1 @@
-type TUserSession = UserDto & { session: string };
+type TUserSession = MeDto & { session: string };
