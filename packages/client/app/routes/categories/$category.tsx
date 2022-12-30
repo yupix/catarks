@@ -4,7 +4,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { Pagination } from "~/components/pagination";
-import { HTTP_ERRORS, api, getPaginationPageNumber } from "~/utils/utils";
+import { HTTP_ERRORS, api, getCategoryName, getPaginationPageNumber } from "~/utils/utils";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = new URL(request.url)
@@ -28,7 +28,7 @@ export default function Category() {
       <Grid justify="center" style={{ margin: 0 }} grow>
         {data.items.map((item) => <Grid.Col key={item.id} md={6} lg={4}>
           <Link to={`/items/${item.id}`} style={{ textDecoration: 'none' }}>
-            <ArticleCardVertical author={{ name: '1000', avatar: "https://s3.akarinext.org/assets/*/pso2/n.webp" }} image={item.iconUrl} category="特殊能力" title={item.name} date="" />
+            <ArticleCardVertical author={{ name: '1000', avatar: "https://s3.akarinext.org/assets/*/pso2/n.webp" }} image={item.iconUrl} category={getCategoryName(item.type)} title={item.name} date="" />
           </Link></Grid.Col>)}
       </Grid>
       <div>
