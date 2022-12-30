@@ -6,7 +6,8 @@ import { DefaultNavBar } from "./navBar";
 
 export const DefaultLayout: FC<{
   children?: React.ReactNode;
-  currentUser?: TUserSession | null
+  currentUser?: TUserSession | null;
+  currentActive: string;
   navbar?:
   | React.ReactElement<any, string | React.JSXElementConstructor<any>>
   | undefined;
@@ -18,7 +19,8 @@ export const DefaultLayout: FC<{
   | undefined;
 }> = ({
   children,
-  navbar = <DefaultNavBar />,
+  currentActive,
+  navbar = <DefaultNavBar currentActive={currentActive} />,
   header = <DefaultHeader />,
   footer = <Footer data={FooterDefaultData} />,
 }) => {

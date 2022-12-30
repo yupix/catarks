@@ -6,10 +6,11 @@ import { useSnapshot } from "valtio"
 import { useMenuState } from "~/states/menu"
 import { IconBellRinging, IconReceipt2 } from "@tabler/icons"
 import { useSessionState } from "~/states/common";
+import { Link } from "@remix-run/react";
 
 const data = [
-  { link: '', label: '通知', icon: IconBellRinging },
-  { link: '', label: 'カテゴリ一覧', icon: IconReceipt2 },
+  { link: '', label: 'notification', icon: IconBellRinging },
+  { link: '/categories', label: 'categories', icon: IconReceipt2 },
 ];
 
 
@@ -83,25 +84,21 @@ const useStyles = createStyles((theme, _params, getRef) => {
   }
 });
 
-export const DefaultNavBar = () => {
+export const DefaultNavBar: FC<{ currentActive: string }> = ({ currentActive }) => {
   const { classes, cx } = useStyles();
   const opened = useSnapshot(useMenuState).opened
-  const [active, setActive] = useState('Billing');
+  const [active, setActive] = useState(currentActive);
   const { user: currentUser } = useSnapshot(useSessionState);
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={cx(classes.link, { [classes.linkActive]: item.label === active })}
-      href={item.link}
+      to={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </a>
+      <span style={{ textTransform: 'uppercase' }}>{item.label}</span>
+    </Link>
   ));
 
 

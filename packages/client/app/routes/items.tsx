@@ -3,7 +3,7 @@ import { DefaultLayout } from "~/components/defaultLayout";
 
 export default function ItemsPage() {
   return (
-    <DefaultLayout>
+    <DefaultLayout currentActive="">
       <Outlet></Outlet>
     </DefaultLayout>
   )
