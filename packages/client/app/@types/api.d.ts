@@ -5,22 +5,33 @@ interface AbilityDto {name: string, effects: AbilityEffectDto[]}
 
 interface ItemPriceDto {id: string}
 
-interface ItemDto {type: 'ability' |'weapon' , ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: ItemPriceDto[]}
+interface DropAriaDto {name: string}
+
+interface ItemDto {type: 'ability' |'weapon' , ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: ItemPriceDto[], droparias: DropAriaDto[]}
 
 interface getItemsDto {max: number, items: ItemDto[]}
+
+interface UserDto {id: string, username: string, avatarUrl: string, discordId: string}
+
+interface getItemPriceDto {reporter: UserDto, id: string, price: number, reporterId: string}
 
 interface createItemPriceDto {itemId: string, price: number}
 
 interface CreatedItemPriceDto {price: number}
 
-type CreateUserDto = any
+interface CreateUserDto {username: string, password: string}
 
+interface UserSettingsDto {useDarkTheme: boolean}
 
-interface UserDto {id: string, username: string, avatarUrl: string, useDarkTheme: boolean}
+interface MeDto {id: string, username: string, avatarUrl: string, discordId: string, settings: UserSettingsDto[]}
+
+interface IntegrationRequestDto {code: string}
+
+interface ErrorDto {id: string, type: string, code: string, message: string}
 type Schema = {resource: {
 "/api": {
     GET: {
-        response: any
+        response: string
     }
 }
 
@@ -49,7 +60,7 @@ type Schema = {resource: {
         params: {
             itemId: string
         },
-        response: any
+        response: getItemPriceDto[]
     },
     POST: {
         params: {
@@ -82,7 +93,7 @@ type Schema = {resource: {
 
 "/api/users/whoami": {
     GET: {
-        response: object
+        response: MeDto
     }
 }
 
@@ -92,6 +103,12 @@ type Schema = {resource: {
             userId: string
         },
         response: object
+    }
+}
+
+"/api/users/integration/discord": {
+    POST: {
+        response: IntegrationRequestDto
     }
 }
 }}
