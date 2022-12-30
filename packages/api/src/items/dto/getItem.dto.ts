@@ -33,6 +33,12 @@ export class ItemPriceDto {
   id: string;
 }
 
+export class DropAriaDto {
+  @IsString()
+  @ApiProperty()
+  name: string;
+}
+
 export class ItemDto {
   @ApiProperty({ enum: ['ability', 'weapon'] })
   type: ItemTypes;
@@ -60,6 +66,10 @@ export class ItemDto {
   @ApiProperty()
   @ValidateNested()
   prices: ItemPriceDto[];
+
+  @ApiProperty()
+  @ValidateNested()
+  droparias: DropAriaDto[];
 }
 
 export class getItemsDto {

@@ -7,10 +7,11 @@ import {
 } from './dto/createItemPrice.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ItemDto, getItemsDto } from './dto/getItem.dto';
+import { getItemPriceDto } from './dto/getItemPrice.dto';
 
 @Controller('items')
 export class ItemsController {
-  constructor(private itemsService: ItemsService) { }
+  constructor(private itemsService: ItemsService) {}
 
   @Get('/')
   @ApiOkResponse({ type: getItemsDto })
@@ -25,12 +26,15 @@ export class ItemsController {
   }
 
   @Get('/:itemId/price')
-  async getItemPrice(@Param('itemId') itemId: string) { }
+  @ApiOkResponse({ type: getItemPriceDto, isArray: true })
+  async getItemPrice(@Param('itemId') itemId: string) {
+    return await this.itemsService.getItemPrice(itemId);
+  }
 
   @Post('/:itemId/price')
   @ApiCreatedResponse({ type: CreatedItemPriceDto })
   async createItemPrice(
     @Param('itemId') itemId: string,
     @Body() body: createItemPriceDto,
-  ) { }
+  ) {}
 }

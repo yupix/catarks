@@ -27,6 +27,7 @@ export class ItemsService {
         name: true,
         rarity: true,
         prices: { include: { reporter: true } },
+        droparias: true,
       },
       orderBy: {
         name: 'desc',
@@ -39,12 +40,22 @@ export class ItemsService {
     };
   }
 
+  async getItemPrice(id: string) {
+    const findPrices = await this.prisma.itemPrices.findMany({
+      where: {
+        items: { some: { id } },
+      },
+      include: { reporter: true },
+    });
+    return findPrices;
+  }
+
   async getItem(id: string) {
     const findItems = await this.prisma.items.findFirst({
       where: {
         id,
       },
-      include: { ability: { include: { effects: true } } },
+      include: { ability: { include: { effects: true } }, droparias: true },
     });
     if (!findItems)
       throw new HttpException(
