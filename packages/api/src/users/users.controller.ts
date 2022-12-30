@@ -12,7 +12,13 @@ import { CurrentUser } from '../current-user.decorator';
 import { CurrentUserInterceptor } from '../current-user.interceptor';
 import { UsersService } from './users.service';
 import { IntegrationRequestDto } from './dto/createIntegration.dto';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { CreateErrorDto } from 'src/types';
+import { MeDto } from 'src/auth/dto/user.dto';
 
 @UseInterceptors(CurrentUserInterceptor)
 @Controller('users')
@@ -20,6 +26,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
   @Get('/whoami')
   @UseGuards(AuthGuard)
+  @ApiOkResponse({ type: MeDto })
   whoAmi(@CurrentUser() user: Users) {
     return user;
   }
@@ -31,8 +38,11 @@ export class UsersController {
 
   @Post('/integration/discord')
   @ApiCreatedResponse({ type: IntegrationRequestDto })
+  @ApiBadRequestResponse({
+    type: CreateErrorDto('639ebe9f-b8be-435c-a350-5802e1ad2687'),
+  })
   @UseGuards(AuthGuard)
   async IntegrationRequest(@CurrentUser() user: Users) {
-    return await this.usersService.create_integration_request(user.id);
+    return await this.usersService.create_integration_request(user.username);
   }
 }
