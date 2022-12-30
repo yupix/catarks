@@ -24,7 +24,7 @@ interface ArticleCardVerticalProps {
   category: string;
   title: string;
   date: string;
-  author: {
+  author?: {
     name: string;
     avatar: string;
   };
@@ -52,18 +52,20 @@ export function ArticleCardVertical({
           <Text className={classes.title} mt="xs" mb="md" >
             {title}
           </Text>
-          <Group noWrap spacing="xs">
-            <Group spacing="xs" noWrap>
-              <Avatar size={20} src={author.avatar} />
-              <Text size="xs">{author.name}</Text>
-            </Group>
-            {/* <Text size="xs" color="dimmed">
+          {author &&
+            <Group noWrap spacing="xs">
+              <Group spacing="xs" noWrap>
+                <Avatar size={20} src={author?.avatar} />
+                <Text size="xs">{author?.name}</Text>
+              </Group>
+              {/* <Text size="xs" color="dimmed">
               •
             </Text> */}
-            <Text size="xs" color="dimmed">
-              {date}
-            </Text>
-          </Group>
+              <Text size="xs" color="dimmed">
+                {date}
+              </Text>
+            </Group>
+          }
         </div>
       </Group>
     </Card >
