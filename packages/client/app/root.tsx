@@ -1,7 +1,8 @@
 import type { ColorScheme } from "@mantine/core";
 import { ColorSchemeProvider, createEmotionCache, MantineProvider } from "@mantine/core";
 import { StylesPlaceholder } from "@mantine/remix";
-import { LoaderArgs, MetaFunction, json } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -17,6 +18,7 @@ import styles from "./assets/main.css";
 import { authenticator } from "./auth.server";
 import { useSessionState } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
+import { getUserProfile } from "middlewares/user.server";
 
 
 export const meta: MetaFunction = () => ({
@@ -33,7 +35,8 @@ export function links() {
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request);
-  return json(user);
+  return json(user ? await getUserProfile(user) : null);
+
 }
 
 createEmotionCache({ key: 'mantine' });
