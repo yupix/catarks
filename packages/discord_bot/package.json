@@ -14,9 +14,11 @@
   "dependencies": {
     "@vent/db": "workspace:^1.0.0",
     "@vent/shared": "workspace:^0.0.1",
-    "discord.js": "^14.7.1"
+    "discord.js": "^14.7.1",
+    "ioredis": "^5.2.4"
   },
   "devDependencies": {
+    "@types/ioredis": "^5.0.0",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.13"
   }
