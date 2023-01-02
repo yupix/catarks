@@ -42,6 +42,7 @@ model ItemPrices {
   price      Int
   reporter   Users   @relation(fields: [reporterId], references: [id])
   items      Items[]
+  ship       Int
   reporterId String
 }
 
