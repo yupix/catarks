@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsString, ValidateNested } from 'class-validator';
+import { UserDto } from 'src/auth/dto/user.dto';
 import { ItemTypes } from 'src/types';
 
 export class AbilityEffectDto {
@@ -31,6 +32,22 @@ export class ItemPriceDto {
   @ApiProperty()
   @IsString()
   id: string;
+
+  @ApiProperty()
+  @IsInt()
+  price: number;
+
+  @ApiProperty()
+  @IsInt()
+  ship: number;
+
+  @ApiProperty({ type: UserDto })
+  @ValidateNested()
+  reporter: UserDto;
+
+  @ApiProperty()
+  @IsString()
+  reporterId: string;
 }
 
 export class DropAriaDto {
@@ -73,6 +90,7 @@ export class ItemDto {
 }
 
 export class getItemsDto {
+  @IsInt()
   @ApiProperty()
   max: number;
 
