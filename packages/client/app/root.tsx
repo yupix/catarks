@@ -19,6 +19,7 @@ import { authenticator } from "./auth.server";
 import { useSessionState } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
 import { getUserProfile } from "middlewares/user.server";
+import { ReportPriceModal } from "./components/modals/reportPrice";
 
 
 export const meta: MetaFunction = () => ({
@@ -68,6 +69,7 @@ export default function App() {
             <Links />
           </head>
           <body>
+            <ReportPriceModal />
             <Outlet />
             {transition.state === 'loading' && <ProgressBar />}
             <ScrollRestoration />
