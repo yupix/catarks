@@ -49,14 +49,14 @@ const useStyles = createStyles((theme) => ({
 export async function loader({ request }: LoaderArgs) {
   // If the user is already authenticated redirect to /dashboard directly
   return await authenticator.isAuthenticated(request, {
-    successRedirect: "/dashboard",
+    successRedirect: "/",
   });
 };
 
 export async function action({ request }: ActionArgs) {
 
   return await authenticator.authenticate("form", request, {
-    successRedirect: "/dashboard",
+    successRedirect: "/",
     failureRedirect: "/signin",
   });
 }
