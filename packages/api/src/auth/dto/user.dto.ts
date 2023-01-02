@@ -30,6 +30,10 @@ export class UserDto {
   @ApiProperty()
   ship: number;
 
+  @IsString()
+  @ApiProperty({ nullable: true })
+  bannerUrl: string;
+
   @IsDate()
   @Type(() => Date)
   createdAt: Date;

@@ -38,12 +38,13 @@ model Items {
 }
 
 model ItemPrices {
-  id         String  @id @default(uuid())
+  id         String   @id @default(uuid())
   price      Int
-  reporter   Users   @relation(fields: [reporterId], references: [id])
+  reporter   Users    @relation(fields: [reporterId], references: [id])
   items      Items[]
   ship       Int
   reporterId String
+  createdAt  DateTime @default(now())
 }
 
 model Users {
@@ -54,7 +55,9 @@ model Users {
   ItemPrices ItemPrices[]
   discordId  String?
   ship       Int           @default(8)
+  bannerUrl  String?
   settings   UserSettings?
+  createdAt  DateTime      @default(now())
 }
 
 model UserSettings {

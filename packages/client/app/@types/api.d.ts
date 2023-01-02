@@ -3,7 +3,7 @@ interface AbilityEffectDto {name: string, percent: boolean, effect: string}
 
 interface AbilityDto {name: string, effects: AbilityEffectDto[]}
 
-interface UserDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number}
+interface UserDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number, bannerUrl: string, createdAt: string}
 
 interface ItemPriceDto {id: string, price: number, ship: number, reporter: UserDto, reporterId: string}
 
@@ -13,7 +13,7 @@ interface ItemDto {type: 'ability' |'weapon' , ability: AbilityDto, id: string, 
 
 interface getItemsDto {max: number, items: ItemDto[]}
 
-interface getItemPriceDto {reporter: UserDto, id: string, price: number, reporterId: string}
+interface getItemPriceDto {reporter: UserDto, id: string, price: number, reporterId: string, createdAt: string}
 
 interface createItemPriceDto {price: number, ship: number}
 
@@ -23,7 +23,7 @@ interface CreateUserDto {username: string, password: string}
 
 interface UserSettingsDto {useDarkTheme: boolean}
 
-interface MeDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number, settings: UserSettingsDto}
+interface MeDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number, bannerUrl: string, settings: UserSettingsDto, createdAt: string}
 
 interface IntegrationRequestDto {code: string}
 
@@ -102,7 +102,7 @@ type Schema = {resource: {
         params: {
             userId: string
         },
-        response: object
+        response: UserDto
     }
 }
 
