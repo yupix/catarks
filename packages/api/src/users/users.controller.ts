@@ -18,7 +18,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { CreateErrorDto } from 'src/types';
-import { MeDto } from 'src/auth/dto/user.dto';
+import { MeDto, UserDto } from 'src/auth/dto/user.dto';
 
 @UseInterceptors(CurrentUserInterceptor)
 @Controller('users')
@@ -32,6 +32,7 @@ export class UsersController {
   }
 
   @Get('/:userId')
+  @ApiOkResponse({ type: UserDto })
   async getProfile(@Param('userId') userId: string) {
     return await this.usersService.findOne(userId);
   }
