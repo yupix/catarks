@@ -4,7 +4,7 @@ import { IconChevronLeft, IconChevronRight } from "@tabler/icons";
 import type { FC } from "react";
 import { For } from "./for";
 import { Link } from "@remix-run/react";
-import { VentLink } from "./link";
+import { CatArksLink } from "./link";
 
 const sizes = {
   xs: 22,
@@ -68,9 +68,9 @@ export const Pagination: FC<{ max: number, currentPage: number, to: string }> = 
   const prevDisable = max <= currentPage
   return (
     <Flex gap={6}>
-      <VentLink options={{ to: `${to}${currentPage - 1}`, disabled: nextDisable }}>
+      <CatArksLink options={{ to: `${to}${currentPage - 1}`, disabled: nextDisable }}>
         <button type="button" className={classes.item} disabled={nextDisable}><IconChevronLeft /></button>
-      </VentLink>
+      </CatArksLink>
       <For v={[1, (i) => i <= max, (i) => i + 1]}>
         {(i, index) => (
           <Link to={`${to}${i}`} key={i}>
@@ -78,9 +78,9 @@ export const Pagination: FC<{ max: number, currentPage: number, to: string }> = 
           </Link>
         )}
       </For>
-      <VentLink options={{ to: `${to}${currentPage + 1}`, disabled: prevDisable, prefetch: "intent" }}>
+      <CatArksLink options={{ to: `${to}${currentPage + 1}`, disabled: prevDisable, prefetch: "intent" }}>
         <button type="button" className={classes.item} disabled={prevDisable}><IconChevronRight /></button>
-      </VentLink>
+      </CatArksLink>
     </Flex>
   )
 }

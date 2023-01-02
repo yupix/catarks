@@ -1,5 +1,5 @@
 {
-  "name": "@vent/api",
+  "name": "@catarks/api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -29,8 +29,8 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-fastify": "^9.2.0",
     "@nestjs/swagger": "^6.1.4",
-    "@vent/db": "workspace:^1.0.0",
-    "@vent/shared": "workspace:^0.0.1",
+    "@catarks/db": "workspace:^1.0.0",
+    "@catarks/shared": "workspace:^0.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "ioredis": "^5.2.4",

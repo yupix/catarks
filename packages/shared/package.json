@@ -1,5 +1,5 @@
 {
-  "name": "@vent/shared",
+  "name": "@catarks/shared",
   "version": "0.0.1",
   "description": "",
   "main": "./built/index.js",

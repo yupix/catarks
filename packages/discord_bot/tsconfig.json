@@ -5,6 +5,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "skipLibCheck": false,
+    "esModuleInterop": false,
     "allowJs": true,
     "declaration": false,
     "sourceMap": false,
@@ -19,7 +20,7 @@
     "plugins": [
       {
         "transform": "tsc-progress",
-        "title": "@vent/discord_bot"
+        "title": "@catarks/discord_bot"
       }
     ]
   },

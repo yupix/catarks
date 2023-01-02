@@ -27,7 +27,7 @@ export const DefaultHeader = () => {
             />
           </MediaQuery>
           {/* <Logo colorScheme={colorScheme} /> */}
-          <Text>Vent</Text>
+          <Text>CatArks</Text>
           {/* <MantineLogo size={28} /> */}
           <Code sx={{ fontWeight: 700 }}>v1.0.0</Code>
         </Group>

@@ -1,5 +1,5 @@
 {
-  "name": "@vent/db",
+  "name": "@catarks/db",
   "version": "1.0.0",
   "description": "",
   "main": "./built/index.js",
@@ -19,7 +19,7 @@
     "@mikro-orm/postgresql": "^5.5.3",
     "@mikro-orm/reflection": "^5.5.3",
     "@prisma/client": "^4.6.1",
-    "@vent/shared": "workspace:^0.0.1",
+    "@catarks/shared": "workspace:^0.0.1",
     "add": "^2.0.6",
     "prisma": "^4.6.1",
     "uuid": "^9.0.0"

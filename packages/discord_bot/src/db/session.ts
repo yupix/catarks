@@ -1,5 +1,5 @@
-import { PrismaClient } from "@vent/db";
-import { config } from "@vent/shared";
+import { PrismaClient } from "@catarks/db";
+import { config } from "@catarks/shared";
 import Redis from "ioredis";
 
 export class ORM {
@@ -15,7 +15,6 @@ export class ORM {
   }
 }
 
-//@ts-ignore
 export const redis = new Redis({
   host: config.redis.host,
   port: config.redis.port,

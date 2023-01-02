@@ -1,4 +1,5 @@
 import type { ColorScheme } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import { ColorSchemeProvider, createEmotionCache, MantineProvider } from "@mantine/core";
 import { StylesPlaceholder } from "@mantine/remix";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
@@ -20,6 +21,7 @@ import { useSessionState } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
 import { getUserProfile } from "middlewares/user.server";
 import { ReportPriceModal } from "./components/modals/reportPrice";
+import { NotificationsProvider } from '@mantine/notifications';
 
 
 export const meta: MetaFunction = () => ({
@@ -62,21 +64,27 @@ export default function App() {
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <html lang="ja">
-          <head>
-            <StylesPlaceholder />
-            <Meta />
-            <Links />
-          </head>
-          <body>
-            <ReportPriceModal />
-            <Outlet />
-            {transition.state === 'loading' && <ProgressBar />}
-            <ScrollRestoration />
-            <Scripts />
-            <LiveReload />
-          </body>
-        </html>
+        <NotificationsProvider>
+
+          <html lang="ja">
+            <head>
+              <StylesPlaceholder />
+              <Meta />
+              <Links />
+            </head>
+            <body>
+              <ReportPriceModal />
+              <Outlet />
+              {transition.state === 'submitting' && <div style={{ position: "fixed", display: "flex", zIndex: 300, top: 14, right: 20 }}>
+                <Loader />
+              </div>}
+              {transition.state === 'loading' && <ProgressBar />}
+              <ScrollRestoration />
+              <Scripts />
+              <LiveReload />
+            </body>
+          </html>
+        </NotificationsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

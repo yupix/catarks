@@ -1,5 +1,10 @@
-import { Abilities, AbilityEffects, DropArias, PrismaClient } from "@vent/db";
-import { Logger } from "@vent/shared";
+import {
+  Abilities,
+  AbilityEffects,
+  DropArias,
+  PrismaClient,
+} from "@catarks/db";
+import { Logger } from "@catarks/shared";
 import abilities from "../assets/ops.json";
 import { ORM } from "../db/session";
 import { BaseRegister } from "../types/register";

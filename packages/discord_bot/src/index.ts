@@ -10,7 +10,7 @@ import {
   Routes,
 } from "discord.js";
 
-import { config } from "@vent/shared";
+import { config } from "@catarks/shared";
 import * as fs from "node:fs";
 import { ORM } from "./db/session.js";
 import path from "node:path";

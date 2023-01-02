@@ -16,7 +16,7 @@
     "plugins": [
       {
         "transform": "tsc-progress",
-        "title": "@vent/register"
+        "title": "@catarks/register"
       }
     ]
   },

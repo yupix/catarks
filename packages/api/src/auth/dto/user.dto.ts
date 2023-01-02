@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsString, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsBoolean,
+  IsDate,
+  IsInt,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 export class UserDto {
   @IsString()
@@ -22,6 +29,10 @@ export class UserDto {
   @IsInt()
   @ApiProperty()
   ship: number;
+
+  @IsDate()
+  @Type(() => Date)
+  createdAt: Date;
 }
 
 export class UserSettingsDto {

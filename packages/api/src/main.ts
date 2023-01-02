@@ -6,7 +6,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
-import { config } from '@vent/shared';
+import { config } from '@catarks/shared';
 import { ValidationPipe } from '@nestjs/common';
 import { RemovePasswordInterceptor } from './remove-pass';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';

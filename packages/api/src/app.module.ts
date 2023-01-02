@@ -6,7 +6,7 @@ import { ItemsModule } from './items/items.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
-import { config } from '@vent/shared';
+import { config } from '@catarks/shared';
 
 @Module({
   imports: [

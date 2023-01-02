@@ -1,5 +1,5 @@
 {
-  "name": "@vent/register",
+  "name": "@catarks/register",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,8 +13,8 @@
   "dependencies": {
     "@mikro-orm/core": "^5.5.3",
     "@mikro-orm/postgresql": "^5.5.3",
-    "@vent/db": "workspace:^1.0.0",
-    "@vent/shared": "workspace:*"
+    "@catarks/db": "workspace:^1.0.0",
+    "@catarks/shared": "workspace:*"
   },
   "devDependencies": {
     "ttypescript": "^1.5.13"

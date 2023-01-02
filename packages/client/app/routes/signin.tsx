@@ -68,7 +68,7 @@ export default function Authentication() {
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>
         <Title order={2} className={classes.title} align="center" mt="md" mb={50}>
-          Welcome back to Vent!
+          Welcome back to CatArks!
         </Title>
         <Form method="post">
 

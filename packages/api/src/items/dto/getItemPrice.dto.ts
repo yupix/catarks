@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { UserDto } from 'src/auth/dto/user.dto';
 
 export class getItemPriceDto {
@@ -15,4 +16,8 @@ export class getItemPriceDto {
   @ApiProperty({ type: UserDto })
   @ValidateNested()
   reporter: UserDto;
+
+  @IsDate()
+  @Type(() => Date)
+  createdAt: Date;
 }

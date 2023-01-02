@@ -1,6 +1,6 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Users } from '@vent/db';
+import { Users } from '@catarks/db';
 import { PrismaService } from 'src/prisma.service';
 import { getRandomIntInclusive, fail } from 'src/utils';
 

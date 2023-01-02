@@ -16,7 +16,7 @@
     "plugins": [
       {
         "transform": "tsc-progress",
-        "title": "@vent/shared"
+        "title": "@catarks/shared"
       }
     ]
   },

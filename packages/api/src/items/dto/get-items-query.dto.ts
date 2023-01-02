@@ -1,4 +1,4 @@
-import { ItemTypes } from '@vent/db';
+import { ItemTypes } from '@catarks/db';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';

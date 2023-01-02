@@ -12,7 +12,7 @@ export const UsersCommand = async () => {
     .addSubcommand((sub) =>
       sub
         .setName("auth")
-        .setDescription("Ventとの認証を行います")
+        .setDescription("CatArksとの認証を行います")
         .addStringOption((option) =>
           option
             .setName("username")

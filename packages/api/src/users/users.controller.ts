@@ -6,7 +6,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Users } from '@vent/db';
+import { Users } from '@catarks/db';
 import { AuthGuard } from '../auth.guard';
 import { CurrentUser } from '../current-user.decorator';
 import { CurrentUserInterceptor } from '../current-user.interceptor';

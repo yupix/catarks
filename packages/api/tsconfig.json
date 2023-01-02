@@ -20,7 +20,7 @@
     "plugins": [
       {
         "transform": "tsc-progress",
-        "title": "@vent/api"
+        "title": "@catarks/api"
       }
     ]
   }

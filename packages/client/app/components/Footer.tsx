@@ -152,7 +152,7 @@ export function Footer({ data }: FooterLinksProps) {
       </Container>
       <Container className={classes.afterFooter}>
         <Text color="dimmed" size="sm">
-          © 2022 vent.akarinext.org. All rights reserved.
+          © 2022 catarks.org. All rights reserved.
         </Text>
 
         <Group spacing={0} className={classes.social} position="right" noWrap>
