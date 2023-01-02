@@ -1,4 +1,5 @@
 import { apiClient } from "strictcat";
+import { authenticator } from "~/auth.server";
 
 export const api = apiClient<Schema>(
   "http://localhost:3000",
@@ -16,6 +17,17 @@ export const getCategoryName = (type: PickType<ItemDto, "type">): string => {
   return TYPE_TO_CATEGORY[type];
 };
 
+export const createAuthHeaders = async (request: Request) => {
+  const user = await authenticator.isAuthenticated(request);
+  assertIsDefined(user);
+  return new Headers({ Cookie: user.session });
+};
+
+export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+  if (val === undefined || val === null) {
+    throw new Error(`Expected 'val' to be defined, but received ${val}`);
+  }
+}
 export const HTTP_ERRORS = new Map<string, { content: string }>([
   ["400", { content: "Bad Request" }],
   ["401", { content: "Unauthorized" }],
