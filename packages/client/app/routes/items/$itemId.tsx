@@ -1,7 +1,7 @@
 import { Avatar, Card, Container, Grid, Group, List, Space, Table, Title } from "@mantine/core";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { api, getCategoryName } from "~/utils/utils";
 
@@ -33,10 +33,12 @@ export default function Item() {
     <tr key={price.id}>
       <td>{price.price}</td>
       <td>
-        <Group align="center">
-          <Avatar src={price.reporter.avatarUrl} radius="xs"></Avatar>
-          {price.reporter.username}
-        </Group>
+        <Link to={`/users/${price.reporter.id}`}>
+          <Group align="center">
+            <Avatar src={price.reporter.avatarUrl} radius="xs"></Avatar>
+            {price.reporter.username}
+          </Group>
+        </Link>
       </td>
     </tr>
   ))
