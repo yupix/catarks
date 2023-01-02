@@ -11,7 +11,7 @@ interface ItemDto {type: 'ability' |'weapon' , ability: AbilityDto, id: string, 
 
 interface getItemsDto {max: number, items: ItemDto[]}
 
-interface UserDto {id: string, username: string, avatarUrl: string, discordId: string}
+interface UserDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number}
 
 interface getItemPriceDto {reporter: UserDto, id: string, price: number, reporterId: string}
 
@@ -23,7 +23,7 @@ interface CreateUserDto {username: string, password: string}
 
 interface UserSettingsDto {useDarkTheme: boolean}
 
-interface MeDto {id: string, username: string, avatarUrl: string, discordId: string, settings: UserSettingsDto[]}
+interface MeDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number, settings: UserSettingsDto}
 
 interface IntegrationRequestDto {code: string}
 

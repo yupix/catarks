@@ -31,7 +31,7 @@ export class UserSettingsDto {
 }
 
 export class MeDto extends UserDto {
-  @ApiProperty({ type: [UserSettingsDto] })
+  @ApiProperty({ type: UserSettingsDto })
   @ValidateNested()
   settings: UserSettingsDto;
 }
