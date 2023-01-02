@@ -73,7 +73,7 @@ export const Pagination: FC<{ max: number, currentPage: number, to: string }> = 
       </VentLink>
       <For v={[1, (i) => i <= max, (i) => i + 1]}>
         {(i, index) => (
-          <Link to={`${to}${i}`}>
+          <Link to={`${to}${i}`} key={i}>
             <button type="button" className={classes.item} data-active={currentPage === i || undefined}>{i}</button>
           </Link>
         )}
