@@ -33,7 +33,7 @@ export class RemovePasswordInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       map((value) => {
-        if (Array.isArray(value)) {
+        if (Array.isArray(value) || typeof value === 'object') {
           removePassword(value);
         }
         if (value?.password) {
