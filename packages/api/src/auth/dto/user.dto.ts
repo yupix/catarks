@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsInt, IsString, ValidateNested } from 'class-validator';
 
 export class UserDto {
   @IsString()
@@ -18,6 +18,10 @@ export class UserDto {
   @IsString()
   @ApiProperty({ nullable: true })
   discordId?: string;
+
+  @IsInt()
+  @ApiProperty()
+  ship: number;
 }
 
 export class UserSettingsDto {
