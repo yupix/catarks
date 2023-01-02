@@ -52,6 +52,7 @@ model Users {
   avatarUrl  String?
   ItemPrices ItemPrices[]
   discordId  String?
+  ship       Int           @default(8)
   settings   UserSettings?
 }
 
