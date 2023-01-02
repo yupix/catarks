@@ -1,16 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsUUID } from 'class-validator';
+import { IsInt, IsUUID, Max, Min } from 'class-validator';
 
 export class createItemPriceDto {
   @ApiProperty()
-  @IsUUID()
-  itemId: string;
+  @IsInt()
+  @Max(99999999999)
+  @Min(1000)
+  @Type(() => Number)
+  price: number;
 
   @ApiProperty()
   @IsInt()
+  @Max(10)
+  @Min(1)
   @Type(() => Number)
-  price: number;
+  ship: number;
 }
 
 export class CreatedItemPriceDto {

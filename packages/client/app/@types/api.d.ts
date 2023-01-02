@@ -15,7 +15,7 @@ interface getItemsDto {max: number, items: ItemDto[]}
 
 interface getItemPriceDto {reporter: UserDto, id: string, price: number, reporterId: string}
 
-interface createItemPriceDto {itemId: string, price: number}
+interface createItemPriceDto {price: number, ship: number}
 
 interface CreatedItemPriceDto {price: number}
 

@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { GetItemsQueryDto } from './dto/get-items-query.dto';
 import { ItemsService } from './items.service';
 import {
@@ -8,8 +17,13 @@ import {
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ItemDto, getItemsDto } from './dto/getItem.dto';
 import { getItemPriceDto } from './dto/getItemPrice.dto';
+import { CurrentUserInterceptor } from 'src/current-user.interceptor';
+import { AuthGuard } from 'src/auth.guard';
+import { CurrentUser } from 'src/current-user.decorator';
+import { Users } from '@vent/db';
 
 @Controller('items')
+@UseInterceptors(CurrentUserInterceptor)
 export class ItemsController {
   constructor(private itemsService: ItemsService) {}
 
@@ -33,8 +47,12 @@ export class ItemsController {
 
   @Post('/:itemId/price')
   @ApiCreatedResponse({ type: CreatedItemPriceDto })
+  @UseGuards(AuthGuard)
   async createItemPrice(
     @Param('itemId') itemId: string,
+    @CurrentUser() user: Users,
     @Body() body: createItemPriceDto,
-  ) {}
+  ) {
+    return await this.itemsService.createItemPrice({ itemId, user, ...body });
+  }
 }
