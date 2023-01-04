@@ -1,6 +1,9 @@
 import { PrismaClient } from "@catarks/db";
 import { config } from "@catarks/shared";
-import Redis from "ioredis";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url);
+const Redis = require("ioredis");
+import type { RedisOptions, Redis as TRedis } from "ioredis";
 
 export class ORM {
   private static _instance: PrismaClient;
@@ -15,7 +18,7 @@ export class ORM {
   }
 }
 
-export const redis = new Redis({
+export const redis: TRedis = new Redis({
   host: config.redis.host,
   port: config.redis.port,
-});
+} as RedisOptions);
