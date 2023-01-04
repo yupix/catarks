@@ -41,10 +41,11 @@ model ItemPrices {
   id         String   @id @default(uuid())
   price      Int
   reporter   Users    @relation(fields: [reporterId], references: [id])
-  items      Items[]
+  items      Items    @relation(fields: [itemsId], references: [id])
   ship       Int
   reporterId String
   createdAt  DateTime @default(now())
+  itemsId    String
 }
 
 model Users {
