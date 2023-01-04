@@ -18,7 +18,7 @@ export class ItemsService {
       data: {
         price: price,
         ship,
-        items: { connect: { id: itemId } },
+        item: { connect: { id: itemId } },
         reporter: { connect: { id: user.id } },
       },
       include: { reporter: true },
@@ -55,14 +55,14 @@ export class ItemsService {
 
     return {
       max: countItems,
-      items,
+      items: items,
     };
   }
 
   async getItemPrice(id: string) {
     const findPrices = await this.prisma.itemPrices.findMany({
       where: {
-        items: { some: { id } },
+        itemId: id,
       },
       include: { reporter: true },
     });
