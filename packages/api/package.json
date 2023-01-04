@@ -34,7 +34,6 @@
     "aws-sdk": "^2.1287.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
-    "convert-svg-to-png": "^0.6.4",
     "ioredis": "^5.2.4",
     "jdenticon": "^3.2.0",
     "nest-aws-sdk": "^3.0.0",
