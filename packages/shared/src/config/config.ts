@@ -25,6 +25,11 @@ interface IConfig {
   discord: {
     token: string;
   };
+  objectStorage: {
+    endpoint: string;
+    accessKeyId: string;
+    secretAccessKey: string;
+  };
 }
 
 function loadConfig() {

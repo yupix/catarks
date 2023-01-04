@@ -14,3 +14,7 @@ auth:
   salt: ''
 discord:
   token: ''
+objectStorage:
+  endpoint: ''
+  accessKeyId: ''
+  secretAccessKey: ''
