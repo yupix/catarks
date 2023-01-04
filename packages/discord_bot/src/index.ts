@@ -15,8 +15,7 @@ import * as fs from "node:fs";
 import { ORM } from "./db/session.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ItemsCommand } from "./commands/items.js";
-import { UsersCommand } from "./commands/users.js";
+import { COMMANDS } from "./commands/const.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +23,6 @@ const orm = ORM.instance();
 
 const commands = [];
 const commandCollection = new Collection();
-const COMMANDS = [ItemsCommand, UsersCommand];
 
 const client = new Client({
   intents: [GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds],
@@ -33,8 +31,10 @@ const rest = new REST({ version: "10" }).setToken(config.discord.token);
 for (const _command of COMMANDS) {
   const command = await _command();
   const data = command.data;
-  commandCollection.set(data.name, command);
-  commands.push(data.toJSON());
+  if (data) {
+    commandCollection.set(data.name, command);
+    commands.push(data.toJSON());
+  }
 }
 
 try {
