@@ -40,12 +40,12 @@ model Items {
 model ItemPrices {
   id         String   @id @default(uuid())
   price      Int
-  reporter   Users    @relation(fields: [reporterId], references: [id])
-  items      Items    @relation(fields: [itemsId], references: [id])
+  reporter   Users    @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  item       Items    @relation(fields: [itemId], references: [id])
   ship       Int
   reporterId String
   createdAt  DateTime @default(now())
-  itemsId    String
+  itemId     String
 }
 
 model Users {
@@ -64,7 +64,7 @@ model Users {
 model UserSettings {
   id           String  @id @default(uuid())
   useDarkTheme Boolean @default(false)
-  Users        Users   @relation(fields: [usersId], references: [id])
+  Users        Users   @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId      String  @unique
 }
 
