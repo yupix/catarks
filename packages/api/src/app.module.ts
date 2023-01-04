@@ -7,9 +7,23 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { config } from '@catarks/shared';
+import { AwsSdkModule } from 'nest-aws-sdk';
+import { S3 } from 'aws-sdk';
 
 @Module({
   imports: [
+    AwsSdkModule.forRoot({
+      defaultServiceOptions: {
+        region: 'us-east-1',
+        endpoint: config.objectStorage.endpoint,
+        s3ForcePathStyle: true,
+        credentials: {
+          secretAccessKey: config.objectStorage.secretAccessKey,
+          accessKeyId: config.objectStorage.accessKeyId,
+        },
+      },
+      services: [S3],
+    }),
     RedisModule.forRoot({
       config: {
         port: config.redis.port,
