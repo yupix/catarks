@@ -3,12 +3,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Users } from '@catarks/db';
 import { PrismaService } from 'src/prisma.service';
 import { getRandomIntInclusive, fail } from 'src/utils';
+import { toPng } from 'jdenticon';
+import { InjectAwsService } from 'nest-aws-sdk';
+import { S3 } from 'aws-sdk';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const crypto = require('crypto');
 
 @Injectable()
 export class UsersService {
   constructor(
     private prisma: PrismaService,
     @InjectRedis() private redis: Redis,
+    @InjectAwsService(S3) private readonly s3: S3,
   ) {}
 
   async findOne(userId: string) {
@@ -43,7 +49,21 @@ export class UsersService {
     return { code };
   }
 
+  async create_avatar(username: string) {
+    const png = toPng(username, 200);
+
+    return this.s3
+      .upload({
+        Bucket: 'ngs-market',
+        Key: `*/users/avatar/${crypto.randomUUID()}.png`,
+        Body: png,
+      })
+      .promise()
+      .then((res) => res.Location);
+  }
+
   async create(username: string, password: string): Promise<Users> {
+    const avatar_url = await this.create_avatar(username);
     const createdUser = await this.prisma.users.create({
       data: {
         username,
@@ -51,6 +71,7 @@ export class UsersService {
         settings: {
           create: {},
         },
+        avatarUrl: avatar_url,
       },
     });
     return createdUser;
