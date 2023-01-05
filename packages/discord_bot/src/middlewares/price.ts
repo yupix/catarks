@@ -1,7 +1,8 @@
 import { Users } from "@catarks/db";
-import { ORM } from "../db/session.js";
+import { ORM } from "@/db/session.js";
 import { validateRange } from "@/utils/validate.js";
 import { OutOfRangeError } from "@/exceptions.js";
+import { api } from "@/utils/api.js";
 
 export class ItemPriceActions {
   static async register(options: {
@@ -37,11 +38,11 @@ export class ItemPriceActions {
 }
 
 export async function getItemIdfromPrice(itemId: string, limit?: number) {
-  return await ORM.instance().itemPrices.findMany({
-    where: {
-      itemId,
-    },
-    include: { reporter: true },
-    take: limit,
+  const res = await api.call("GET", "/api/items/:itemId/price", {
+    params: { itemId },
+    query: { limit },
   });
+
+  if (res.type === "failed") throw new Error(JSON.stringify(res.data));
+  return res.data;
 }
