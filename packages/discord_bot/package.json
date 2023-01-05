@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./built/index.js",
     "dev": "node --watch --loader ./script/loader.js ./src/index.ts",
-    "build": "ttsc -p ./tsconfig.json"
+    "build": "ttsc -p ./tsconfig.json || echo done. && tsc-alias -p ./tsconfig.json"
   },
   "keywords": [],
   "author": "yupix",
@@ -25,6 +25,7 @@
     "cross-env": "^7.0.3",
     "node-fetch": "^3.3.0",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.2",
     "tsconfig-paths": "4.1.0",
     "ttypescript": "^1.5.13"
   }
