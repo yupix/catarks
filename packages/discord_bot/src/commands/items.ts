@@ -1,19 +1,27 @@
-import { validatePrice } from "../utils/validate.js";
-import { ORM } from "../db/session.js";
+import { validatePrice } from "@/utils/validate.js";
+import { ORM } from "@/db/session.js";
 import {
+  APIEmbed,
   AutocompleteInteraction,
   CacheType,
   ChatInputCommandInteraction,
+  EmbedBuilder,
+  JSONEncodable,
   SlashCommandBuilder,
 } from "discord.js";
-import { getUserIdtoProfile } from "../middlewares/user.js";
-import { getItemIdfromPrice } from "../middlewares/price.js";
-import { ItemActions } from "../middlewares/item.js";
+import { getUserIdtoProfile } from "@/middlewares/user.js";
+import { getItemIdfromPrice } from "@/middlewares/price.js";
+import { ItemActions } from "@/middlewares/item.js";
+import { Logger, TYPE_TO_CATEGORY } from "@catarks/shared";
+import { Pagination } from "pagination.djs";
+import { api } from "@/utils/api.js";
 
 export const ItemsCommand = async () => {
   const items = (await ORM.instance().items.findMany()).map((item) => {
     return { name: item.name, value: item.id };
   });
+
+  const logger = Logger.getInstance;
 
   const data = new SlashCommandBuilder()
     .setName("items")
@@ -52,10 +60,25 @@ export const ItemsCommand = async () => {
                 .setRequired(true)
             )
         )
+    )
+    .addSubcommand((sub) =>
+      sub
+        .setName("list")
+        .setDescription("アイテムの一覧を表示")
+        .addStringOption((option) =>
+          option
+            .setName("カテゴリー")
+            .setDescription("調べたいアイテムのカテゴリー")
+            .setRequired(true)
+            .addChoices(
+              { name: "特殊能力", value: "ability" },
+              { name: "武器", value: "weapon" }
+            )
+        )
     );
-  async function execute(interaction: ChatInputCommandInteraction<CacheType>) {
-    console.log(interaction.isAutocomplete());
-    console.log(interaction.options.getSubcommand());
+  async function execute(interaction: ChatInputCommandInteraction<"cached">) {
+    console.debug(interaction.isAutocomplete());
+    console.debug(interaction.options.getSubcommand());
     switch (interaction.options.getSubcommand()) {
       case "get":
         const itemId = interaction.options.getString("アイテム名");
@@ -82,7 +105,7 @@ export const ItemsCommand = async () => {
                 title: item.name,
                 url: `https://catarks.org/items/${itemId}`,
                 color: 0x2196f3,
-                timestamp: price.createdAt.toISOString(),
+                timestamp: new Date(price.createdAt).toISOString(),
                 thumbnail: {
                   url: item.iconUrl,
                 },
@@ -99,6 +122,7 @@ export const ItemsCommand = async () => {
             ],
           });
         });
+        await interaction.reply("取得が完了しました");
         break;
       case "register":
         try {
@@ -110,8 +134,65 @@ export const ItemsCommand = async () => {
           await interaction.reply(
             `\`\`${item}\`\`を\`\`${vp}N\`\`に設定しました。`
           );
-        } catch (e) {
-          await interaction.reply(String(e));
+        } catch (err) {
+          logger.error(err);
+          await interaction.reply(String(err));
+        }
+      case "list":
+        try {
+          const itemListPages = new Pagination(interaction);
+          const category =
+            (interaction.options.getString("カテゴリー") as "ability") ||
+            "ability";
+          if (!category) throw new Error("意味わからん");
+          const listEmbeds: EmbedBuilder[] = [];
+          let offset = 0;
+          const limit = 20;
+          const res = await api.call("GET", "/api/items", {
+            query: { type: category },
+          });
+          const status = res.status?.toString() || "unknown";
+          if (res.type === "failed") {
+            throw new Error(`NetworkException: apiCallError: ${status}`);
+          }
+          const createOffset = (_offset: number = offset) => {
+            return (_offset = 0 ? 0 : _offset);
+          };
+
+          while (true) {
+            const embed = new EmbedBuilder()
+              .setColor(0x2196f3)
+              .setTitle(`${TYPE_TO_CATEGORY[category]}のアイテムリスト`);
+
+            let fields = res.data.items
+              .slice(limit * createOffset(), limit * createOffset(offset + 1))
+              .map((item, i) => {
+                let _effect = "";
+                item.ability.effects.map((effect) => {
+                  _effect += `${effect.name}, `;
+                });
+                return {
+                  name: item.name,
+                  value: _effect.slice(0, -2),
+                };
+              });
+            embed.addFields(fields);
+            fields = [];
+            listEmbeds.push(embed);
+            itemListPages.setEmbeds(listEmbeds, (embed, index, array) => {
+              return embed.setFooter({
+                text: `Page: ${index + 1}/${array.length}`,
+              });
+            });
+            offset++;
+            if (limit * createOffset() >= res.data.max) break;
+          }
+          // TODO: readyにして変数に突っ込んでリプライ返すときに他人に見えないように
+          itemListPages.render();
+          //throw new Error("内容は無いそうです");
+        } catch (err) {
+          logger.error(err);
+          await interaction.reply(String(err));
         }
     }
   }
