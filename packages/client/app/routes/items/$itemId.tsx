@@ -29,7 +29,11 @@ export default function Item() {
       </th>
     </tr>
   )
-  const priceRow = prices.map((price) => (
+  const priceRow = prices.sort((a, b) => {
+    const dateA = new Date(a.createdAt).valueOf()
+    const dateB = new Date(b.createdAt).valueOf()
+    return dateA - dateB
+  }).reverse().map((price) => (
     <tr key={price.id}>
       <td>{price.price}</td>
       <td>
