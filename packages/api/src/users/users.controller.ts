@@ -17,7 +17,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { CreateErrorDto } from 'src/types';
+import { ALREADY_CONNECTED_TO_DISCORD_ERROR } from 'src/error';
 import { MeDto, UserDto } from 'src/auth/dto/user.dto';
 
 @UseInterceptors(CurrentUserInterceptor)
@@ -31,6 +31,12 @@ export class UsersController {
     return user;
   }
 
+  @Get('/username/:username')
+  @ApiOkResponse({ type: UserDto })
+  async getUsernameFromUser(@Param('username') username: string) {
+    return await this.usersService.findFromUsername(username);
+  }
+
   @Get('/:userId')
   @ApiOkResponse({ type: UserDto })
   async getProfile(@Param('userId') userId: string) {
@@ -40,7 +46,7 @@ export class UsersController {
   @Post('/integration/discord')
   @ApiCreatedResponse({ type: IntegrationRequestDto })
   @ApiBadRequestResponse({
-    type: CreateErrorDto('639ebe9f-b8be-435c-a350-5802e1ad2687'),
+    type: ALREADY_CONNECTED_TO_DISCORD_ERROR,
   })
   @UseGuards(AuthGuard)
   async IntegrationRequest(@CurrentUser() user: Users) {

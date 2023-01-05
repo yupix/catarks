@@ -17,6 +17,14 @@ export class UsersService {
     @InjectAwsService(S3) private readonly s3: S3,
   ) {}
 
+  async findFromUsername(username: string) {
+    return await this.prisma.users.findFirst({
+      where: {
+        username: username,
+      },
+    });
+  }
+
   async findOne(userId: string) {
     const user = await this.prisma.users.findFirst({ where: { id: userId } });
     return user;

@@ -2,14 +2,18 @@ import { Body, Controller, HttpCode, Post, Req, Session } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as secureSession from '@fastify/secure-session';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { MeDto, UserDto } from './dto/user.dto';
+import { ALREADY_USED_USERNAME_ERROR } from 'src/error';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('/signup')
   @ApiCreatedResponse({ type: UserDto })
+  @ApiBadRequestResponse({
+    type: ALREADY_USED_USERNAME_ERROR,
+  })
   async signup(
     @Session() session: secureSession.Session,
     @Body() body: CreateUserDto,

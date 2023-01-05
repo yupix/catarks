@@ -9,6 +9,7 @@ import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { PrismaService } from 'src/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { promisify } from 'util';
+import { fail } from '../utils';
 const scrypt = promisify(_scrypt);
 
 @Injectable()
@@ -24,7 +25,7 @@ export class AuthService {
     });
     if (searchUserResult)
       throw new HttpException(
-        'username is already used',
+        fail('58ee27a1-f431-4e6f-9656-666ed857d9bc'),
         HttpStatus.BAD_REQUEST,
       );
     const salt = randomBytes(8).toString('hex');
