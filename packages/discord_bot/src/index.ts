@@ -10,16 +10,15 @@ import {
   Routes,
 } from "discord.js";
 
-import { config } from "@catarks/shared";
-import * as fs from "node:fs";
-import { ORM } from "./db/session.js";
+import { Logger, config } from "@catarks/shared";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { COMMANDS } from "./commands/const.js";
+import { COMMANDS } from "@/commands/const.js";
+
+const logger = Logger.getInstance;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const orm = ORM.instance();
 
 const commands = [];
 const commandCollection = new Collection();
@@ -38,12 +37,12 @@ for (const _command of COMMANDS) {
 }
 
 try {
-  console.log(
+  logger.info(
     `Started refreshing ${commands.length} application (/) commands.`
   );
 
   // The put method is used to fully refresh all commands in the guild with the current set
-  const data = rest.put(
+  rest.put(
     Routes.applicationGuildCommands("863698060454658058", "530299114387406860"),
     { body: commands }
   );
@@ -51,11 +50,11 @@ try {
   // console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 } catch (error) {
   // And of course, make sure you catch and log any errors!
-  console.error(error);
+  logger.error(error);
 }
 
 client.once(Events.ClientReady, (c) => {
-  console.log(c.user.tag);
+  logger.info(c.user.tag);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -75,13 +74,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   const command = getCommandName(interaction.commandName);
   if (!command) {
-    console.error(`No command matching ${interaction.commandName} was found.`);
+    logger.error(`No command matching ${interaction.commandName} was found.`);
     return;
   }
 
   try {
     await command.execute(interaction);
   } catch (error) {
+    logger.error(error);
     await interaction.reply({
       content: "There was an error while executing this command!",
       ephemeral: true,
