@@ -4,6 +4,16 @@ import { validateRange } from "@/utils/validate.js";
 import { OutOfRangeError } from "@/exceptions.js";
 import { api } from "@/utils/api.js";
 
+/**
+ * @static
+ * @async
+ * @param { itemId } string - アイテムのId
+ * @param { price } number - 値段
+ * @param { ship } number - 報告する価格のship番号
+ * @param { reporterId } Users - 報告者のId
+ * @returns { Promise<ItemPrices> } - 作成した価格
+ * @throws { OutOfRangeError } - 価格が範囲外になっている
+ */
 export class ItemPriceActions {
   static async register(options: {
     itemId: string;
@@ -11,17 +21,6 @@ export class ItemPriceActions {
     price: number;
     reporterId: string;
   }) {
-    /**
-     * @static
-     * @async
-     * @param { itemId } string - アイテムのId
-     * @param { price } number - 値段
-     * @param { ship } number - 報告する価格のship番号
-     * @param { reporterId } Users - 報告者のId
-     * @returns { Promise<ItemPrices> } - 作成した価格
-     * @throws { OutOfRangeError } - 価格が範囲外になっている
-     */
-
     const { itemId, price, reporterId, ship } = options;
     if (validateRange({ value: price, min: 1000, max: 99999999999 }))
       throw new OutOfRangeError("アイテムの価格が範囲内に収まっていません");
@@ -37,21 +36,21 @@ export class ItemPriceActions {
   }
 }
 
+/**
+ * 指定されたIdのアイテムを取得します
+ *
+ * @async
+ * @function
+ * @param { itemid } string - 取得するアイテムのId
+ * @param { limit? } number - 取得する件数
+ * @param { ( "desc" | "asc" ) } - どのようにソートするか
+ * @returns { ItemPrices[] } - 取得したアイテムの価格
+ */
 export async function getItemIdfromPrice(
   itemId: string,
   limit?: number,
   sort: "desc" | "asc" = "desc"
 ) {
-  /**
-   * 指定されたIdのアイテムを取得します
-   *
-   * @async
-   * @function
-   * @param { itemid } string - 取得するアイテムのId
-   * @param { limit? } number - 取得する件数
-   * @param { ( "desc" | "asc" ) } - どのようにソートするか
-   * @returns { ItemPrices[] } - 取得したアイテムの価格
-   */
   const res = await api.call("GET", "/api/items/:itemId/price", {
     params: { itemId },
     query: { limit, sort },
