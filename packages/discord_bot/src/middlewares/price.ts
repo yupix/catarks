@@ -1,4 +1,4 @@
-import { Users } from "@catarks/db";
+import { ItemPrices, Users } from "@catarks/db";
 import { ORM } from "@/db/session.js";
 import { validateRange } from "@/utils/validate.js";
 import { OutOfRangeError } from "@/exceptions.js";
@@ -37,10 +37,24 @@ export class ItemPriceActions {
   }
 }
 
-export async function getItemIdfromPrice(itemId: string, limit?: number) {
+export async function getItemIdfromPrice(
+  itemId: string,
+  limit?: number,
+  sort: "desc" | "asc" = "desc"
+) {
+  /**
+   * 指定されたIdのアイテムを取得します
+   *
+   * @async
+   * @function
+   * @param { itemid } string - 取得するアイテムのId
+   * @param { limit? } number - 取得する件数
+   * @param { ( "desc" | "asc" ) } - どのようにソートするか
+   * @returns { ItemPrices[] } - 取得したアイテムの価格
+   */
   const res = await api.call("GET", "/api/items/:itemId/price", {
     params: { itemId },
-    query: { limit },
+    query: { limit, sort },
   });
 
   if (res.type === "failed") throw new Error(JSON.stringify(res.data));
