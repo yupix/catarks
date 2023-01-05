@@ -1,4 +1,4 @@
-import { ORM, redis } from "../db/session.js";
+import { ORM, redis } from "@/db/session.js";
 import {
   CacheType,
   ChatInputCommandInteraction,

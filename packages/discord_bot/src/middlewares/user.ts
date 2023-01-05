@@ -1,4 +1,4 @@
-import { ORM } from "../db/session.js";
+import { ORM } from "@/db/session.js";
 
 export async function getUserIdtoProfile(discordId: string) {
   /**
