@@ -1,16 +1,18 @@
-import { Navbar, createStyles } from "@mantine/core"
+import { Divider, Navbar, Space, createStyles } from "@mantine/core"
 import type { FC } from "react";
-import { useState } from "react"
 import { UserButton } from "./userButton"
 import { useSnapshot } from "valtio"
 import { useMenuState } from "~/states/menu"
-import { IconBellRinging, IconReceipt2 } from "@tabler/icons"
+import type { TablerIcon } from "@tabler/icons";
+import { IconBellRinging, IconHome, IconReceipt2, IconSettings } from "@tabler/icons"
 import { useSessionState } from "~/states/common";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 
-const data = [
-  { link: '', label: 'notification', icon: IconBellRinging },
-  { link: '/categories', label: 'categories', icon: IconReceipt2 },
+const DefaultLinks = [
+  { link: '/', label: 'トップ', icon: IconHome },
+  { link: '/categories', label: 'カテゴリ', icon: IconReceipt2, divider: true },
+  { link: '/notifications', label: '通知', icon: IconBellRinging, divider: true, requiredAuth: true },
+  { link: '/settings', label: '設定', icon: IconSettings, requiredAuth: true },
 ];
 
 
@@ -84,21 +86,33 @@ const useStyles = createStyles((theme, _params, getRef) => {
   }
 });
 
-export const DefaultNavBar: FC<{ currentActive: string }> = ({ currentActive }) => {
+const DefaultNavBar: FC<{ currentActive: string, items?: { link: string, label: string, icon: TablerIcon, divider?: boolean, requiredAuth?: boolean }[] }> = ({ currentActive, items }) => {
+  const location = useLocation()
   const { classes, cx } = useStyles();
   const opened = useSnapshot(useMenuState).opened
-  const [active, setActive] = useState(currentActive);
   const { user: currentUser } = useSnapshot(useSessionState);
 
-  const links = data.map((item) => (
-    <Link
-      className={cx(classes.link, { [classes.linkActive]: item.label === active })}
-      to={item.link}
-      key={item.label}
-    >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span style={{ textTransform: 'uppercase' }}>{item.label}</span>
-    </Link>
+  const getAuth = (value: boolean | undefined) => {
+    if (value) {
+      if (currentUser) return true
+      return false
+    }
+    return true
+  }
+
+  const links = items?.map((item) => (
+    <>
+      {getAuth(item.requiredAuth) && <div key={item.label}>
+        <Link
+          className={cx(classes.link, { [classes.linkActive]: item.link === location.pathname })}
+          to={item.link}
+        >
+          <item.icon className={classes.linkIcon} stroke={1.5} />
+          <span style={{ textTransform: 'uppercase' }}>{item.label}</span>
+        </Link>
+        {item.divider && <><Space h="lg" /><Divider /><Space h="lg" /></>}
+      </div>}
+    </>
   ));
 
 
@@ -119,3 +133,8 @@ export const DefaultNavBar: FC<{ currentActive: string }> = ({ currentActive }) 
       </Navbar.Section>
     </Navbar>)
 }
+
+DefaultNavBar.defaultProps = {
+  items: DefaultLinks
+}
+export { DefaultNavBar }

@@ -72,7 +72,7 @@ export default function FeaturesCards() {
     </Link>
   ));
   return (
-    <Container size="lg" py="xl">
+    <Container size="lg">
 
 
       <Title order={2} className={classes.title} mt="sm">
