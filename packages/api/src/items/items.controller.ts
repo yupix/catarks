@@ -16,7 +16,7 @@ import {
 } from './dto/createItemPrice.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ItemDto, getItemsDto } from './dto/getItem.dto';
-import { getItemPriceDto } from './dto/getItemPrice.dto';
+import { GetItemPriceDto, getItemPriceDto } from './dto/getItemPrice.dto';
 import { CurrentUserInterceptor } from 'src/current-user.interceptor';
 import { AuthGuard } from 'src/auth.guard';
 import { CurrentUser } from 'src/current-user.decorator';
@@ -41,8 +41,11 @@ export class ItemsController {
 
   @Get('/:itemId/price')
   @ApiOkResponse({ type: getItemPriceDto, isArray: true })
-  async getItemPrice(@Param('itemId') itemId: string) {
-    return await this.itemsService.getItemPrice(itemId);
+  async getItemPrice(
+    @Param('itemId') itemId: string,
+    @Query() query: GetItemPriceDto,
+  ) {
+    return await this.itemsService.getItemPrice(itemId, query);
   }
 
   @Post('/:itemId/price')
