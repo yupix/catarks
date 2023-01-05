@@ -11,6 +11,7 @@ import {
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import { authenticator } from '~/auth.server';
+import { AUTHORS } from '~/const';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -54,7 +55,6 @@ export async function loader({ request }: LoaderArgs) {
 };
 
 export async function action({ request }: ActionArgs) {
-
   return await authenticator.authenticate("form", request, {
     successRedirect: "/",
     failureRedirect: "/signin",
@@ -62,7 +62,6 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function Authentication() {
-  const example_users = ["yupix", "ikaros", "Alumis"]
   const { classes } = useStyles();
   return (
     <div className={classes.wrapper}>
@@ -72,7 +71,7 @@ export default function Authentication() {
         </Title>
         <Form method="post">
 
-          <TextInput label="ユーザー名" name="username" placeholder={example_users[Math.floor(Math.random() * example_users.length)]} required type="text" size="md" />
+          <TextInput label="ユーザー名" name="username" placeholder={AUTHORS[Math.floor(Math.random() * AUTHORS.length)]} required type="text" size="md" />
           <PasswordInput label="パスワード" name="password" autoComplete='current-password' type="password" placeholder="Your password" required mt="md" size="md" />
           <Button fullWidth mt="xl" size="md" type="submit">
             Login
