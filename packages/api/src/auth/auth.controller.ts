@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as secureSession from '@fastify/secure-session';
 import { ApiCreatedResponse } from '@nestjs/swagger';
-import { UserDto } from './dto/user.dto';
+import { MeDto, UserDto } from './dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +20,7 @@ export class AuthController {
   }
 
   @Post('/signin')
-  @ApiCreatedResponse({ type: UserDto })
+  @ApiCreatedResponse({ type: MeDto })
   async signin(
     @Session() session: secureSession.Session,
     @Body() body: CreateUserDto,
