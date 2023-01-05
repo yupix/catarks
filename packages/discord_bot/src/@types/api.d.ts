@@ -57,11 +57,12 @@ type Schema = {resource: {
 
 "/api/items/:itemId/price": {
     GET: {
+        query: {
+            limit?: number,
+            sort?: string
+        },
         params: {
             itemId: string
-        },
-        query: {
-            limit?: number
         },
         response: getItemPriceDto[]
     },
