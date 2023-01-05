@@ -60,6 +60,9 @@ type Schema = {resource: {
         params: {
             itemId: string
         },
+        query: {
+            limit?: number
+        },
         response: getItemPriceDto[]
     },
     POST: {
@@ -81,7 +84,7 @@ type Schema = {resource: {
 "/api/auth/signin": {
     POST: {
         body: CreateUserDto,
-        response: UserDto
+        response: MeDto
     }
 }
 
