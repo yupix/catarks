@@ -58,7 +58,7 @@ export class DropAriaDto {
 
 export class ItemDto {
   @ApiProperty({ enum: ['ability', 'weapon'] })
-  type: ItemTypes;
+  type: 'ability' | 'weapon' | 'armor';
 
   @ApiProperty()
   @ValidateNested()

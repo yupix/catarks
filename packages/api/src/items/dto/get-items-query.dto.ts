@@ -1,13 +1,13 @@
 import { ItemTypes } from '@catarks/db';
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GetItemsQueryDto {
-  @ApiProperty()
-  @IsString()
+  @ApiProperty({ enum: ['ability', 'weapon', 'armor'] })
+  @IsEnum(['ability', 'weapon', 'armor'])
   @IsOptional()
-  type?: ItemTypes;
+  type?: 'ability' | 'weapon' | 'armor';
 
   @ApiProperty({ required: false })
   @IsOptional()

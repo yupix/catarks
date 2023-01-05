@@ -11,17 +11,19 @@ import {
 } from 'class-validator';
 import { UserDto } from 'src/auth/dto/user.dto';
 
-export class GetItemPriceDto {
+export type SortTypes = 'desc' | 'asc';
+
+export class GetItemPriceDtoQuery {
   @ApiProperty()
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   limit?: number;
 
-  @ApiProperty({ nullable: true })
-  @IsOptional()
+  @ApiProperty({ enum: ['desc', 'asc'] })
   @IsEnum(['desc', 'asc'])
-  sort?: 'desc' | 'asc' = 'desc';
+  @IsOptional()
+  sort?: SortTypes = 'asc';
 }
 
 export class getItemPriceDto {

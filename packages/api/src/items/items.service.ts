@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { GetItemsQueryDto } from './dto/get-items-query.dto';
 import { createItemPriceDto } from './dto/createItemPrice.dto';
 import { Users } from '@catarks/db';
-import { GetItemPriceDto } from './dto/getItemPrice.dto';
+import { GetItemPriceDtoQuery } from './dto/getItemPrice.dto';
 
 @Injectable()
 export class ItemsService {
@@ -60,7 +60,7 @@ export class ItemsService {
     };
   }
 
-  async getItemPrice(id: string, query: GetItemPriceDto) {
+  async getItemPrice(id: string, query: GetItemPriceDtoQuery) {
     const findPrices = await this.prisma.itemPrices.findMany({
       where: {
         itemId: id,
