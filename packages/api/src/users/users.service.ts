@@ -1,8 +1,8 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Users } from '@catarks/db';
-import { PrismaService } from 'src/prisma.service';
-import { getRandomIntInclusive, fail } from 'src/utils';
+import { PrismaService } from '../prisma.service';
+import { getRandomIntInclusive, fail } from '../utils';
 import { toPng } from 'jdenticon';
 import { InjectAwsService } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';

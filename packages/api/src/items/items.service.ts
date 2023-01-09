@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { GetItemsQueryDto } from './dto/get-items-query.dto';
 import { createItemPriceDto } from './dto/createItemPrice.dto';
 import { Users } from '@catarks/db';

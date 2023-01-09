@@ -9,7 +9,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { UserDto } from 'src/auth/dto/user.dto';
+import { UserDto } from '../../auth/dto/user.dto';
 
 export type SortTypes = 'desc' | 'asc';
 

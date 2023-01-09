@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsString, ValidateNested } from 'class-validator';
-import { UserDto } from 'src/auth/dto/user.dto';
-import { ItemTypes } from 'src/types';
+import { UserDto } from '../../auth/dto/user.dto';
 
 export class AbilityEffectDto {
   @ApiProperty()

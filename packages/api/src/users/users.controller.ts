@@ -17,8 +17,8 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { ALREADY_CONNECTED_TO_DISCORD_ERROR } from 'src/error';
-import { MeDto, UserDto } from 'src/auth/dto/user.dto';
+import { ALREADY_CONNECTED_TO_DISCORD_ERROR } from '../error';
+import { MeDto, UserDto } from '../auth/dto/user.dto';
 
 @UseInterceptors(CurrentUserInterceptor)
 @Controller('users')

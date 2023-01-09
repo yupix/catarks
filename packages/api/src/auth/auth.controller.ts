@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as secureSession from '@fastify/secure-session';
 import { ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { MeDto, UserDto } from './dto/user.dto';
-import { ALREADY_USED_USERNAME_ERROR } from 'src/error';
+import { ALREADY_USED_USERNAME_ERROR } from '../error';
 
 @Controller('auth')
 export class AuthController {

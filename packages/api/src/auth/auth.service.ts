@@ -6,8 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
-import { PrismaService } from 'src/prisma.service';
-import { UsersService } from 'src/users/users.service';
+import { PrismaService } from '../prisma.service';
+import { UsersService } from '../users/users.service';
 import { promisify } from 'util';
 import { fail } from '../utils';
 const scrypt = promisify(_scrypt);

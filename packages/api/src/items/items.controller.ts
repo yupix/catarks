@@ -17,9 +17,9 @@ import {
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ItemDto, getItemsDto } from './dto/getItem.dto';
 import { GetItemPriceDtoQuery, getItemPriceDto } from './dto/getItemPrice.dto';
-import { CurrentUserInterceptor } from 'src/current-user.interceptor';
-import { AuthGuard } from 'src/auth.guard';
-import { CurrentUser } from 'src/current-user.decorator';
+import { CurrentUserInterceptor } from '../current-user.interceptor';
+import { AuthGuard } from '../auth.guard';
+import { CurrentUser } from '../current-user.decorator';
 import { Users } from '@catarks/db';
 
 @Controller('items')
