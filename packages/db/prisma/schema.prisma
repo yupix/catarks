@@ -70,4 +70,6 @@ model UserSettings {
 
 enum ItemTypes {
   ability
+  weapon
+  armor
 }
