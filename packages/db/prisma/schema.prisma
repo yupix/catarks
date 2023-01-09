@@ -49,16 +49,17 @@ model ItemPrices {
 }
 
 model Users {
-  id         String        @id @default(uuid())
-  username   String        @unique
-  password   String
-  avatarUrl  String?
-  ItemPrices ItemPrices[]
-  discordId  String?
-  ship       Int           @default(8)
-  bannerUrl  String?
-  settings   UserSettings?
-  createdAt  DateTime      @default(now())
+  id          String        @id @default(uuid())
+  username    String        @unique
+  description String?
+  password    String
+  avatarUrl   String?
+  ItemPrices  ItemPrices[]
+  discordId   String?
+  ship        Int           @default(8)
+  bannerUrl   String?
+  settings    UserSettings?
+  createdAt   DateTime      @default(now())
 }
 
 model UserSettings {
