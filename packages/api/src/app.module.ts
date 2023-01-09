@@ -9,6 +9,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { config } from '@catarks/shared';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { S3 } from 'aws-sdk';
     }),
     AuthModule,
     UsersModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
