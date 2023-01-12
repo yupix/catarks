@@ -58,6 +58,10 @@ export class UsersService {
   }
 
   async create_avatar(username: string) {
+    const hitAvatar = await this.prisma.defaultAvatars.findFirst({
+      where: { username },
+    });
+    if (hitAvatar) return hitAvatar.url;
     const png = toPng(username, 200);
 
     return this.s3
@@ -67,7 +71,15 @@ export class UsersService {
         Body: png,
       })
       .promise()
-      .then((res) => res.Location);
+      .then(async (res) => {
+        await this.prisma.defaultAvatars.create({
+          data: {
+            username,
+            url: res.Location,
+          },
+        });
+        return res.Location;
+      });
   }
 
   async create(username: string, password: string): Promise<Users> {
