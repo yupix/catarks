@@ -12,5 +12,12 @@
       "description": "既にDiscordと連携済みです",
       "code": "ALREADY_CONNECTED_TO_DISCORD"
     }
+  ],
+  [
+    "967c9cb5-2189-4fd5-b2c3-b45a8e1f453f",
+    {
+      "description": "使用できないMIME TYPEです",
+      "code": "NOT_AVAILABLE_MIME_TYPE"
+    }
   ]
 ]
