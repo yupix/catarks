@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ItemsModule } from './items/items.module';
@@ -10,9 +9,20 @@ import { config } from '@catarks/shared';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
 import { UserModule } from './user/user.module';
+import { SentryModule } from '@ntegral/nestjs-sentry';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
+    SentryModule.forRoot({
+      dsn: `${config.api.sentry.ssl ? 'https' : 'http'}://${
+        config.api.sentry.token
+      }@${config.api.sentry.domain}/${config.api.sentry.projectId}`,
+      debug: true,
+      environment: 'dev',
+      release: null,
+      logLevels: ['debug'],
+    }),
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
         region: 'us-east-1',
@@ -34,12 +44,10 @@ import { UserModule } from './user/user.module';
       },
     }),
     ItemsModule,
-    LoggerModule.forRoot({
-      pinoHttp: { transport: { target: 'pino-pretty' } },
-    }),
     AuthModule,
     UsersModule,
     UserModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
