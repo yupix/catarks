@@ -5,6 +5,10 @@ interface IConfig {
   main: {
     "log-level": string;
   };
+  api: {
+    ssl: boolean;
+    domain: string;
+  };
   db: {
     user: string;
     pass: string;

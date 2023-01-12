@@ -1,5 +1,8 @@
 main:
   log-level: 'error'
+api:
+  ssl: true
+  domain: api.example.com
 db:
   user: 'postgres'
   pass: 'postgrespw'
