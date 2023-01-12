@@ -48,6 +48,17 @@ model ItemPrices {
   itemId     String
 }
 
+model DefaultAvatars {
+  username String @id
+  url      String @unique
+}
+
+model Files {
+  hash     String @id
+  filename String @unique
+  url      String
+}
+
 model Users {
   id          String        @id @default(uuid())
   username    String        @unique
