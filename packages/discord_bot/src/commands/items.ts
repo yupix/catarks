@@ -1,18 +1,17 @@
 import { validatePrice } from "@/utils/validate.js";
 import { ORM } from "@/db/session.js";
 import {
-  APIEmbed,
   AutocompleteInteraction,
+  ButtonStyle,
   CacheType,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  JSONEncodable,
   SlashCommandBuilder,
 } from "discord.js";
 import { getUserIdtoProfile } from "@/middlewares/user.js";
 import { getItemIdfromPrice } from "@/middlewares/price.js";
 import { ItemActions } from "@/middlewares/item.js";
-import { Logger, TYPE_TO_CATEGORY } from "@catarks/shared";
+import { Logger, PickType, TYPE_TO_CATEGORY } from "@catarks/shared";
 import { Pagination } from "pagination.djs";
 import { api } from "@/utils/api.js";
 
@@ -140,9 +139,13 @@ export const ItemsCommand = async () => {
         }
       case "list":
         try {
-          const itemListPages = new Pagination(interaction);
+          type TCategory = PickType<ItemDto, "type">;
+          const itemListPages = new Pagination(interaction, {
+            ephemeral: true,
+            buttonStyle: ButtonStyle.Primary,
+          });
           const category =
-            (interaction.options.getString("カテゴリー") as "ability") ||
+            (interaction.options.getString("カテゴリー") as TCategory) ||
             "ability";
           if (!category) throw new Error("意味わからん");
           const listEmbeds: EmbedBuilder[] = [];
@@ -158,11 +161,22 @@ export const ItemsCommand = async () => {
           const createOffset = (_offset: number = offset) => {
             return (_offset = 0 ? 0 : _offset);
           };
+          const getThumbnail = (_category: TCategory) => {
+            if ((_category = "ability")) {
+              return "https://s3.akarinext.org/assets/*/pso2/op/op_2.webp";
+            } else if ((_category = "weapon")) {
+              return "https://s3.akarinext.org/assets/*/pso2/op/op_2.webp";
+            } else {
+              return "";
+            }
+          };
 
           while (true) {
             const embed = new EmbedBuilder()
               .setColor(0x2196f3)
-              .setTitle(`${TYPE_TO_CATEGORY[category]}のアイテムリスト`);
+              .setTitle(`${TYPE_TO_CATEGORY[category]}のアイテムリスト`)
+              .setURL(`https://catarks.org/categories/${category}`)
+              .setThumbnail(getThumbnail(category));
 
             let fields = res.data.items
               .slice(limit * createOffset(), limit * createOffset(offset + 1))

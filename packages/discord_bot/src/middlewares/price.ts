@@ -4,17 +4,17 @@ import { validateRange } from "@/utils/validate.js";
 import { OutOfRangeError } from "@/exceptions.js";
 import { api } from "@/utils/api.js";
 
-/**
- * @static
- * @async
- * @param { itemId } string - アイテムのId
- * @param { price } number - 値段
- * @param { ship } number - 報告する価格のship番号
- * @param { reporterId } Users - 報告者のId
- * @returns { Promise<ItemPrices> } - 作成した価格
- * @throws { OutOfRangeError } - 価格が範囲外になっている
- */
 export class ItemPriceActions {
+  /**
+   * @static
+   * @async
+   * @param { itemId } string - アイテムのId
+   * @param { price } number - 値段
+   * @param { ship } number - 報告する価格のship番号
+   * @param { reporterId } Users - 報告者のId
+   * @returns { Promise<ItemPrices> } - 作成した価格
+   * @throws { OutOfRangeError } - 価格が範囲外になっている
+   */
   static async register(options: {
     itemId: string;
     ship: number;
