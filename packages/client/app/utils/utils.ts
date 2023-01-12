@@ -1,10 +1,9 @@
 import { apiClient } from "strictcat";
 import { authenticator } from "~/auth.server";
 
-export const api = apiClient<Schema>(
-  "http://localhost:3000",
-  "application/json"
-);
+export const api = apiClient<Schema>("http://localhost:3000", {
+  contentType: "application/json",
+});
 
 export type PickType<T, K extends keyof T> = T[K];
 
@@ -20,7 +19,7 @@ export const getCategoryName = (type: PickType<ItemDto, "type">): string => {
 export const createAuthHeaders = async (request: Request) => {
   const user = await authenticator.isAuthenticated(request);
   assertIsDefined(user);
-  return new Headers({ Cookie: user.session });
+  return { Cookie: user.session };
 };
 
 export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
