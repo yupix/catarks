@@ -57,6 +57,8 @@ model Files {
   hash     String @id
   filename String @unique
   url      String
+  author   Users  @relation(fields: [userId], references: [id])
+  userId   String
 }
 
 model Users {
@@ -71,13 +73,14 @@ model Users {
   bannerUrl   String?
   settings    UserSettings?
   createdAt   DateTime      @default(now())
+  Files       Files[]
 }
 
 model UserSettings {
   id           String  @id @default(uuid())
   useDarkTheme Boolean @default(false)
-  Users        Users   @relation(fields: [usersId], references: [id], onDelete: Cascade)
-  usersId      String  @unique
+  User         Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String  @unique
 }
 
 enum ItemTypes {
