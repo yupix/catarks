@@ -12,7 +12,7 @@
       "decoratorMetadata": true
     },
     "experimental": {
-      "keepImportAssertions": true,
+      "keepImportAssertions": true
     },
     "baseUrl": ".",
     "paths": {
