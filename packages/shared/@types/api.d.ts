@@ -3,13 +3,13 @@ interface AbilityEffectDto {name: string, percent: boolean, effect: string}
 
 interface AbilityDto {name: string, effects: AbilityEffectDto[]}
 
-interface UserDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number, bannerUrl: string, createdAt: string}
+interface UserDto {id: string, username: string, avatarUrl: string, description: string, discordId?: string, ship: number, bannerUrl?: string, createdAt: string}
 
 interface ItemPriceDto {id: string, price: number, ship: number, reporter: UserDto, reporterId: string}
 
 interface DropAriaDto {name: string}
 
-interface ItemDto {type: 'ability' |'weapon' , ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: ItemPriceDto[], droparias: DropAriaDto[]}
+interface ItemDto {type: 'ability' | 'weapon', ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: ItemPriceDto[], droparias: DropAriaDto[]}
 
 interface getItemsDto {max: number, items: ItemDto[]}
 
@@ -21,13 +21,17 @@ interface CreatedItemPriceDto {price: number}
 
 interface CreateUserDto {username: string, password: string}
 
+interface ALREADY_USED_USERNAME_ERROR {id: string, type: string, code: string, message: string}
+
 interface UserSettingsDto {useDarkTheme: boolean}
 
-interface MeDto {id: string, username: string, avatarUrl: string, discordId: string, ship: number, bannerUrl: string, settings: UserSettingsDto, createdAt: string}
+interface MeDto {id: string, username: string, avatarUrl: string, description: string, discordId?: string, ship: number, bannerUrl?: string, settings: UserSettingsDto, createdAt: string}
 
 interface IntegrationRequestDto {code: string}
 
-interface ErrorDto {id: string, type: string, code: string, message: string}
+interface ALREADY_CONNECTED_TO_DISCORD_ERROR {id: string, type: string, code: string, message: string}
+
+interface PatchProfileDto {ship?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10, bannerUrl?: string, avatarUrl?: string, description?: string}
 type Schema = {resource: {
 "/api": {
     GET: {
@@ -38,7 +42,7 @@ type Schema = {resource: {
 "/api/items": {
     GET: {
         query: {
-            type?: string,
+            type?: 'ability' | 'weapon' | 'armor',
             skip?: number,
             limit?: number
         },
@@ -59,7 +63,7 @@ type Schema = {resource: {
     GET: {
         query: {
             limit?: number,
-            sort?: string
+            sort?: 'desc' | 'asc'
         },
         params: {
             itemId: string
@@ -101,6 +105,15 @@ type Schema = {resource: {
     }
 }
 
+"/api/users/:username/:username": {
+    GET: {
+        params: {
+            username: string
+        },
+        response: UserDto
+    }
+}
+
 "/api/users/:userId": {
     GET: {
         params: {
@@ -113,6 +126,13 @@ type Schema = {resource: {
 "/api/users/integration/discord": {
     POST: {
         response: IntegrationRequestDto
+    }
+}
+
+"/api/user": {
+    PATCH: {
+        body: PatchProfileDto,
+        response: UserDto
     }
 }
 }}
