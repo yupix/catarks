@@ -19,7 +19,6 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     @InjectAwsService(S3) private readonly s3: S3,
-    private logger: LoggerService,
   ) {}
 
   async uploadAvatar(file: MemoryStorageFile) {

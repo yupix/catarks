@@ -11,13 +11,13 @@ import { RemovePasswordInterceptor } from '@/remove-pass';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import fastifyMultipart from '@fastify/multipart';
-import { SentryService } from '@ntegral/nestjs-sentry';
+import { Logger } from 'nestjs-pino';
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
-    { bufferLogs: true },
+    { bufferLogs: true, logger: false },
   );
   await app.register(secureSession, {
     secret: config.auth.secret,
@@ -41,13 +41,12 @@ async function bootstrap() {
     .addCookieAuth('session')
     .build();
 
-  // const logger = app.get(Logger);
+  const logger = app.get(Logger);
   app.useGlobalInterceptors(new RemovePasswordInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.useLogger(SentryService.SentryServiceInstance());
+  app.useLogger(logger);
   app.register(fastifyMultipart);
   app.setGlobalPrefix('api');
-  const sentryService = app.get(SentryService);
 
   const document = SwaggerModule.createDocument(app, documentConfig);
   SwaggerModule.setup('doc', app, document);
@@ -57,7 +56,9 @@ async function bootstrap() {
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
   });
   await app.listen(3000, '0.0.0.0');
-  sentryService.log(`🚀 Start up 0.0.0.0:3000`);
-  // logger.log(`🚀 Start up 0.0.0.0:3000`);
+  logger.log(`🚀 Start up 0.0.0.0:3000`);
+  return app;
 }
-bootstrap();
+if (config.main.devMode === false) {
+  bootstrap();
+}
