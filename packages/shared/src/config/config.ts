@@ -10,6 +10,7 @@ type ISentryConfig = {
 
 interface IConfig {
   main: {
+    devMode: boolean;
     "log-level": string;
   };
   api: {

@@ -1,4 +1,5 @@
 main:
+  devMode: false
   log-level: 'error'
 api:
   ssl: true
