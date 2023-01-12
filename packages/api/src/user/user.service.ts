@@ -1,11 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PatchProfileDto } from './dto/patch-user.dto';
 import { PrismaService } from '../prisma.service';
 import { Users } from '@catarks/db';
+import { MemoryStorageFile } from '@blazity/nest-file-fastify';
+import { InjectAwsService } from 'nest-aws-sdk';
+import { S3 } from 'aws-sdk';
+import { Scope as SentryScope } from '@sentry/node';
+import { LoggerService } from 'src/logger/logger.service';
+import { fail } from '../utils';
+import { Md5 } from 'ts-md5';
 
+const crypto = require('crypto');
+const mime = require('mime-types');
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectAwsService(S3) private readonly s3: S3,
+    private logger: LoggerService,
+  ) {}
+
+  async uploadAvatar(file: MemoryStorageFile) {
+    const fileExtension = mime.extension(file.mimetype);
+    if (!['png', 'jpeg', 'gif'].includes(fileExtension)) {
+      const scope = new SentryScope();
+      const exceptionBody = fail('967c9cb5-2189-4fd5-b2c3-b45a8e1f453f');
+      const exception = new BadRequestException(exceptionBody);
+      await this.logger.sendExceptionToSentry(exception, exceptionBody, scope);
+      throw exception;
+    }
+    const hash = new Md5().appendByteArray(file.buffer).end().toString();
+    const findFile = await this.prisma.files.findFirst({
+      where: {
+        hash,
+      },
+    });
+    if (findFile) return findFile.url;
+    const filename = `${crypto.randomUUID()}.${fileExtension}`;
+    return this.s3
+      .upload({
+        Bucket: 'ngs-market',
+        Key: `*/users/avatar/${filename}`,
+        Body: file.buffer,
+      })
+      .promise()
+      .then(async (res) => {
+        await this.prisma.files.create({
+          data: {
+            filename,
+            url: res.Location,
+            hash,
+          },
+        });
+        return res.Location;
+      });
+  }
+
   async patchProfile(user: Users, body: PatchProfileDto) {
     return await this.prisma.users.update({
       where: { id: user.id },
