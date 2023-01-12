@@ -23,6 +23,10 @@ export class UserDto {
   avatarUrl: string;
 
   @IsString()
+  @ApiProperty()
+  description: string;
+
+  @IsString()
   @ApiProperty({ nullable: true })
   discordId?: string;
 
