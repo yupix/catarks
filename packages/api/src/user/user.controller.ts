@@ -7,19 +7,21 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthGuard } from '../auth.guard';
-import { CurrentUserInterceptor } from '../current-user.interceptor';
-import { UserService } from './user.service';
-import { PatchProfileDto } from './dto/patch-user.dto';
-import { CurrentUser } from '../current-user.decorator';
-import { Users } from '@catarks/db';
-import { ApiCookieAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
-import { UserDto } from '../auth/dto/user.dto';
 import {
   FileInterceptor,
   MemoryStorageFile,
   UploadedFile,
 } from '@blazity/nest-file-fastify';
+import { ApiCookieAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+
+import { Users } from '@catarks/db';
+
+import { AuthGuard } from '@/auth.guard';
+import { UserDto } from '@/auth/dto/user.dto';
+import { UserService } from '@/user/user.service';
+import { CurrentUser } from '@/current-user.decorator';
+import { PatchProfileDto } from '@/user/dto/patch-user.dto';
+import { CurrentUserInterceptor } from '@/current-user.interceptor';
 
 @UseInterceptors(CurrentUserInterceptor)
 @Controller('user')

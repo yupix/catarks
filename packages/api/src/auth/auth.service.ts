@@ -5,11 +5,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+
 import { randomBytes, scrypt as _scrypt } from 'crypto';
-import { PrismaService } from '../prisma.service';
-import { UsersService } from '../users/users.service';
+
+import { PrismaService } from '@/prisma.service';
+import { UsersService } from '@/users/users.service';
 import { promisify } from 'util';
-import { fail } from '../utils';
+import { fail } from '@/utils';
 const scrypt = promisify(_scrypt);
 
 @Injectable()

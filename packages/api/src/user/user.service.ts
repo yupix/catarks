@@ -1,14 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PatchProfileDto } from './dto/patch-user.dto';
-import { PrismaService } from '../prisma.service';
-import { Users } from '@catarks/db';
-import { MemoryStorageFile } from '@blazity/nest-file-fastify';
-import { InjectAwsService } from 'nest-aws-sdk';
-import { S3 } from 'aws-sdk';
-import { Scope as SentryScope } from '@sentry/node';
-import { LoggerService } from 'src/logger/logger.service';
-import { fail } from '../utils';
 import { Md5 } from 'ts-md5';
+import { S3 } from 'aws-sdk';
+import { InjectAwsService } from 'nest-aws-sdk';
+import { Scope as SentryScope } from '@sentry/node';
+import { BadRequestException, Injectable } from '@nestjs/common';
+
+import { Users } from '@catarks/db';
+
+import { fail } from '@/utils';
+import { PrismaService } from '@/prisma.service';
+import { LoggerService } from '@/logger/logger.service';
+import { PatchProfileDto } from '@/user/dto/patch-user.dto';
+import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 
 const crypto = require('crypto');
 const mime = require('mime-types');

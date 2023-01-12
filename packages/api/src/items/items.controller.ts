@@ -8,19 +8,24 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { GetItemsQueryDto } from './dto/get-items-query.dto';
-import { ItemsService } from './items.service';
+import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+
+import { Users } from '@catarks/db';
+
+import {
+  GetItemPriceDtoQuery,
+  getItemPriceDto,
+} from '@/items/dto/getItemPrice.dto';
 import {
   CreatedItemPriceDto,
   createItemPriceDto,
-} from './dto/createItemPrice.dto';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { ItemDto, getItemsDto } from './dto/getItem.dto';
-import { GetItemPriceDtoQuery, getItemPriceDto } from './dto/getItemPrice.dto';
-import { CurrentUserInterceptor } from '../current-user.interceptor';
-import { AuthGuard } from '../auth.guard';
-import { CurrentUser } from '../current-user.decorator';
-import { Users } from '@catarks/db';
+} from '@/items/dto/createItemPrice.dto';
+import { AuthGuard } from '@/auth.guard';
+import { ItemsService } from '@/items/items.service';
+import { CurrentUser } from '@/current-user.decorator';
+import { ItemDto, getItemsDto } from '@/items/dto/getItem.dto';
+import { GetItemsQueryDto } from '@/items/dto/get-items-query.dto';
+import { CurrentUserInterceptor } from '@/current-user.interceptor';
 
 @Controller('items')
 @UseInterceptors(CurrentUserInterceptor)

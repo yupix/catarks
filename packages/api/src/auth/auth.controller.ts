@@ -1,10 +1,10 @@
 import { Body, Controller, HttpCode, Post, Req, Session } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AuthService } from '@/auth/auth.service';
+import { CreateUserDto } from '@/auth/dto/create-user.dto';
 import * as secureSession from '@fastify/secure-session';
 import { ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
-import { MeDto, UserDto } from './dto/user.dto';
-import { ALREADY_USED_USERNAME_ERROR } from '../error';
+import { MeDto, UserDto } from '@/auth/dto/user.dto';
+import { ALREADY_USED_USERNAME_ERROR } from '@/error';
 
 @Controller('auth')
 export class AuthController {

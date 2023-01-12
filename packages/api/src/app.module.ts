@@ -1,16 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ItemsModule } from './items/items.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { RedisModule } from '@nestjs-modules/ioredis';
-import { config } from '@catarks/shared';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
-import { UserModule } from './user/user.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
 import { SentryModule } from '@ntegral/nestjs-sentry';
-import { LoggerModule } from './logger/logger.module';
+
+import { config } from '@catarks/shared';
+
+import { AppController } from '@/app.controller';
+import { AppService } from '@/app.service';
+import { ItemsModule } from '@/items/items.module';
+import { AuthModule } from '@/auth/auth.module';
+import { UsersModule } from '@/users/users.module';
+import { UserModule } from '@/user/user.module';
+import { LoggerModule } from '@/logger/logger.module';
 
 @Module({
   imports: [

@@ -8,18 +8,18 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Users } from '@catarks/db';
-import { AuthGuard } from '../auth.guard';
-import { CurrentUser } from '../current-user.decorator';
-import { CurrentUserInterceptor } from '../current-user.interceptor';
-import { UsersService } from './users.service';
-import { IntegrationRequestDto } from './dto/createIntegration.dto';
+import { AuthGuard } from '@/auth.guard';
+import { CurrentUser } from '@/current-user.decorator';
+import { CurrentUserInterceptor } from '@/current-user.interceptor';
+import { UsersService } from '@/users/users.service';
+import { IntegrationRequestDto } from '@/users/dto/createIntegration.dto';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { ALREADY_CONNECTED_TO_DISCORD_ERROR } from '../error';
-import { MeDto, UserDto } from '../auth/dto/user.dto';
+import { ALREADY_CONNECTED_TO_DISCORD_ERROR } from '@/error';
+import { MeDto, UserDto } from '@/auth/dto/user.dto';
 
 @UseInterceptors(CurrentUserInterceptor)
 @Controller('users')

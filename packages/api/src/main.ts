@@ -4,10 +4,10 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { AppModule } from './app.module';
+import { AppModule } from '@/app.module';
 import { config } from '@catarks/shared';
 import { ValidationPipe } from '@nestjs/common';
-import { RemovePasswordInterceptor } from './remove-pass';
+import { RemovePasswordInterceptor } from '@/remove-pass';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import fastifyMultipart from '@fastify/multipart';

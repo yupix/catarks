@@ -1,4 +1,4 @@
-import { ERRORS } from './error';
+import { ERRORS } from '@/error';
 
 export function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);

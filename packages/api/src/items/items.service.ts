@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { GetItemsQueryDto } from './dto/get-items-query.dto';
-import { createItemPriceDto } from './dto/createItemPrice.dto';
 import { Users } from '@catarks/db';
-import { GetItemPriceDtoQuery } from './dto/getItemPrice.dto';
+
+import { PrismaService } from '@/prisma.service';
+import { GetItemsQueryDto } from '@/items/dto/get-items-query.dto';
+import { GetItemPriceDtoQuery } from '@/items/dto/getItemPrice.dto';
+import { createItemPriceDto } from '@/items/dto/createItemPrice.dto';
 
 @Injectable()
 export class ItemsService {

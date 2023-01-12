@@ -6,7 +6,8 @@ import {
 } from '@nestjs/common';
 import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { Scope } from '@sentry/node';
-import { fail } from '../utils';
+
+import { fail } from '@/utils';
 
 @Injectable()
 export class LoggerService {

@@ -1,11 +1,13 @@
-import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Users } from '@catarks/db';
-import { PrismaService } from '../prisma.service';
-import { getRandomIntInclusive, fail } from '../utils';
+import { S3 } from 'aws-sdk';
 import { toPng } from 'jdenticon';
 import { InjectAwsService } from 'nest-aws-sdk';
-import { S3 } from 'aws-sdk';
+import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
+import { Users } from '@catarks/db';
+import { PrismaService } from '@/prisma.service';
+import { getRandomIntInclusive, fail } from '@/utils';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto');
 
