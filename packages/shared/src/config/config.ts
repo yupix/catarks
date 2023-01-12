@@ -1,6 +1,13 @@
 import { readFileSync } from "fs";
 import * as yaml from "js-yaml";
 
+type ISentryConfig = {
+  ssl: boolean;
+  domain: string;
+  projectId: number;
+  token: string;
+};
+
 interface IConfig {
   main: {
     "log-level": string;
@@ -8,6 +15,7 @@ interface IConfig {
   api: {
     ssl: boolean;
     domain: string;
+    sentry: ISentryConfig;
   };
   db: {
     user: string;
