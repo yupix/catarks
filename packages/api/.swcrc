@@ -13,13 +13,12 @@
     },
     "experimental": {
       "keepImportAssertions": true,
-      "baseUrl": ".",
-      "paths": {
-        "@/*": [
-          "./src/*"
-        ]
-      },
-      "target": "es2020"
+    },
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "module": {
