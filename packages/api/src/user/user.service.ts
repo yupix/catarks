@@ -8,7 +8,6 @@ import { Users } from '@catarks/db';
 
 import { fail } from '@/utils';
 import { PrismaService } from '@/prisma.service';
-import { LoggerService } from '@/logger/logger.service';
 import { PatchProfileDto } from '@/user/dto/patch-user.dto';
 import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 
@@ -23,13 +22,10 @@ export class UserService {
 
   async uploadAvatar(file: MemoryStorageFile) {
     const fileExtension = mime.extension(file.mimetype);
-    if (!['png', 'jpeg', 'gif'].includes(fileExtension)) {
-      const scope = new SentryScope();
-      const exceptionBody = fail('967c9cb5-2189-4fd5-b2c3-b45a8e1f453f');
-      const exception = new BadRequestException(exceptionBody);
-      await this.logger.sendExceptionToSentry(exception, exceptionBody, scope);
-      throw exception;
-    }
+    if (!['png', 'jpeg', 'gif'].includes(fileExtension))
+      throw new BadRequestException(
+        fail('967c9cb5-2189-4fd5-b2c3-b45a8e1f453f'),
+      );
     const hash = new Md5().appendByteArray(file.buffer).end().toString();
     const findFile = await this.prisma.files.findFirst({
       where: {

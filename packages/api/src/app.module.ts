@@ -1,8 +1,13 @@
-import { Module } from '@nestjs/common';
+import { BadRequestException, HttpException, Module } from '@nestjs/common';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
 import { RedisModule } from '@nestjs-modules/ioredis';
-import { SentryModule } from '@ntegral/nestjs-sentry';
+import {
+  SentryInterceptor,
+  SentryModule,
+  SentryService,
+} from '@ntegral/nestjs-sentry';
+import { LoggerModule } from 'nestjs-pino';
 
 import { config } from '@catarks/shared';
 
@@ -12,7 +17,8 @@ import { ItemsModule } from '@/items/items.module';
 import { AuthModule } from '@/auth/auth.module';
 import { UsersModule } from '@/users/users.module';
 import { UserModule } from '@/user/user.module';
-import { LoggerModule } from '@/logger/logger.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { Scope } from '@sentry/node';
 
 @Module({
   imports: [
@@ -20,10 +26,14 @@ import { LoggerModule } from '@/logger/logger.module';
       dsn: `${config.api.sentry.ssl ? 'https' : 'http'}://${
         config.api.sentry.token
       }@${config.api.sentry.domain}/${config.api.sentry.projectId}`,
-      debug: true,
+      debug: false,
       environment: 'dev',
       release: null,
       logLevels: ['debug'],
+      close: {
+        enabled: true,
+        timeout: 100,
+      },
     }),
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
@@ -37,6 +47,9 @@ import { LoggerModule } from '@/logger/logger.module';
       },
       services: [S3],
     }),
+    LoggerModule.forRoot({
+      pinoHttp: { transport: { target: 'pino-pretty' } },
+    }),
     RedisModule.forRoot({
       config: {
         port: config.redis.port,
@@ -49,9 +62,27 @@ import { LoggerModule } from '@/logger/logger.module';
     AuthModule,
     UsersModule,
     UserModule,
-    LoggerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: (sentry: SentryService) =>
+        new SentryInterceptor({
+          filters: [
+            {
+              type: HttpException,
+              filter: (exception: HttpException) => {
+                const scope = new Scope();
+                sentry.instance().captureException(exception, () => scope);
+                return true;
+              },
+            },
+          ],
+        }),
+      inject: [SentryService],
+    },
+  ],
 })
 export class AppModule {}
