@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Module } from '@nestjs/common';
+import { HttpException, Module } from '@nestjs/common';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
 import { RedisModule } from '@nestjs-modules/ioredis';
@@ -19,9 +19,18 @@ import { UsersModule } from '@/users/users.module';
 import { UserModule } from '@/user/user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Scope } from '@sentry/node';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
+    BullModule.forRoot({
+      redis: {
+        host: config.redis.host,
+        port: config.redis.port,
+        password: config.redis.password,
+        db: config.redis.db,
+      },
+    }),
     SentryModule.forRoot({
       dsn: `${config.api.sentry.ssl ? 'https' : 'http'}://${
         config.api.sentry.token
@@ -47,9 +56,7 @@ import { Scope } from '@sentry/node';
       },
       services: [S3],
     }),
-    LoggerModule.forRoot({
-      pinoHttp: { transport: { target: 'pino-pretty' } },
-    }),
+    LoggerModule.forRoot({}),
     RedisModule.forRoot({
       config: {
         port: config.redis.port,
@@ -62,6 +69,7 @@ import { Scope } from '@sentry/node';
     AuthModule,
     UsersModule,
     UserModule,
+    BullModule,
   ],
   controllers: [AppController],
   providers: [

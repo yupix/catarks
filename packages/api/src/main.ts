@@ -12,12 +12,17 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import fastifyMultipart from '@fastify/multipart';
 import { Logger } from 'nestjs-pino';
+import { getBullBoardQueues } from './bull-board-queue';
+import {
+  createBullBoard,
+  FastifyAdapter as BullFastifyAdapter,
+} from '@bull-board/fastify';
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
-    { bufferLogs: true, logger: false },
+    { bufferLogs: true },
   );
   await app.register(secureSession, {
     secret: config.auth.secret,
@@ -50,6 +55,18 @@ export async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, documentConfig);
   SwaggerModule.setup('doc', app, document);
+  const bullServerAdapter = new BullFastifyAdapter();
+
+  const queues = getBullBoardQueues();
+  createBullBoard({
+    queues: queues,
+    serverAdapter: bullServerAdapter,
+  });
+  bullServerAdapter.setBasePath('/admin/queues');
+  app.register(bullServerAdapter.registerPlugin(), {
+    prefix: '/admin/queues',
+    basePath: '/admin/queues',
+  });
 
   app.enableCors({
     origin: '*',

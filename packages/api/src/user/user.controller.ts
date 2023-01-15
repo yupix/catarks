@@ -24,13 +24,19 @@ import { PatchProfileDto } from '@/user/dto/patch-user.dto';
 import { CurrentUserInterceptor } from '@/current-user.interceptor';
 
 @UseInterceptors(CurrentUserInterceptor)
+@UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
   @Post('avatar')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadAvatar(@UploadedFile() file: MemoryStorageFile) {
-    return await this.userService.uploadAvatar(file);
+  async uploadAvatar(
+    @CurrentUser() user: Users,
+    @UploadedFile() file: MemoryStorageFile,
+  ) {
+    console.log(user);
+    return await this.userService.uploadAvatar(file, user);
   }
 
   @Patch('')
