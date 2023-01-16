@@ -2,12 +2,9 @@ import { CREATE_URL, config } from "@catarks/shared";
 import { apiClient } from "strictcat";
 import { authenticator } from "~/auth.server";
 
-export const api = apiClient<Schema>(
-  CREATE_URL(config.api.domain, config.api.ssl),
-  {
-    contentType: "application/json",
-  }
-);
+export const api = apiClient<Schema>("https://api.catarks.org", {
+  contentType: "application/json",
+});
 
 export type PickType<T, K extends keyof T> = T[K];
 
