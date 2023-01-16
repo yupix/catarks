@@ -20,6 +20,7 @@ import { UserModule } from '@/user/user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { Scope } from '@sentry/node';
 import { BullModule } from '@nestjs/bull';
+import { QueuesModule } from './queues/queues.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { BullModule } from '@nestjs/bull';
     UsersModule,
     UserModule,
     BullModule,
+    QueuesModule,
   ],
   controllers: [AppController],
   providers: [
