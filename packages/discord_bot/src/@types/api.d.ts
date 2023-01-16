@@ -3,48 +3,46 @@ interface AbilityEffectDto {name: string, percent: boolean, effect: string}
 
 interface AbilityDto {name: string, effects: AbilityEffectDto[]}
 
-interface UserDto {id: string, username: string, avatarUrl: string, description: string, discordId?: string, ship: number, bannerUrl?: string, createdAt: string}
-
-interface ItemPriceDto {id: string, price: number, ship: number, reporter: UserDto, reporterId: string}
-
-interface DropAriaDto {name: string}
-
-interface ItemDto {type: 'ability' | 'weapon', ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: ItemPriceDto[], droparias: DropAriaDto[]}
+interface ItemDto {type: 'ability' | 'weapon', ability: AbilityDto, id: string, name: string, rarity: number, iconUrl: string, prices: string, droparias: string}
 
 interface getItemsDto {max: number, items: ItemDto[]}
 
-interface getItemPriceDto {reporter: UserDto, id: string, price: number, reporterId: string, createdAt: string}
+interface UserDto {id: string, username: string, avatarUrl: string, description: string, discordId?: string, ship: number, bannerUrl?: string}
+
+interface getItemPriceDto {reporter: UserDto}
 
 interface createItemPriceDto {price: number, ship: number}
 
 interface CreatedItemPriceDto {price: number}
 
-interface CreateUserDto {username: string, password: string}
+type CreateUserDto = any
 
-interface ALREADY_USED_USERNAME_ERROR {id: string, type: string, code: string, message: string}
+
+interface ALREADY_USED_USERNAME_ERROR {id: '58ee27a1-f431-4e6f-9656-666ed857d9bc', type: 'failed', code: 'ALREADY_USED_USERNAME', message: '既に利用されているユーザー名です'}
 
 interface UserSettingsDto {useDarkTheme: boolean}
 
-interface MeDto {id: string, username: string, avatarUrl: string, description: string, discordId?: string, ship: number, bannerUrl?: string, settings: UserSettingsDto, createdAt: string}
+interface MeDto {id: string, username: string, avatarUrl: string, description: string, discordId?: string, ship: number, bannerUrl?: string, settings: UserSettingsDto}
 
-interface IntegrationRequestDto {code: string}
+type IntegrationRequestDto = any
 
-interface ALREADY_CONNECTED_TO_DISCORD_ERROR {id: string, type: string, code: string, message: string}
+
+interface ALREADY_CONNECTED_TO_DISCORD_ERROR {id: '639ebe9f-b8be-435c-a350-5802e1ad2687', type: string, code: 'ALREADY_CONNECTED_TO_DISCORD', message: '既にDiscordと連携済みです'}
 
 interface PatchProfileDto {ship?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10, bannerUrl?: string, avatarUrl?: string, description?: string}
 type Schema = {resource: {
 "/api": {
     GET: {
-        response: string
+        response: any
     }
 }
 
 "/api/items": {
     GET: {
         query: {
-            type?: 'ability' | 'weapon' | 'armor',
+            type: 'ability' | 'weapon' | 'armor',
             skip?: number,
-            limit?: number
+            limit: number
         },
         response: getItemsDto
     }
@@ -59,11 +57,20 @@ type Schema = {resource: {
     }
 }
 
+"/api/items/prices": {
+    GET: {
+        query: {
+            type: 'ability' | 'weapon' | 'armor'
+        },
+        response: any
+    }
+}
+
 "/api/items/:itemId/price": {
     GET: {
         query: {
-            limit?: number,
-            sort?: 'desc' | 'asc'
+            limit: number,
+            sort: 'desc' | 'asc'
         },
         params: {
             itemId: string
@@ -129,10 +136,25 @@ type Schema = {resource: {
     }
 }
 
+"/api/user/avatar": {
+    POST: {
+        response: any
+    }
+}
+
 "/api/user": {
     PATCH: {
         body: PatchProfileDto,
         response: UserDto
+    }
+}
+
+"/api/queues/:jobId": {
+    GET: {
+        params: {
+            jobId: string
+        },
+        response: any
     }
 }
 }}
