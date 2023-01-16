@@ -5,10 +5,11 @@ import {
   PasswordInput,
   Button,
   Title,
+  Text,
 } from '@mantine/core';
 import { useForm } from "@mantine/form"
 import { ActionArgs, LoaderArgs, TypedResponse, json } from '@remix-run/node';
-import { Form, useFetcher } from '@remix-run/react';
+import { Form, Link, useFetcher } from '@remix-run/react';
 import { useEffect } from 'react';
 import { authenticator } from '~/auth.server';
 import { AUTHORS } from '~/const';
@@ -129,6 +130,12 @@ export default function Authentication() {
           <Button fullWidth mt="xl" size="md" type="submit">
             SignUp
           </Button>
+          <Text align="center" mt="md">
+            既にアカウントをお持ちですか?{' '}
+            <Link to="/signin" style={{ fontWeight: 700 }}>
+              ログイン
+            </Link>
+          </Text>
         </Form>
       </Paper>
     </div>
