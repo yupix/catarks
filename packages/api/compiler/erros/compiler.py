@@ -25,7 +25,7 @@ export const ERRORS = new Map<
         error_id = i[0]
         text += f'''export class {i[1]["code"]}_ERROR {{
   @IsString()
-  @ApiProperty({{ example: '{error_id}' }})
+  @ApiProperty({{ example: '{error_id}', default: '{error_id}' }})
   id: string;
 
   @IsString()
@@ -33,11 +33,11 @@ export const ERRORS = new Map<
   type: 'failed';
 
   @IsString()
-  @ApiProperty({{ example: '{i[1]["code"]}' }})
+  @ApiProperty({{ example: '{i[1]["code"]}', default: '{i[1]["code"]}' }})
   code: string;
 
   @IsString()
-  @ApiProperty({{ example: '{i[1]["description"]}' }})
+  @ApiProperty({{ example: '{i[1]["description"]}', default: '{i[1]["description"]}' }})
   message: string;
 }}\n
 '''
