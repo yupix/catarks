@@ -1,10 +1,13 @@
+import type {
+  UnstyledButtonProps
+} from '@mantine/core';
 import {
   UnstyledButton,
-  UnstyledButtonProps,
   Group,
   Avatar,
   Text,
   createStyles,
+  Menu,
 } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons';
 
@@ -40,8 +43,9 @@ export function UserButton({ image, name, icon, ...others }: UserButtonProps) {
             {name}
           </Text>
         </div>
-
-        {icon || <IconChevronRight size={14} stroke={1.5} />}
+        <Menu position="right-end" withArrow>
+          {icon || <IconChevronRight size={14} stroke={1.5} />}
+        </Menu>
       </Group>
     </UnstyledButton>
   );

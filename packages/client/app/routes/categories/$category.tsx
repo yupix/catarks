@@ -5,16 +5,18 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { Pagination } from "~/components/pagination";
 import { HTTP_ERRORS, api, getCategoryName, getPaginationPageNumber } from "~/utils/utils";
+import { PickType } from "@catarks/shared";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = new URL(request.url)
   const page = url.searchParams.get('page') || '1'
   const limit = 20
   const skip = getPaginationPageNumber({ limit, page })
+  const category = params.category as PickType<ItemDto, 'type'> | undefined
+  if (!category) throw new Error()
 
-  const res = await api.call('GET', '/api/items', { query: { type: params.category, skip, limit } })
+  const res = await api.call('GET', '/api/items', { query: { type: category, skip, limit } })
   const status = res.status?.toString() || "404"
-  console.log(status, res.type)
   if (res.type === 'failed') throw new Response(`${HTTP_ERRORS.get(status)}`, { status: res.status })
   return json({ data: res.data, category: params.category, page: Number(page) })
 }

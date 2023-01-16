@@ -70,7 +70,6 @@ export default function Authentication() {
           Welcome back to CatArks!
         </Title>
         <Form method="post">
-
           <TextInput label="ユーザー名" name="username" placeholder={AUTHORS[Math.floor(Math.random() * AUTHORS.length)]} required type="text" size="md" />
           <PasswordInput label="パスワード" name="password" autoComplete='current-password' type="password" placeholder="Your password" required mt="md" size="md" />
           <Button fullWidth mt="xl" size="md" type="submit">
