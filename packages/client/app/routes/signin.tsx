@@ -9,7 +9,7 @@ import {
   Anchor,
 } from '@mantine/core';
 import type { ActionArgs, LoaderArgs } from '@remix-run/node';
-import { Form } from '@remix-run/react';
+import { Form, Link } from '@remix-run/react';
 import { authenticator } from '~/auth.server';
 import { AUTHORS } from '~/const';
 
@@ -80,9 +80,9 @@ export default function Authentication() {
 
         <Text align="center" mt="md">
           アカウントを持っていませんか?{' '}
-          <Anchor<'a'> href="#" weight={700} onClick={(event) => event.preventDefault()}>
+          <Link to="/signup" style={{ fontWeight: 700 }}>
             登録
-          </Anchor>
+          </Link>
         </Text>
       </Paper>
     </div>
