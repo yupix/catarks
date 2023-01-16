@@ -7,13 +7,12 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm } from "@mantine/form"
-import { ActionArgs, LoaderArgs, json } from '@remix-run/node';
+import { ActionArgs, LoaderArgs, TypedResponse, json } from '@remix-run/node';
 import { Form, useFetcher } from '@remix-run/react';
 import { useEffect } from 'react';
 import { authenticator } from '~/auth.server';
 import { AUTHORS } from '~/const';
 import { api, assertIsDefined } from '~/utils/utils';
-import { ClientAPI } from '~/utils/utils.client';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -56,32 +55,25 @@ export async function loader({ request }: LoaderArgs) {
   });
 };
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionArgs): Promise<TypedResponse<ActionResponse<ALREADY_USED_USERNAME_ERROR>>> {
   const form = await request.formData()
   const intent = form.get('intent')?.toString()
   const username = form.get('username')?.toString()
   const password = form.get('password')?.toString()
 
   assertIsDefined(username)
-  switch (intent) {
-    case 'checkUsername':
-      const res = await api.call('GET', '/api/users/:username/:username', { params: { username } })
-      if (res.type === 'failed') throw new Error(JSON.parse(res.data.data))
-      return json({ status: 'success', intent: 'checkUsername', message: 'alreadyUsed' } as ActionResponse)
-
-    default:
-      break;
-  }
   assertIsDefined(password)
   const res = await api.call('POST', '/api/auth/signup', { body: { password, username } })
-  if (res.type === 'failed') throw new Error(JSON.stringify(res.data))
-  return { 'status': 'success', 'intent': 'signup' } as ActionResponse
+  if (res.type === 'failed') return json({
+    'status': 'failed', intent: 'signup', body: res.data.data as ALREADY_USED_USERNAME_ERROR
+  })
+  return json({ 'status': 'success', 'intent': 'signup' })
 }
 
 
 export default function Authentication() {
   const { classes } = useStyles();
-  const fethcer = useFetcher()
+  const fetcher = useFetcher<typeof action>()
   const form = useForm(
     {
       initialValues: {
@@ -96,11 +88,22 @@ export default function Authentication() {
   )
 
   useEffect(() => {
-    if (fethcer.data?.status) {
+    if (fetcher.type === 'done' && fetcher.data.status) {
+      (
+        async () => {
+          if (fetcher.data.body) {
+            if (fetcher.data.body.code === 'ALREADY_USED_USERNAME') {
+              form.setFieldError('username', fetcher.data.body.message)
+            }
+          }
+          if (fetcher.data.status === 'success') {
+            fetcher.submit(form.values, { method: 'post', action: '/signin' })
+          }
+        }
+      )()
 
-      fethcer.submit(form.values, { method: 'post', action: '/signin' })
     }
-  }, [fethcer.data, form.values])
+  }, [fetcher, form.values])
 
   return (
     <div className={classes.wrapper}>
@@ -109,7 +112,7 @@ export default function Authentication() {
           Welcome back to CatArks!
         </Title>
         <Form method="post" onSubmit={form.onSubmit((value) => {
-          fethcer.submit(value, { method: 'post' })
+          fetcher.submit(value, { method: 'post' })
         })}>
 
           <TextInput
