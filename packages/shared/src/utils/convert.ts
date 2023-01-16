@@ -7,5 +7,5 @@ export const TYPE_TO_CATEGORY: { [key in PickType<ItemDto, "type">]: string } =
   };
 
 export const CREATE_URL = (domain: string, ssl: boolean, path?: string) => {
-  return `${ssl ? "https" : "http"}://${domain}/${path}`;
+  return `${ssl ? "https" : "http"}://${domain}${path ? `/${path}` : ""}`;
 };
