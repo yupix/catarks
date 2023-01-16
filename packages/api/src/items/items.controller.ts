@@ -26,6 +26,7 @@ import { CurrentUser } from '@/current-user.decorator';
 import { ItemDto, getItemsDto } from '@/items/dto/getItem.dto';
 import { GetItemsQueryDto } from '@/items/dto/get-items-query.dto';
 import { CurrentUserInterceptor } from '@/current-user.interceptor';
+import { GetPricesDto } from './dto/getPrices.dto';
 
 @Controller('items')
 @UseInterceptors(CurrentUserInterceptor)
@@ -42,6 +43,11 @@ export class ItemsController {
   @ApiOkResponse({ type: ItemDto })
   async getItem(@Param('itemId') itemId: string) {
     return await this.itemsService.getItem(itemId);
+  }
+
+  @Get('/prices')
+  async getPrices(@Query() query: GetPricesDto) {
+    return await this.itemsService.getPrices(query);
   }
 
   @Get('/:itemId/price')

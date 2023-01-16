@@ -5,10 +5,22 @@ import { PrismaService } from '@/prisma.service';
 import { GetItemsQueryDto } from '@/items/dto/get-items-query.dto';
 import { GetItemPriceDtoQuery } from '@/items/dto/getItemPrice.dto';
 import { createItemPriceDto } from '@/items/dto/createItemPrice.dto';
+import { GetPricesDto } from './dto/getPrices.dto';
 
 @Injectable()
 export class ItemsService {
   constructor(private prisma: PrismaService) {}
+
+  async getPrices({ type }: GetPricesDto) {
+    return await this.prisma.itemPrices.findMany({
+      where: {
+        item: {
+          type,
+        },
+      },
+      include: { item: true, reporter: true },
+    });
+  }
 
   async createItemPrice({
     itemId,
