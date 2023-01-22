@@ -1,8 +1,10 @@
+import { ItemPrices, Users } from "@catarks/db";
+import { prisma } from "~/utils/prisma.server";
 import { api, createAuthHeaders } from "~/utils/utils";
 
 export class ItemActions {
 
-  static async CreateItemPrice(itemId: string, price: number, ship: number, request: Request) {
+  static async CreateItemPrice(itemId: string, price: number, ship: number, user: Users): Promise<ItemPrices> {
     /**
      * アイテムの価格を作成します
      * @static
@@ -10,15 +12,13 @@ export class ItemActions {
      * @param {string} itemid - Item id
      * @param {number} price - item price
      * @param {number} ship - ship number
-     * @returns {CreatedItemPriceDto} - created item price
-     * @throws {Error}
+     * @returns {ItemPrices} - created item price
      */
-    const headers = await createAuthHeaders(request)
-    headers.append('Content-Type', 'application/json')
-
-    const res = await api.call('POST', '/api/items/:itemId/price', { body: { ship, price }, params: { itemId }, headers })
-
-    if (res.type === 'failed') throw new Error(JSON.stringify(res.data))
-    return res.data
+    return await prisma.itemPrices.create({data: {
+      price,
+      itemId,
+      ship,
+      reporterId: user.id
+    }})
   }
 }
