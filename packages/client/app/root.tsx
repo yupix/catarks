@@ -16,11 +16,13 @@ import {
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import styles from "./assets/main.css";
-import { useSessionState } from "./states/common";
+import { useSessionState, useUserDevice } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
 import { ReportPriceModal } from "./components/modals/reportPrice";
 import { NotificationsProvider } from '@mantine/notifications';
 import { authenticator } from "./utils/auth.server";
+import { useSnapshot } from "valtio";
+import { assertIsDefined } from "./utils/utils";
 
 
 export const meta: MetaFunction = () => ({
@@ -46,11 +48,16 @@ createEmotionCache({ key: 'mantine' });
 
 export default function App() {
   const currentUser = useLoaderData<typeof loader>();
-  useSessionState.user = currentUser
+  useUserDevice.useTheme = (currentUser?.settings?.useDarkTheme || false) ? 'dark' : 'light';
+  const device = useSnapshot(useUserDevice)
+  if (currentUser) {
+    assertIsDefined(currentUser)
+    useSessionState.user = currentUser
+}
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
   const transition = useTransition();
   const toggleColorScheme = (value?: ColorScheme) => {
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setColorScheme(value || (device.useTheme === 'dark' ? 'light' : 'dark'));
   }
 
   useEffect(() => {
