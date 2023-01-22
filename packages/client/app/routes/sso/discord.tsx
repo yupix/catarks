@@ -18,7 +18,7 @@ import {
 import { LoaderArgs, Response, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { IconArrowLeft, IconCheck, IconCopy } from '@tabler/icons';
-import { authenticator } from '~/auth.server';
+import { authenticator } from '~/utils/auth.server';
 import { HTTP_ERRORS, api } from '~/utils/utils';
 
 const useStyles = createStyles((theme) => ({

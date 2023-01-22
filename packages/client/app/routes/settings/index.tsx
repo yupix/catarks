@@ -2,7 +2,7 @@ import { Avatar, Button, Input, Paper, TextInput } from "@mantine/core";
 import { ActionArgs, json } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { useSnapshot } from "valtio";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/utils/auth.server";
 import { useSessionState } from "~/states/common";
 import { api, assertIsDefined, createAuthHeaders } from "~/utils/utils";
 import { ShipType, assertIsShip } from "@catarks/shared"

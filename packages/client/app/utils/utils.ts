@@ -1,6 +1,6 @@
 import { CREATE_URL, config } from "@catarks/shared";
 import { apiClient } from "strictcat";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/utils/auth.server";
 
 export const api = apiClient<Schema>("https://api.catarks.org", {
   contentType: "application/json",

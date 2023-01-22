@@ -1,5 +1,5 @@
 import { ActionIcon, Burger, Code, Group, Header, MediaQuery, useMantineColorScheme, useMantineTheme, Tooltip, Button, Image } from "@mantine/core"
-import { Link } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { IconMoonStars, IconPencil, IconSun } from "@tabler/icons"
 import { useSnapshot } from "valtio";
 import { useModalState, useSessionState } from "~/states/common";
@@ -37,7 +37,9 @@ export const DefaultHeader = () => {
         <Group>
           {user ? <Tooltip label="価格を報告する">
             <ActionIcon variant="default" onClick={() => useModalState.isOpenedPriceRepost = true}><IconPencil size={16} /></ActionIcon>
-          </Tooltip> : <Link to="/signin"><Button>ログイン</Button></Link>}
+          </Tooltip> : <Form action="/auth/auth0" method="post">
+      <button>Login with Auth0</button>
+    </Form>}
           <Tooltip label={colorScheme === 'dark' ? '光に満たされる' : '闇に飲まれる'}>
             <ActionIcon variant="default" onClick={() => toggleColorScheme()} size={30}>
               {colorScheme === 'dark' ? <IconSun size={16} /> : <IconMoonStars size={16} />}

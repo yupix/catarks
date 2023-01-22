@@ -16,12 +16,11 @@ import {
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import styles from "./assets/main.css";
-import { authenticator } from "./auth.server";
 import { useSessionState } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
-import { getUserProfile } from "middlewares/user.server";
 import { ReportPriceModal } from "./components/modals/reportPrice";
 import { NotificationsProvider } from '@mantine/notifications';
+import { authenticator } from "./utils/auth.server";
 
 
 export const meta: MetaFunction = () => ({
@@ -38,7 +37,7 @@ export function links() {
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request);
-  return json(user ? await getUserProfile(user) : null);
+  return json(user ? user : null);
 
 }
 

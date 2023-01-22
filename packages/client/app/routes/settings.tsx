@@ -2,7 +2,7 @@ import { Button, Container, Grid } from "@mantine/core";
 import type { LoaderArgs } from "@remix-run/node";
 import { Link, Outlet, useLocation } from "@remix-run/react";
 import { IconSettings, IconUser } from "@tabler/icons";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/utils/auth.server";
 import { DefaultLayout } from "~/components/defaultLayout";
 
 const SETTINGS = [
