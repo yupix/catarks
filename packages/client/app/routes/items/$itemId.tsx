@@ -1,4 +1,4 @@
-import { Avatar, Card, Container, Grid, Group, List, Space, Table, Title } from "@mantine/core";
+import { Avatar, Card, Text, Container, Grid, Group, HoverCard, List, Space, Table, Title, Stack } from "@mantine/core";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
@@ -37,12 +37,35 @@ export default function Item() {
     <tr key={price.id}>
       <td>{price.price}</td>
       <td>
-        <Link to={`/users/${price.reporter.id}`}>
-          <Group align="center">
-            <Avatar src={price.reporter.avatarUrl} radius="xs"></Avatar>
-            {price.reporter.username}
-          </Group>
-        </Link>
+        <HoverCard width={280} shadow="md" withinPortal withArrow position="bottom-start">
+          <HoverCard.Target>
+            <Link to={`/users/${price.reporter.id}`}>
+              <Group align="center">
+                <Avatar src={price.reporter.avatarUrl} radius="xs"></Avatar>
+                {price.reporter.username}
+              </Group>
+            </Link>
+          </HoverCard.Target>
+          <HoverCard.Dropdown >
+            <Group>
+              <Avatar src={price.reporter.avatarUrl} radius="xl" />
+              <Stack spacing={5}>
+                <Text size="sm" weight={700} sx={{ lineHeight: 1 }}>
+                  {price.reporter.username}
+                </Text>
+                <Link
+                  to={`/users/${price.reporter.id}`}
+                  color="dimmed"
+                >
+                  @{price.reporter.username}
+                </Link>
+              </Stack>
+            </Group>
+            <Text size="sm" mt="md">
+              {price.reporter.description}
+            </Text>
+          </HoverCard.Dropdown>
+        </HoverCard>
       </td>
     </tr>
   ))
