@@ -101,8 +101,8 @@ const DefaultNavBar: FC<{ currentActive: string, items?: { link: string, label: 
   }
 
   const links = items?.map((item) => (
-    <>
-      {getAuth(item.requiredAuth) && <div key={item.label}>
+    <div key={item.label}>
+      {getAuth(item.requiredAuth) &&<>
         <Link
           className={cx(classes.link, { [classes.linkActive]: item.link === location.pathname })}
           to={item.link}
@@ -110,9 +110,9 @@ const DefaultNavBar: FC<{ currentActive: string, items?: { link: string, label: 
           <item.icon className={classes.linkIcon} stroke={1.5} />
           <span style={{ textTransform: 'uppercase' }}>{item.label}</span>
         </Link>
-        {item.divider && <><Space h="lg" /><Divider /><Space h="lg" /></>}
-      </div>}
-    </>
+        {item.divider && <><Space h="lg" /><Divider /><Space h="lg" /></>}</>
+      }
+    </div>
   ));
 
 
