@@ -18,6 +18,10 @@ interface IConfig {
     domain: string;
     sentry: ISentryConfig;
   };
+  client: {
+    host: string;
+    ssl: boolean;
+  }
   db: {
     user: string;
     pass: string;
@@ -34,6 +38,11 @@ interface IConfig {
   auth: {
     secret: string;
     salt: string;
+    auth0: {
+      domain: string;
+      clientId: string;
+      secretId: string;
+    };
   };
   discord: {
     token: string;

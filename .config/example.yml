@@ -4,6 +4,9 @@ main:
 api:
   ssl: true
   domain: api.example.com
+client:
+  host: 'catarks.org'
+  ssl: false
 db:
   user: 'postgres'
   pass: 'postgrespw'
@@ -16,6 +19,10 @@ redis:
 auth:
   secret: ''
   salt: ''
+  auth0:
+    domain: ''
+    clientId: ''
+    secretId: ''
 discord:
   token: ''
 objectStorage:
