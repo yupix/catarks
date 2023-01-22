@@ -5,6 +5,10 @@ export const useSessionState = proxy<{ user: Users | null }>({
   user: null
 })
 
+export const useUserDevice = proxy<{useTheme: 'dark' | 'light'}>({
+  useTheme: 'light'
+})
+
 export const useModalState = proxy<{ isOpenedPriceRepost: boolean }>({
   isOpenedPriceRepost: false
 })
