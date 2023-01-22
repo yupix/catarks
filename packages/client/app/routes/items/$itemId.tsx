@@ -80,7 +80,7 @@ export default function Item() {
 
           <Grid.Col md={6} lg={3}>
             <Card withBorder h="100%">
-              <Title order={3}>入手方法</Title>
+              <Title order={3} color="dark.4">入手方法</Title>
               {item.droparias.map((aria) => <List key={aria.name}><List.Item>
                 {aria.name}</List.Item></List>)}
             </Card>
@@ -88,7 +88,7 @@ export default function Item() {
           <Grid.Col md={6} lg={3}>
             {item.type == 'ability' &&
               <Card withBorder h="100%">
-                <Title order={3}>効果</Title>
+                <Title order={3} color="dark.4">効果</Title>
                 {item.ability.effects.map((effect) => (
                   <div key={effect.name}>{effect.name}</div>
                 ))}
