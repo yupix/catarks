@@ -29,14 +29,15 @@ let auth0Strategy = new Auth0Strategy(
       },
       include: { settings: true },
     });
-    assertIsDefined(profile.displayName);
+    const username = profile._json?.nickname ? profile._json?.nickname : profile.displayName
     assertIsDefined(profile.photos);
+    assertIsDefined(username);
     return findUser
       ? findUser
       : await prisma.users.create({
           data: {
             id: profile.id,
-            username: profile.displayName,
+            username,
             avatarUrl: profile.photos[0].value,
             settings: {
               create: {
