@@ -26,7 +26,7 @@ model DropArias {
 }
 
 model Items {
-  id            String       @id
+  id            String       @id @default(uuid())
   name          String       @unique
   rarity        Int
   type          ItemTypes
@@ -63,6 +63,7 @@ model Files {
 
 model Users {
   id          String        @id @default(uuid())
+  auth0Id     String
   username    String        @unique
   description String?
   avatarUrl   String?
