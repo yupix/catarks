@@ -12,11 +12,13 @@ import {
   Title,
   Stack,
 } from "@mantine/core";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
+import { SITE_META_PREFIX } from "~/const";
 import { getItemByID } from "~/middlewares/items";
+import { generateSvg } from "~/utils/og.server";
 import { getCategoryName } from "~/utils/utils";
 
 export async function loader({ params }: LoaderArgs) {
@@ -26,11 +28,22 @@ export async function loader({ params }: LoaderArgs) {
 
   const item = await getItemByID(itemId);
   if (!item) throw Error('Item Not Found')
-  return json(item);
+  const ogpImage = await generateSvg({title: item.name})
+  return json({item, ogpImage});
+}
+
+export const meta: MetaFunction<typeof loader> = ({data,  location}) => {
+  return {
+    title: `${data.item.name} - ${SITE_META_PREFIX}`,
+    charset: 'utf-8',
+    'og:title': `${data.item.name} - ${SITE_META_PREFIX}`,
+    'og:url': `https://catarks.org/items/${data.item.id}`,
+    'og:image': data.ogpImage
+  }
 }
 
 export default function Item() {
-  const item = useLoaderData<typeof loader>();
+  const {item} = useLoaderData<typeof loader>();
 
   const priceThs = (
     <tr>
