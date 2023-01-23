@@ -25,16 +25,26 @@ model DropArias {
   Items Items[]
 }
 
+model ItemPriceAverage {
+  id        String   @id @default(uuid())
+  ship      Int
+  price     Int
+  item      Items    @relation(fields: [itemsId], references: [id])
+  createdAt DateTime
+  itemsId   String
+}
+
 model Items {
-  id            String       @id @default(uuid())
-  name          String       @unique
-  rarity        Int
-  type          ItemTypes
-  abilitiesName String?
-  ability       Abilities?   @relation(fields: [abilitiesName], references: [name])
-  iconUrl       String
-  prices        ItemPrices[]
-  droparias     DropArias[]
+  id               String             @id @default(uuid())
+  name             String             @unique
+  rarity           Int
+  type             ItemTypes
+  abilitiesName    String?
+  ability          Abilities?         @relation(fields: [abilitiesName], references: [name])
+  iconUrl          String
+  prices           ItemPrices[]
+  droparias        DropArias[]
+  ItemPriceAverage ItemPriceAverage[]
 }
 
 model ItemPrices {
