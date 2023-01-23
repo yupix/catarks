@@ -19,7 +19,11 @@ export async function action({ request }: ActionArgs): Promise<TypedResponse<Act
     assertIsDefined(price);
     assertIsDefined(ship);
     const res = await ItemActions.CreateItemPrice(itemId.toString(), Number(price.toString()), Number(ship.toString()), user)
-    return json({intent: 'createPrice', status: 'success', body: res})
+    return json({
+      intent: 'createPrice',
+       status: 'success',
+        body: res
+      })
   }
   return json({intent: '?', status: 'failed'})
 }
