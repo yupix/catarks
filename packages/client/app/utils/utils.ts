@@ -13,6 +13,14 @@ const TYPE_TO_CATEGORY: { [key in PickType<ItemDto, "type">]: string } = {
   weapon: "武器",
 };
 
+export const searchParams = (request: Request) => {
+  const url = new URL(request.url);
+  const get = (key: string) => {
+    return url.searchParams.get(key) || undefined
+  }
+  return {get}
+}
+
 export const getCategoryName = (type: PickType<ItemDto, "type">): string => {
   return TYPE_TO_CATEGORY[type];
 };
