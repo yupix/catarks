@@ -3,10 +3,12 @@ import { useEffect, useReducer, useState } from "react"
 import { useSnapshot } from "valtio"
 import { useModalState, useSessionState } from "~/states/common"
 import { SelectItem } from "../common/selectItem"
-import { ClientAPI } from "~/utils/utils.client"
 import { useFetcher } from "@remix-run/react"
 import { showNotification } from "@mantine/notifications"
 import { IconCheck } from "@tabler/icons"
+import { TgetItemsLoader } from "~/routes/api/items"
+import { assertIsDefined } from "~/utils/utils"
+import { TCreateItemPriceAction } from "~/routes/api/items/price"
 
 type TState = {
   price: number;
@@ -42,19 +44,22 @@ export const ReportPriceModal = () => {
     itemId: ''
   }
   useEffect(() => {
-    (async () => {
-      const res = await ClientAPI.call('GET', '/api/items')
-      if (res.type === 'failed') throw new Error(JSON.stringify(res.data))
-      setItems(res.data.items.map((item) => { return { value: item.id, label: item.name, image: item.iconUrl } }))
-    })()
+    fetcher.submit(null, {action: '/api/items?index', method: 'get'})
+
   }, [])
   const [state, dispatch] = useReducer(reducer, initialState)
   const isOpen = useSnapshot(useModalState).isOpenedPriceRepost
   const theme = useMantineTheme();
-  const fetcher = useFetcher()
+  const fetcher = useFetcher<TgetItemsLoader | TCreateItemPriceAction>()
 
   useEffect(() => {
     if (fetcher.data) {
+      if (fetcher.data.intent === 'getItems') {
+        assertIsDefined(fetcher.data.body)
+        setItems(fetcher.data.body.items.map((item) => {return {value: item.id,label: item.name, image: item.iconUrl} }))
+        return
+      }
+      if (fetcher.data.intent === 'createPrice') { 
       showNotification({
         color: "green",
         icon: <IconCheck />,
@@ -62,8 +67,10 @@ export const ReportPriceModal = () => {
         message: "ご協力感謝します!"
       })
     }
+    }
   }, [fetcher.data])
 
+  
   return (
     <Modal
       overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
