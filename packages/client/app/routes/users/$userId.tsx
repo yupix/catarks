@@ -1,15 +1,16 @@
-import type { LoaderArgs } from "@remix-run/node";
+import { LoaderArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { createStyles, Avatar, Text, Group, Container, Box, Indicator } from '@mantine/core';
 
-import { api, assertIsDefined } from "~/utils/utils";
+import { assertIsDefined } from "~/utils/utils";
 import type { CSSProperties } from "react";
+import { getUserFromId } from "~/middlewares/users";
 
 export async function loader({ params }: LoaderArgs) {
   assertIsDefined(params.userId)
-  const res = await api.call('GET', '/api/users/:userId', { params: { userId: params.userId } })
-  if (res.type === 'failed') throw new Error(JSON.stringify(res.data))
-  return res.data
+  const user = await getUserFromId(params.userId);
+  if (!user) throw new Error('User Not Found')
+  return json(user)
 }
 
 const useStyles = createStyles((theme) => ({

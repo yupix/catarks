@@ -17,7 +17,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { getItemByID } from "~/middlewares/items";
-import { assertIsDefined, getCategoryName } from "~/utils/utils";
+import { getCategoryName } from "~/utils/utils";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -25,7 +25,7 @@ export async function loader({ params }: LoaderArgs) {
     throw new Error("アイテムIdが指定されていません");
 
   const item = await getItemByID(itemId);
-  assertIsDefined(item);
+  if (!item) throw Error('Item Not Found')
   return json(item);
 }
 
