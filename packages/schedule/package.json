@@ -1,0 +1,25 @@
+{
+  "name": "@catarks/schedule",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./built/index.js",
+  "types": "./built/index.d.ts",
+  "scripts": {
+    "build": "ttsc -p ./tsconfig.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@catarks/db": "workspace:^1.0.0",
+    "node-cron": "^3.0.2",
+    "node-schedule": "^2.1.1",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.7",
+    "@types/node-schedule": "^2.1.0",
+    "ts-node": "^10.9.1",
+    "ttypescript": "^1.5.13"
+  }
+}
