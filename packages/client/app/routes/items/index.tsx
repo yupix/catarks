@@ -1,12 +1,11 @@
 import { Response, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { getItems } from "~/middlewares/items";
 import { HTTP_ERRORS, api } from "~/utils/utils";
 
 export async function loader() {
-  const res = await api.call('GET', '/api/items')
-  const status = String(res.status) || '500'
-  if (res.type === 'failed') throw new Response(`${HTTP_ERRORS.get(status)}`)
-  return json(res.data)
+  const items = await getItems({})
+  return json(items)
 }
 
 export default function ItemsIndex() {
