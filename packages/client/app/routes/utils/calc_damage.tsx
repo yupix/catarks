@@ -1,6 +1,5 @@
 import { forwardRef, useState } from 'react';
 import { Group, Avatar, Text, Select, Grid, Container, Title, Box, Space, Checkbox, NumberInput } from '@mantine/core';
-import { get_site, percent_to_float } from '~/utils/weapon';
 
 const data = [
   {

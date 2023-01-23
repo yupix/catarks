@@ -1,6 +1,5 @@
 import { ItemPrices, Users } from "@catarks/db";
 import { prisma } from "~/utils/prisma.server";
-import { api, createAuthHeaders } from "~/utils/utils";
 
 export class ItemActions {
 
