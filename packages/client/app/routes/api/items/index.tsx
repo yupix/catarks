@@ -1,11 +1,9 @@
-import { LoaderArgs, json } from "@remix-run/node";
-import { ITEM_TYPE, ITEM_TYPES } from "~/const";
+import { LoaderArgs, TypedResponse, json } from "@remix-run/node";
 import { getItems } from "~/middlewares/items";
-import { prisma } from "~/utils/prisma.server";
-import { assertIsDefined, searchParams } from "~/utils/utils";
+import { searchParams } from "~/utils/utils";
 import { validateItemQuery } from "~/validations/items/index.query";
 
-export async function loader({request}: LoaderArgs) {
+export async function loader({request}: LoaderArgs): Promise<TypedResponse<ActionResponse<'getItems', Awaited<ReturnType<typeof getItems>>>>> {
   const url = searchParams(request);
   const type = url.get("type");
   const skip = url.get("skip");
@@ -15,5 +13,7 @@ export async function loader({request}: LoaderArgs) {
     skip,
     limit
   })
-  return json(await getItems(query))
+  return json({ intent: 'getItems', status: 'success', body: await getItems(query)})
 }
+
+export type TgetItemsLoader = typeof loader
