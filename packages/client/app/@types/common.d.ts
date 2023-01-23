@@ -5,4 +5,3 @@ interface ActionResponse<I extends string, T = undefined> {
   body?: T;
 }
 
-type ObjectValues<T> = T[keyof T]

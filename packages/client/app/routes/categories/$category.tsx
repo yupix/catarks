@@ -4,8 +4,8 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { Pagination } from "~/components/pagination";
-import { HTTP_ERRORS, api, getCategoryName, getPaginationPageNumber } from "~/utils/utils";
-import { PickType } from "@catarks/shared";
+import { getCategoryName, getPaginationPageNumber } from "~/utils/utils";
+import { PickType } from "@catarks/utils";
 import { getItems } from "~/middlewares/items";
 
 export async function loader({ params, request }: LoaderArgs) {

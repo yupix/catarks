@@ -1,4 +1,5 @@
 import { ItemTypes } from "@catarks/db";
+import { TYPE_TO_CATEGORY } from "@catarks/utils";
 import { apiClient } from "strictcat";
 import { authenticator } from "~/utils/auth.server";
 
@@ -6,13 +7,6 @@ export const api = apiClient<Schema>("https://api.catarks.org", {
   contentType: "application/json",
 });
 
-export type PickType<T, K extends keyof T> = T[K];
-
-const TYPE_TO_CATEGORY: { [key in ItemTypes]: string } = {
-  ability: "特殊能力",
-  weapon: "武器",
-  armor: '防具'
-};
 
 export const searchParams = (request: Request) => {
   const url = new URL(request.url);
