@@ -6,6 +6,7 @@ import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { Pagination } from "~/components/pagination";
 import { HTTP_ERRORS, api, getCategoryName, getPaginationPageNumber } from "~/utils/utils";
 import { PickType } from "@catarks/shared";
+import { getItems } from "~/middlewares/items";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = new URL(request.url)
@@ -15,10 +16,8 @@ export async function loader({ params, request }: LoaderArgs) {
   const category = params.category as PickType<ItemDto, 'type'> | undefined
   if (!category) throw new Error()
 
-  const res = await api.call('GET', '/api/items', { query: { type: category, skip, limit } })
-  const status = res.status?.toString() || "404"
-  if (res.type === 'failed') throw new Response(`${HTTP_ERRORS.get(status)}`, { status: res.status })
-  return json({ data: res.data, category: params.category, page: Number(page) })
+  const res = await getItems({limit, skip, type: category})
+  return json({ data: res, category: params.category, page: Number(page) })
 }
 
 export default function Category() {
