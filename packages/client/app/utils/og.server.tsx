@@ -1,6 +1,4 @@
 import sharp from 'sharp';
-import satori from 'satori';
-
 
 export const generateSvg = async ({
   title='',
@@ -9,6 +7,7 @@ export const generateSvg = async ({
   const res = await fetch('https://codedgeekery.com/fonts/hack/woff/hack-regular.woff');
   const font = await res.arrayBuffer();
 
+  const {default: satori} = await import('satori');
   const svg = await satori(
       <div 
           style={{
