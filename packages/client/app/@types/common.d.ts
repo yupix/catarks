@@ -4,3 +4,5 @@ interface ActionResponse<T = undefined> {
   message?: string;
   body?: T;
 }
+
+type ObjectValues<T> = T[keyof T]
