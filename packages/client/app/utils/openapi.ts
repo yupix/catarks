@@ -1,8 +1,4 @@
-import { meta as createItemMeta } from "~/routes/api/items/price"
 
-const paths = {
-  ...createItemMeta
-}
 
 export const baseSchema = {
   "openapi": "3.1.0",
