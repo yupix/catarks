@@ -36,10 +36,10 @@ export const DefaultHeader = () => {
         </Group>
         <Group>
           {user ? <Tooltip label="価格を報告する">
-            <ActionIcon variant="default" onClick={() => useModalState.isOpenedPriceRepost = true}><IconPencil size={16} /></ActionIcon>
+            <ActionIcon variant="default" onClick={() => {useModalState.isOpenedPriceRepost = true}}><IconPencil size={16} /></ActionIcon>
           </Tooltip> : <Form action="/auth/auth0" method="post">
-      <button>Login with Auth0</button>
-    </Form>}
+            <Button size="xs" type="submit">ログイン</Button>
+          </Form>}
           <Tooltip label={colorScheme === 'dark' ? '光に満たされる' : '闇に飲まれる'}>
             <ActionIcon variant="default" onClick={() => toggleColorScheme()} size={30}>
               {colorScheme === 'dark' ? <IconSun size={16} /> : <IconMoonStars size={16} />}
