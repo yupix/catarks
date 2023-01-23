@@ -25,18 +25,19 @@ let auth0Strategy = new Auth0Strategy(
     // Get the user data from your DB or API using the tokens and profile
     const findUser = await prisma.users.findFirst({
       where: {
-        id: profile.id,
+        auth0Id: profile.id,
       },
       include: { settings: true },
     });
     const username = profile._json?.nickname ? profile._json?.nickname : profile.displayName
     assertIsDefined(profile.photos);
+    assertIsDefined(profile.id);
     assertIsDefined(username);
     return findUser
       ? findUser
       : await prisma.users.create({
           data: {
-            id: profile.id,
+            auth0Id: profile.id,
             username,
             avatarUrl: profile.photos[0].value,
             settings: {
