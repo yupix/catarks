@@ -15,14 +15,26 @@ export const getItems = async ({ limit, skip, type }: TItemQuery) => {
           effects: true
         }
       },
-      droparias: true
+      droparias: true,
+      ItemPriceAverage: {
+        orderBy: {
+          createdAt: "desc"
+        },
+        where: {
+          ship: 0
+        },
+        take: 1
+      }
     }
   })
-  return {items, max: maxCount}
+
+  return { items, max: maxCount }
 }
 
 export const getItemByID = async (itemId: string) => {
-  return await prisma.items.findFirst({where: {
-    id: itemId
-  }, include: {prices: {include: {reporter: true}}, droparias: true, ability: {include: {effects: true}}}})
+  return await prisma.items.findFirst({
+    where: {
+      id: itemId
+    }, include: { prices: { include: { reporter: true } }, droparias: true, ability: { include: { effects: true } } }
+  })
 }
