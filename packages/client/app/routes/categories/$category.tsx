@@ -16,25 +16,25 @@ export async function loader({ params, request }: LoaderArgs) {
   const category = params.category as PickType<ItemDto, 'type'> | undefined
   if (!category) throw new Error()
 
-  const res = await getItems({limit, skip, type: category})
-  return json({ data: res, category: params.category, page: Number(page) })
+  const res = await getItems({ limit, skip, type: category })
+  return json({ body: res, category: params.category, page: Number(page) })
 }
 
 export default function Category() {
-  const { data, page, category } = useLoaderData<typeof loader>()
+  const { body, page, category } = useLoaderData<typeof loader>()
 
 
   return (
     <Container>
       <Grid justify="center" style={{ margin: 0 }} grow>
-        {data.items.map((item) => <Grid.Col key={item.id} md={6} lg={4}>
+        {body.items.map((item) => <Grid.Col key={item.id} md={6} lg={4}>
           <Link to={`/items/${item.id}`} style={{ textDecoration: 'none' }}>
-            <ArticleCardVertical author={{ name: '1000', avatar: "https://s3.akarinext.org/assets/*/pso2/n.webp" }} image={item.iconUrl} category={getCategoryName(item.type)} title={item.name} date="" />
+            <ArticleCardVertical author={{ name: item.ItemPriceAverage[0]?.price ? item.ItemPriceAverage[0].price.toString() : "0", avatar: "https://s3.akarinext.org/assets/*/pso2/n.webp" }} image={item.iconUrl} category={getCategoryName(item.type)} title={item.name} date="" />
           </Link></Grid.Col>)}
       </Grid>
       <div>
         <Center>
-          <Pagination max={Math.floor(data.max / 20)} currentPage={page} to={`/categories/${category}?page=`} />
+          <Pagination max={Math.floor(body.max / 20)} currentPage={page} to={`/categories/${category}?page=`} />
         </Center>
       </div>
     </Container>)
