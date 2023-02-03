@@ -185,6 +185,7 @@ importers:
       '@types/react': ^18.0.27
       '@types/react-dom': ^18.0.10
       '@types/sharp': ^0.31.1
+      aws-sdk: ^2.1295.0
       bullmq: ^3.5.9
       chart.js: ^4.2.0
       core-js: ^3.27.2
@@ -193,6 +194,7 @@ importers:
       eslint: ^8.32.0
       ioredis: ^5.2.5
       isbot: ^3.6.5
+      mime-types: ^2.1.35
       mobx: ^6.7.0
       prosemirror-model: ^1.19.0
       react: ^18.2.0
@@ -240,6 +242,7 @@ importers:
       '@tiptap/extension-link': 2.0.0-beta.204_f4ffqkgz5d3wev7su7t7l2rrua
       '@tiptap/react': 2.0.0-beta.204_q2znjafzmb4pvn25xzm5s3hjsu
       '@tiptap/starter-kit': 2.0.0-beta.204_cedpvvjbghtcstt37fejh4i2nq
+      aws-sdk: 2.1295.0
       bullmq: 3.5.9
       chart.js: 4.2.0
       core-js: 3.27.2
@@ -247,6 +250,7 @@ importers:
       embla-carousel-react: 7.0.8_react@18.2.0
       ioredis: 5.2.5
       isbot: 3.6.5
+      mime-types: 2.1.35
       mobx: 6.7.0
       prosemirror-model: 1.19.0
       react: 18.2.0
@@ -6762,7 +6766,7 @@ packages:
     resolution: {integrity: sha512-xq+q3SRMOxGivLhBNaUdC64hDTQwejJ+H0T/NB1XMtTVEwNTrfFF3gAxiyW0Bu/xWEGhjVKgUcMhCrUy2+uCWg==}
     dependencies:
       base64-js: 1.5.1
-      ieee754: 1.1.13
+      ieee754: 1.2.1
       isarray: 1.0.0
     dev: false
 
