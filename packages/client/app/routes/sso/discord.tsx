@@ -3,7 +3,6 @@ import {
   Paper,
   Title,
   Text,
-  TextInput,
   Button,
   Container,
   Group,
@@ -15,7 +14,8 @@ import {
   CopyButton,
   Flex,
 } from '@mantine/core';
-import { LoaderArgs, Response, json } from '@remix-run/node';
+import type { LoaderArgs} from '@remix-run/node';
+import { Response, json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { IconArrowLeft, IconCheck, IconCopy } from '@tabler/icons';
 import { authenticator } from '~/utils/auth.server';

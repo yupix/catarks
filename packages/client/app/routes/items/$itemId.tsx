@@ -25,7 +25,6 @@ import { ClientOnly } from "remix-utils";
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
 
-
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
   if (typeof itemId !== "string")
@@ -33,21 +32,20 @@ export async function loader({ params }: LoaderArgs) {
 
   const item = await getItemByID(itemId);
   const charts = await getItemPriceChartById(itemId);
-  if (!item) throw Error('Item Not Found')
-  const ogpImage = await generateSvg({ title: item.name })
+  if (!item) throw Error("Item Not Found");
+  const ogpImage = await generateSvg({ title: item.name });
   return json({ item, ogpImage, charts });
 }
-
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   return {
     title: `${data.item.name} - ${SITE_META_PREFIX}`,
-    charset: 'utf-8',
-    'og:title': `${data.item.name} - ${SITE_META_PREFIX}`,
-    'og:url': `https://catarks.org/items/${data.item.id}`,
-    'og:image': data.ogpImage
-  }
-}
+    charset: "utf-8",
+    "og:title": `${data.item.name} - ${SITE_META_PREFIX}`,
+    "og:url": `https://catarks.org/items/${data.item.id}`,
+    "og:image": data.ogpImage,
+  };
+};
 
 export default function Item() {
   const { item, charts } = useLoaderData<typeof loader>();
@@ -149,16 +147,22 @@ export default function Item() {
               <Tabs.Tab value="chart">チャート</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="prices">
-              <Table striped highlightOnHover withBorder>
-                <thead>{priceThs}</thead>
-                <tbody>{priceRow}</tbody>
-              </Table>
+              {item.prices.length > 0 ? (
+                <Table striped highlightOnHover withBorder>
+                  <thead>{priceThs}</thead>
+                  <tbody>{priceRow}</tbody>
+                </Table>
+              ) : (
+                <Text>まだ報告が存在しないようです</Text>
+              )}
             </Tabs.Panel>
             <Tabs.Panel value="chart">
               <ClientOnly fallback={<></>}>
-                {() => <>
-                  <PriceChart chartData={charts} />
-                </>}
+                {() => (
+                  <>
+                    <PriceChart chartData={charts} />
+                  </>
+                )}
               </ClientOnly>
             </Tabs.Panel>
           </Card>
