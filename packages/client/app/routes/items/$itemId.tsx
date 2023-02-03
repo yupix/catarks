@@ -12,6 +12,7 @@ import {
   Title,
   Stack,
   Tabs,
+  Tooltip,
 } from "@mantine/core";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -24,6 +25,7 @@ import { getCategoryName } from "~/utils/utils";
 import { ClientOnly } from "remix-utils";
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
+import { IconStar } from "@tabler/icons";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -75,10 +77,13 @@ export default function Item() {
             position="bottom-start"
           >
             <HoverCard.Target>
-              <Link to={`/users/${price.reporter.id}`}>
+              <Link to={`/users/${price.reporter.id}`} style={{textDecoration:"none", color: "black"}}>
                 <Group align="center">
-                  <Avatar src={price.reporter.avatarUrl} radius="xs"></Avatar>
+                  <Avatar src={price.reporter.avatarUrl} radius="sm"></Avatar>
                   {price.reporter.username}
+                  {price.reporter.role.filter((v) => v.name === 'admin') && 
+                  <IconStar height={15} style={{color: "#FFD43B"}}/>
+                  }
                 </Group>
               </Link>
             </HoverCard.Target>

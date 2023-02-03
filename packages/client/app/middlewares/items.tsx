@@ -35,6 +35,6 @@ export const getItemByID = async (itemId: string) => {
   return await prisma.items.findFirst({
     where: {
       id: itemId
-    }, include: { prices: { include: { reporter: true } }, droparias: true, ability: { include: { effects: true } } }
+    }, include: { prices: { include: { reporter: {include: {role: true}} } }, droparias: true, ability: { include: { effects: true } } }
   })
 }
