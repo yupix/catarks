@@ -1,11 +1,12 @@
 import type { LoaderArgs} from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { createStyles, Avatar, Text, Group, Container, Box, Indicator } from '@mantine/core';
+import { createStyles, Avatar, Text, Group, Container, Box, Indicator, Center, Tooltip } from '@mantine/core';
 
 import { assertIsDefined } from "~/utils/utils";
 import type { CSSProperties } from "react";
 import { getUserFromId } from "~/middlewares/users";
+import { IconStar } from "@tabler/icons";
 
 export async function loader({ params }: LoaderArgs) {
   assertIsDefined(params.userId)
@@ -35,9 +36,13 @@ export default function UserCardImage() {
       <div style={{ height: 200, boxShadow: 'inset 0px 0px 20px 5px rgba(17, 17, 26, 0.18)', borderRadius: `${radius}px ${radius}px 0 0`, ...banner }}>
         <Box style={{ position: "relative", height: "100%", width: "100%", }}>
           <Box style={{ position: "absolute", bottom: 0, left: 0, paddingLeft: '165px', color: "white" }}>
-            <Text align="center" size={30} weight={500} mt="lg" style={{ textShadow: "0px 0px 4px #000" }} >
+            <Group style={{gap: "5px"}}>
+              
+            <Text align="center" size={30} weight={500} style={{ textShadow: "0px 0px 4px #000" }} >
               {user.username}
             </Text>
+            {user.role.filter((v) => v.name === 'admin').length > 0 && <Tooltip label="管理者"><Box> <IconStar style={{marginTop: "10px"}} color="#FFD43B"/></Box></Tooltip>}
+            </Group>
           </Box>
         </Box>
       </div>
