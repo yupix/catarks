@@ -1,5 +1,5 @@
-import { ActionIcon, Burger, Code, Group, Header, MediaQuery, useMantineColorScheme, useMantineTheme, Tooltip, Button, Image } from "@mantine/core"
-import { Form, Link } from "@remix-run/react";
+import { ActionIcon, Burger, Code, Group, Header, MediaQuery, useMantineColorScheme, useMantineTheme, Tooltip, Button, Title } from "@mantine/core"
+import { Form } from "@remix-run/react";
 import { IconMoonStars, IconPencil, IconSun } from "@tabler/icons"
 import { useSnapshot } from "valtio";
 import { useModalState, useSessionState } from "~/states/common";
@@ -28,7 +28,7 @@ export const DefaultHeader = () => {
           </MediaQuery>
           {/* <Logo colorScheme={colorScheme} /> */}
           <div>
-            <Image src={"https://s3.akarinext.org/assets/*/pso2/__catarks.svg"} height={35} />
+            <Title color="dark" size="1.5em">Cat Arks</Title>
           </div>
           {/* <Text>CatArks</Text> */}
           {/* <MantineLogo size={28} /> */}
