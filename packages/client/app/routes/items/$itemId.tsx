@@ -22,7 +22,6 @@ import { getItemByID } from "~/middlewares/items";
 import { generateSvg } from "~/utils/og.server";
 import { getCategoryName } from "~/utils/utils";
 import { ClientOnly } from "remix-utils";
-import { Line } from 'react-chartjs-2';
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
 
@@ -35,11 +34,12 @@ export async function loader({ params }: LoaderArgs) {
   const item = await getItemByID(itemId);
   const charts = await getItemPriceChartById(itemId);
   if (!item) throw Error('Item Not Found')
-  const ogpImage = await generateSvg({title: item.name})
-  return json({item, ogpImage, charts});
+  const ogpImage = await generateSvg({ title: item.name })
+  return json({ item, ogpImage, charts });
 }
 
-export const meta: MetaFunction<typeof loader> = ({data,  location}) => {
+
+export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
   return {
     title: `${data.item.name} - ${SITE_META_PREFIX}`,
     charset: 'utf-8',
@@ -50,7 +50,7 @@ export const meta: MetaFunction<typeof loader> = ({data,  location}) => {
 }
 
 export default function Item() {
-  const {item, charts} = useLoaderData<typeof loader>();
+  const { item, charts } = useLoaderData<typeof loader>();
 
   const priceThs = (
     <tr>
@@ -143,25 +143,25 @@ export default function Item() {
         </Grid>
         <Space h="lg" />
         <Tabs defaultValue="prices">
-        <Card withBorder>
-        <Tabs.List>
-          <Tabs.Tab value="prices">価格</Tabs.Tab>
-          <Tabs.Tab value="chart">チャート</Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="prices">
-          <Table striped highlightOnHover withBorder>
-            <thead>{priceThs}</thead>
-            <tbody>{priceRow}</tbody>
-          </Table>
-          </Tabs.Panel>
-          <Tabs.Panel value="chart">
-                <ClientOnly fallback={<></>}>
-                  {() => <>
+          <Card withBorder>
+            <Tabs.List>
+              <Tabs.Tab value="prices">価格</Tabs.Tab>
+              <Tabs.Tab value="chart">チャート</Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="prices">
+              <Table striped highlightOnHover withBorder>
+                <thead>{priceThs}</thead>
+                <tbody>{priceRow}</tbody>
+              </Table>
+            </Tabs.Panel>
+            <Tabs.Panel value="chart">
+              <ClientOnly fallback={<></>}>
+                {() => <>
                   <PriceChart chartData={charts} />
-                  </>}
-                </ClientOnly>
-          </Tabs.Panel>
-        </Card>
+                </>}
+              </ClientOnly>
+            </Tabs.Panel>
+          </Card>
         </Tabs>
       </div>
     </Container>

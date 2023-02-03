@@ -1,9 +1,7 @@
-import { ItemPriceAverage } from "@catarks/db";
-import { useFetcher } from "@remix-run/react";
-import { FC, useEffect, useState } from "react";
+import type { ItemPriceAverage } from "@catarks/db";
+import type { FC } from "react";
 import { Line } from "react-chartjs-2";
-import { SHIPS, SHIPS_TYPE } from "~/const";
-import { TGetItemPriceChart } from "~/routes/api/charts/item/$itemId";
+import { SHIPS } from "~/const";
 
 import {
   Chart as ChartJS,
@@ -15,8 +13,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { ArrayElement } from "@catarks/utils";
-import { getItemPriceChartById } from "~/middlewares/charts";
+import type { ArrayElement } from "@catarks/utils";
+import type { getItemPriceChartById } from "~/middlewares/charts";
 
 ChartJS.register(
   CategoryScale,

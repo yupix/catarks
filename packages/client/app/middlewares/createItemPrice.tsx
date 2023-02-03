@@ -1,4 +1,4 @@
-import { ItemPrices, Users } from "@catarks/db";
+import type { ItemPrices, Users } from "@catarks/db";
 import { prisma } from "~/utils/prisma.server";
 
 export class ItemActions {
@@ -13,11 +13,13 @@ export class ItemActions {
      * @param {number} ship - ship number
      * @returns {ItemPrices} - created item price
      */
-    return await prisma.itemPrices.create({data: {
-      price,
-      itemId,
-      ship,
-      reporterId: user.id
-    }})
+    return await prisma.itemPrices.create({
+      data: {
+        price,
+        itemId,
+        ship,
+        reporterId: user.id
+      }
+    })
   }
 }

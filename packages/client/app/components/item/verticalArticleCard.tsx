@@ -39,10 +39,10 @@ export function ArticleCardVertical({
 }: ArticleCardVerticalProps) {
   const { classes } = useStyles();
   return (
-    <Card withBorder radius="md" p={0} className={classes.card} style={{height: '100%'}}>
-      <Group noWrap spacing={0} style={{height: '100%'}}>
+    <Card withBorder radius="md" p={0} className={classes.card} style={{ height: '100%' }}>
+      <Group noWrap spacing={0} style={{ height: '100%' }}>
         <Center>
-          <Image src={image} height="75" width={75} radius="md" style={{ marginLeft: '16px' }}></Image>
+          <Image src={image} height="75" width={75} radius="md" style={{ marginLeft: '16px' }} withPlaceholder alt={title}></Image>
         </Center>
         {/* <img src={image} height={75} width={75} style={{ borderRadius: '6%', marginLeft: "16px" }} /> */}
         <div className={classes.body}>
