@@ -155,6 +155,7 @@ const DefaultNavBar: FC<{
       {getAuth(item.requiredAuth) && (
         <>
           <Link
+          onClick={() => useMenuState.opened = false}
             className={cx(classes.link, {
               [classes.linkActive]: item.link === location.pathname,
             })}
