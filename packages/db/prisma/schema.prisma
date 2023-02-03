@@ -64,11 +64,12 @@ model DefaultAvatars {
 }
 
 model Files {
-  hash     String @id
-  filename String @unique
+  hash     String    @id
+  filename String    @unique
   url      String
-  author   Users  @relation(fields: [userId], references: [id])
+  author   Users     @relation(fields: [userId], references: [id])
   userId   String
+  Diaries  Diaries[]
 }
 
 model Users {
@@ -84,6 +85,15 @@ model Users {
   settings    UserSettings?
   createdAt   DateTime      @default(now())
   Files       Files[]
+  Diaries     Diaries[]
+  role        UserRoles[]
+}
+
+model UserRoles {
+  name            Roles   @id
+  canCreateReport Boolean
+  Users           Users?  @relation(fields: [usersId], references: [id])
+  usersId         String?
 }
 
 model UserSettings {
@@ -91,6 +101,19 @@ model UserSettings {
   useDarkTheme Boolean @default(false)
   User         Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String  @unique
+}
+
+model Diaries {
+  id        String @id @default(uuid())
+  authorId  String
+  filesHash String
+  author    Users  @relation(fields: [authorId], references: [id])
+  file      Files  @relation(fields: [filesHash], references: [hash])
+}
+
+enum Roles {
+  admin
+  member
 }
 
 enum ItemTypes {
