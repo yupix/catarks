@@ -9,7 +9,8 @@ import {
   createStyles,
   Menu,
 } from '@mantine/core';
-import { IconChevronRight } from '@tabler/icons';
+import { Form } from '@remix-run/react';
+import { IconChevronRight, IconLogout } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
   user: {
@@ -34,19 +35,28 @@ export function UserButton({ image, name, icon, ...others }: UserButtonProps) {
   const { classes } = useStyles();
 
   return (
-    <UnstyledButton className={classes.user} {...others}>
-      <Group>
-        <Avatar src={image} radius="xl" />
+    <Menu position="right-start">
+      <Menu.Target>
+        <UnstyledButton className={classes.user} {...others}>
+          <Group>
+            <Avatar src={image} radius="xl" />
 
-        <div style={{ flex: 1 }}>
-          <Text size="sm" weight={500}>
-            {name}
-          </Text>
-        </div>
-        <Menu position="right-end" withArrow>
-          {icon || <IconChevronRight size={14} stroke={1.5} />}
-        </Menu>
-      </Group>
-    </UnstyledButton>
+            <div style={{ flex: 1 }}>
+              <Text size="sm" weight={500}>
+                {name}
+              </Text>
+            </div>
+            {icon || <IconChevronRight size={14} stroke={1.5} />}
+          </Group>
+        </UnstyledButton>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Form action="/auth/auth0/logout" method="post">
+          <Menu.Item color="red" icon={<IconLogout size={14} />} type="submit">Logout</Menu.Item>
+        </Form>
+
+      </Menu.Dropdown>
+
+    </Menu>
   );
 }
