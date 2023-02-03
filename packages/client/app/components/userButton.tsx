@@ -9,8 +9,10 @@ import {
   createStyles,
   Menu,
 } from '@mantine/core';
-import { Form } from '@remix-run/react';
-import { IconChevronRight, IconLogout } from '@tabler/icons';
+import { Form, Link } from '@remix-run/react';
+import { IconChevronRight, IconLogout, IconUser } from '@tabler/icons';
+import { useSnapshot } from 'valtio';
+import { useSessionState } from '~/states/common';
 
 const useStyles = createStyles((theme) => ({
   user: {
@@ -33,7 +35,7 @@ interface UserButtonProps extends UnstyledButtonProps {
 
 export function UserButton({ image, name, icon, ...others }: UserButtonProps) {
   const { classes } = useStyles();
-
+  const {user} = useSnapshot(useSessionState)
   return (
     <Menu position="right-start">
       <Menu.Target>
@@ -51,6 +53,7 @@ export function UserButton({ image, name, icon, ...others }: UserButtonProps) {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
+        <Link to={`/users/${user?.id}`}><Menu.Item icon={<IconUser size={14} />}>Profile</Menu.Item></Link>
         <Form action="/auth/auth0/logout" method="post">
           <Menu.Item color="red" icon={<IconLogout size={14} />} type="submit">Logout</Menu.Item>
         </Form>
