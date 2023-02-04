@@ -12,7 +12,8 @@ import { BaseRegister } from "../types/register";
 interface IEffect {
   name: string;
   percent: boolean;
-  effect: string | number;
+  value: number;
+  types: string[]
 }
 
 export class RegisterAbility implements BaseRegister {
@@ -35,7 +36,7 @@ export class RegisterAbility implements BaseRegister {
         abilityEffect = await this.orm.abilityEffects.create({
           data: {
             name: effect.name,
-            effect: String(effect.effect),
+            value: effect.value,
             percent: effect.percent,
           },
         });
@@ -104,7 +105,7 @@ export class RegisterAbility implements BaseRegister {
       const aria_ids = await this.registerDropAria(ability.aria);
       const ability_ids = await this.registerAbility(
         ability.name,
-        ability.effect
+        ability.effects
       );
       await this.orm.items.create({
         data: {
