@@ -1,7 +1,7 @@
-interface ActionResponse<I extends string, T = undefined> {
+interface ActionResponse<I extends string, T = undefined, M=undefined> {
   status: "failed" | "success";
   intent: I;
-  message?: string;
+  message?: M;
   body?: T;
 }
 
