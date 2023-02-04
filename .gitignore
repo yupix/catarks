@@ -138,3 +138,8 @@ default.yml
 # assets
 
 ops.json
+convertor
+
+# python
+
+.venv
