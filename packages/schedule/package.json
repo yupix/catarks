@@ -5,7 +5,8 @@
   "main": "./built/index.js",
   "types": "./built/index.d.ts",
   "scripts": {
-    "build": "ttsc -p ./tsconfig.json"
+    "build": "ttsc -p ./tsconfig.json",
+    "start": "node ./built/index.js"
   },
   "keywords": [],
   "author": "",

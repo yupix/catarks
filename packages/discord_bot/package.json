@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./built/index.js",
+    "go": "node ./built/index.js",
     "dev": "node --watch --loader ./script/loader.js ./src/index.ts",
     "build": "ttsc -p ./tsconfig.json || echo done. && tsc-alias -p ./tsconfig.json"
   },
