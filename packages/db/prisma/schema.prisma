@@ -10,7 +10,7 @@ datasource db {
 model AbilityEffects {
   name      String      @id
   percent   Boolean
-  effect    String
+  value     Float
   abilities Abilities[]
 }
 
