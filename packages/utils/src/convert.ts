@@ -13,3 +13,7 @@ export const TYPE_TO_CATEGORY: { [key in ITEM_TYPE]: string } = {
 export const CREATE_URL = (domain: string, ssl: boolean, path?: string) => {
   return `${ssl ? "https" : "http"}://${domain}${path ? `/${path}` : ""}`;
 };
+
+export const StringToBoolean = (text: string) => {
+  return text === 'true' ? true : false
+}
