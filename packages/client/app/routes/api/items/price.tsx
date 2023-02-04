@@ -7,7 +7,7 @@ import { assertIsDefined } from "~/utils/utils";
 
 export type TCreateItemPriceAction = typeof action
 
-export async function action({ request }: ActionArgs): Promise<TypedResponse<ActionResponse<'createPrice' | '?', ItemPrices>>> {
+export async function action({ request }: ActionArgs): Promise<TypedResponse<ActionResponse<'createPrice' | '?', ItemPrices | null, 'BELOW_THE_MINIMUM_PRICE'>>> {
   if (request.method === 'POST') {
     const formData = await request.clone().formData()
     const user = await authenticator.authenticate('auth0', request)
@@ -19,11 +19,12 @@ export async function action({ request }: ActionArgs): Promise<TypedResponse<Act
     assertIsDefined(itemId);
     assertIsDefined(_price);
     assertIsDefined(ship);
-    assertIsDefined(useTax);
     assertIsDefined(qty);
     const originalPrice = Number(_price.toString()) / Number(qty.toString())
-    const price = useTax.toString() === 'on' ? originalPrice - (originalPrice * 0.1) : originalPrice 
-
+    const price = useTax?.toString() === 'on' ? originalPrice - (originalPrice * 0.1) : originalPrice 
+    if (price < 1000) {
+      return json({intent: 'createPrice', status: 'failed', message: 'BELOW_THE_MINIMUM_PRICE'})
+    }
     const res = await ItemActions.CreateItemPrice(itemId.toString(), price, Number(ship.toString()), user)
     return json({
       intent: 'createPrice',
