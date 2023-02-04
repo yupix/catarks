@@ -108,12 +108,18 @@ export const ReportPriceModal = () => {
           min={1000}
           max={99999999999}
           parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
-        // formatter={(value) =>
-        //   value && !Number.isNaN(parseFloat(value))
-        //     ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        //     : '$ '
-        // }
         />
+        <Tooltip label="売上から報告する際に一つあたりの値段を取得するのに使用します" withArrow>
+        <NumberInput
+          name="qty"
+          label="個数"
+          step={1}
+          defaultValue={1}
+          min={1}
+          max={999}
+          parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
+        />
+        </Tooltip>
         <NumberInput
           name="ship"
           label="シップ番号"
@@ -124,7 +130,7 @@ export const ReportPriceModal = () => {
 
         />
         <Space h="sm" />
-        <Tooltip label="アイテムが売れてその値段を報告する際は外してください">
+        <Tooltip label="売上から報告する際は外してください">
           <Checkbox
             name="useTax"
             label="税込み"
