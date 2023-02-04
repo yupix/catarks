@@ -22,13 +22,6 @@ interface IConfig {
     host: string;
     ssl: boolean;
   }
-  db: {
-    user: string;
-    pass: string;
-    host: string;
-    port: number;
-    db: string;
-  };
   redis: {
     host: string;
     port: number;
