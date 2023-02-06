@@ -8,6 +8,9 @@
     "baseUrl": "./",
     "rootDir": "./src",
     "outDir": "./built",
+    "lib": [
+      "DOM"
+    ],
     "paths": {
       "@/*": [
         "./src/*"

@@ -4,16 +4,22 @@ import {
   DropArias,
   PrismaClient,
 } from "@catarks/db";
-import { Logger } from "@catarks/shared";
+import { Logger, config } from "@catarks/shared";
 import abilities from "../assets/ops.json";
 import { ORM } from "../db/session";
 import { BaseRegister } from "../types/register";
+import { MeiliSearch } from "meilisearch";
+
+const client = new MeiliSearch({
+  host: config.meilisearch.host,
+  apiKey: config.meilisearch.apikey,
+});
 
 interface IEffect {
   name: string;
   percent: boolean;
   value: number;
-  types: string[]
+  types: string[];
 }
 
 export class RegisterAbility implements BaseRegister {
@@ -93,6 +99,7 @@ export class RegisterAbility implements BaseRegister {
   }
 
   async run() {
+    const index_body = [];
     for (const ability of abilities) {
       const logger = Logger.getInstance;
       const existsItem = await this.orm.items.findFirst({
@@ -100,6 +107,14 @@ export class RegisterAbility implements BaseRegister {
       });
       if (existsItem) {
         logger.info(`${ability.name} is already exists. skip`);
+        index_body.push({
+          id: existsItem.id,
+          title: existsItem.name,
+          iconUrl: existsItem.iconUrl,
+          effects: ability.effects,
+          droparias: ability.aria,
+          rarity: existsItem.rarity
+        });
         continue;
       }
       const aria_ids = await this.registerDropAria(ability.aria);
@@ -107,7 +122,7 @@ export class RegisterAbility implements BaseRegister {
         ability.name,
         ability.effects
       );
-      await this.orm.items.create({
+      const item = await this.orm.items.create({
         data: {
           name: ability.name,
           rarity: 1,
@@ -117,7 +132,27 @@ export class RegisterAbility implements BaseRegister {
           droparias: { connect: aria_ids },
         },
       });
+      index_body.push({
+        id: item.id,
+        title: item.name,
+        iconUrl: item.iconUrl,
+        effects: ability.effects,
+        droparias: ability.aria,
+        rarity: item.rarity
+      });
       logger.info(`successed register ${ability.name}.`);
     }
+    try {
+      let index = await client.getIndex("index_ops");
+      await index.deleteDocument('index_ops');
+      await index.addDocuments(index_body);
+    } catch (err: any) {
+      if (err.code === "index_not_found") {
+        await client.createIndex('index_ops')
+        let index = await client.getIndex("index_ops");
+        await index.addDocuments(index_body);
+      }
+    }
+
   }
 }
