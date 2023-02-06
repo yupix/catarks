@@ -20,9 +20,11 @@ import { useSessionState, useUserDevice } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
 import { ReportPriceModal } from "./components/modals/reportPrice";
 import { NotificationsProvider } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
 import { authenticator } from "./utils/auth.server";
 import { useSnapshot } from "valtio";
 import { assertIsDefined } from "./utils/utils";
+import CSS from "./css/app.css"
 
 
 export const meta: MetaFunction = () => ({
@@ -34,7 +36,7 @@ export const meta: MetaFunction = () => ({
 
 
 export function links() {
-  return [{ rel: "stylesheet", href: styles }]
+  return [{ rel: "stylesheet", href: styles }, { rel: "stylesheet", href: CSS }]
 }
 
 export async function loader({ request }: LoaderArgs) {
@@ -67,9 +69,12 @@ export default function App() {
     }
     warningMessage()
   }, [])
+
+
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        <ModalsProvider>
         <NotificationsProvider>
 
           <html lang="ja">
@@ -91,6 +96,7 @@ export default function App() {
             </body>
           </html>
         </NotificationsProvider>
+          </ModalsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

@@ -1,91 +1,52 @@
-import {
-  createStyles,
-  Title,
-  Text,
-  Card,
-  SimpleGrid,
-  Container, Flex,
-} from '@mantine/core';
-import { Link } from '@remix-run/react';
+import { Link } from "@remix-run/react";
+import { Card } from "flowbite-react";
 
 const mockdata = [
   {
-    title: '特殊能力',
-    value: 'ability',
+    title: "特殊能力",
+    value: "ability",
 
     icon: "https://s3.akarinext.org/assets/*/pso2/op/op_2.webp",
   },
   {
-    title: '武器',
-    value: 'weapon',
+    title: "武器",
+    value: "weapon",
 
     icon: "https://s3.akarinext.org/assets/*/pso2/op/op_2.webp",
   },
   {
-    title: '防具',
-    value: 'armmor',
+    title: "防具",
+    value: "armmor",
     icon: "https://s3.akarinext.org/assets/*/pso2/op/op_2.webp",
   },
 ];
 
-const useStyles = createStyles((theme) => ({
-  title: {
-    fontSize: 34,
-    fontWeight: 900,
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: 24,
-    },
-  },
-
-  description: {
-    maxWidth: 600,
-
-
-  },
-
-  card: {
-    border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1]
-      }`,
-  },
-
-  cardTitle: {
-    '&::after': {
-      content: '""',
-      display: 'block',
-      width: 45,
-    },
-  },
-}));
-
 export default function FeaturesCards() {
-  const { classes, theme } = useStyles();
   const features = mockdata.map((feature) => (
     <Link key={feature.value} to={`/categories/${feature.value}`}>
-      <Card shadow="md" radius="md" className={classes.card} p="xl">
-        <Flex wrap="wrap" direction="row" align="center">
-          <img src={feature.icon} height={50} width={50} alt={feature.title} style={{ borderRadius: "10%", marginRight: "1em" }} />
-          <Text size="lg" weight={500} className={classes.cardTitle} >
-            {feature.title}
-          </Text>
-        </Flex>
+      <Card>
+        <div className="flex flex-wrap flex-row items-center">
+          <img
+            src={feature.icon}
+            height={50}
+            width={50}
+            alt={feature.title}
+            style={{ borderRadius: "10%", marginRight: "1em" }}
+          />
+          <p>{feature.title}</p>
+        </div>
       </Card>
     </Link>
   ));
   return (
-    <Container size="lg">
+    <div className="container p-10">
+      <h1 className="font-bold">Categories</h1>
 
-
-      <Title order={2} className={classes.title} mt="sm">
-        Categories
-      </Title>
-
-      <Text color="dimmed" className={classes.description} mt="md">
+      <p className="text-slate-400">
         同じ種類の金策可能なアイテムを見つけ、直ぐに金策を始めましょう
-      </Text>
+      </p>
 
-      <SimpleGrid cols={3} spacing="xl" mt={50} breakpoints={[{ maxWidth: 'md', cols: 1 }]}>
-        {features}
-      </SimpleGrid>
-    </Container>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">{features}</div>
+    </div>
   );
 }

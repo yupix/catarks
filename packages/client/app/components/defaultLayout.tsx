@@ -1,7 +1,7 @@
 import { AppShell, Paper, useMantineTheme } from "@mantine/core";
 import type { FC } from "react";
 import React from "react";
-import { Footer, FooterDefaultData } from "./Footer";
+import { Footer } from "./Footer";
 import { DefaultHeader } from "./header";
 import { DefaultNavBar } from "./navBar";
 
@@ -23,7 +23,7 @@ export const DefaultLayout: FC<{
   currentActive,
   navbar = <DefaultNavBar currentActive={currentActive} />,
   header = <DefaultHeader />,
-  footer = <Footer data={FooterDefaultData} />,
+  footer = <Footer />,
 }) => {
     const theme = useMantineTheme();
     return (

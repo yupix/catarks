@@ -1,64 +1,75 @@
-import type { LoaderArgs} from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { createStyles, Avatar, Text, Group, Container, Box, Indicator, Center, Tooltip } from '@mantine/core';
+import { Tooltip } from "flowbite-react";
 
 import { assertIsDefined } from "~/utils/utils";
-import type { CSSProperties } from "react";
 import { getUserFromId } from "~/middlewares/users";
 import { IconStar } from "@tabler/icons";
 
 export async function loader({ params }: LoaderArgs) {
-  assertIsDefined(params.userId)
+  assertIsDefined(params.userId);
   const user = await getUserFromId(params.userId);
-  if (!user) throw new Error('User Not Found')
-  return json(user)
+  if (!user) throw new Error("User Not Found");
+  return json(user);
 }
 
-const useStyles = createStyles((theme) => ({
-  card: {
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-  },
-
-  avatar: {
-    border: `2px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white}`,
-  },
-}));
-
-
 export default function UserCardImage() {
-  const { classes, theme } = useStyles();
-  const user = useLoaderData<typeof loader>()
-  const radius = 14
-  const banner: CSSProperties = user.bannerUrl ? { backgroundImage: `url(${user.bannerUrl})`, backgroundPosition: "center" } : { backgroundColor: `${theme.colors.gray[8]}` }
+  const user = useLoaderData<typeof loader>();
+  const radius = 14;
   return (
-    <Container className={classes.card} p={0} my="xl" style={{ borderRadius: radius }}>
-      <div style={{ height: 200, boxShadow: 'inset 0px 0px 20px 5px rgba(17, 17, 26, 0.18)', borderRadius: `${radius}px ${radius}px 0 0`, ...banner }}>
-        <Box style={{ position: "relative", height: "100%", width: "100%", }}>
-          <Box style={{ position: "absolute", bottom: 0, left: 0, paddingLeft: '165px', color: "white" }}>
-            <Group style={{gap: "5px"}}>
-              
-            <Text align="center" size={30} weight={500} style={{ textShadow: "0px 0px 4px #000" }} >
-              {user.username}
-            </Text>
-            {user.role.filter((v) => v.name === 'admin').length > 0 && <Tooltip label="管理者"><Box> <IconStar style={{marginTop: "10px"}} color="#FFD43B"/></Box></Tooltip>}
-            </Group>
-          </Box>
-        </Box>
+    <div className="container p-10" style={{ borderRadius: radius }}>
+      <div
+        className="bg-gray-700"
+        style={{
+          height: 200,
+          boxShadow: "inset 0px 0px 20px 5px rgba(17, 17, 26, 0.18)",
+          borderRadius: `${radius}px ${radius}px 0 0`,
+          backgroundImage: `url(${user.bannerUrl})`,
+          backgroundPosition: "center",
+        }}
+      >
+        <div style={{ position: "relative", height: "100%", width: "100%" }}>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              paddingLeft: "165px",
+              color: "white",
+            }}
+          >
+            <div className="flex items-center">
+              <h1
+                className="font-medium"
+                style={{ textShadow: "0px 0px 4px #000" }}
+              >
+                {user.username}
+              </h1>
+              {user.role.filter((v) => v.name === "admin").length > 0 && (
+                <Tooltip content={<p>管理者</p>}>
+                  <IconStar style={{ marginTop: "10px" }} color="#FFD43B" />
+                </Tooltip>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      <Box mt="-80px" ml="14px">
-        <Indicator dot inline size={25} offset={122} position="bottom-end" color="red" withBorder styles={{ common: { bottom: 20 } }}>
-
-          <Avatar src={user.avatarUrl} size={145} radius={80} className={classes.avatar} styles={{ 'root': { marginLeft: "0px !important", boxShadow: "0px 0px 20px 2px rgba(17, 17, 26, 0.18);" } }} />
-        </Indicator>
-      </Box>
-      <Text align="center" size="sm" color="dimmed">
-        {/* {job} */}
-      </Text>
-      <Group mt="md" position="center" spacing={30}>
-        {/* {items} */}
-      </Group>
-
-    </Container>
+      <div className="ml-3 -mt-20">
+        <div className="relative">
+          <img
+            className="border-2 border-solid border-white dark:border-gray-900 rounded-full h-36"
+            src={user.avatarUrl}
+            alt={`${user.username} Avatar`}
+            style={{ boxShadow: "0px 0px 20px 2px rgba(17, 17, 26, 0.18);" }}
+          />
+          <span
+            className="left-4 absolute  w-6 h-6 bg-red-500 border-2 border-white dark:border-gray-800 rounded-full"
+            style={{ top: "118px" }}
+          ></span>
+        </div>
+      </div>
+      <p className="text-center">aaa</p>
+    </div>
   );
 }
