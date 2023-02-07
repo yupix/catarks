@@ -1,19 +1,10 @@
 import {
   Avatar,
-  Card,
   Text,
-  Container,
-  Grid,
   Group,
-  HoverCard,
-  List,
   Space,
-  Table,
-  Title,
-  Stack,
-  Tabs,
-  Tooltip,
 } from "@mantine/core";
+import { Tabs, Table } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
@@ -26,6 +17,7 @@ import { ClientOnly } from "remix-utils";
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
 import { IconStar } from "@tabler/icons";
+import type { ReactNode } from "react";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -53,10 +45,10 @@ export default function Item() {
   const { item, charts } = useLoaderData<typeof loader>();
 
   const priceThs = (
-    <tr>
-      <th>値段</th>
-      <th>報告者</th>
-    </tr>
+    <Table.Head>
+      <Table.HeadCell>値段</Table.HeadCell>
+      <Table.HeadCell>報告者</Table.HeadCell>
+    </Table.Head>
   );
   const priceRow = item.prices
     .sort((a, b) => {
@@ -66,50 +58,34 @@ export default function Item() {
     })
     .reverse()
     .map((price) => (
-      <tr key={price.id}>
-        <td>{price.price}</td>
-        <td>
-          <HoverCard
-            width={280}
-            shadow="md"
-            withinPortal
-            withArrow
-            position="bottom-start"
+      <Table.Row key={price.id}>
+        <Table.Cell>{price.price}</Table.Cell>
+        <Table.Cell>
+          <Link
+            to={`/users/${price.reporter.id}`}
+            style={{ textDecoration: "none", color: "black" }}
           >
-            <HoverCard.Target>
-              <Link to={`/users/${price.reporter.id}`} style={{textDecoration:"none", color: "black"}}>
-                <Group align="center">
-                  <Avatar src={price.reporter.avatarUrl} radius="sm"></Avatar>
-                  {price.reporter.username}
-                  {price.reporter.role.filter((v) => v.name === 'admin') && 
-                  <IconStar height={15} style={{color: "#FFD43B"}}/>
-                  }
-                </Group>
-              </Link>
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
-              <Group>
-                <Avatar src={price.reporter.avatarUrl} radius="xl" />
-                <Stack spacing={5}>
-                  <Text size="sm" weight={700} sx={{ lineHeight: 1 }}>
-                    {price.reporter.username}
-                  </Text>
-                  <Link to={`/users/${price.reporter.id}`} color="dimmed">
-                    @{price.reporter.username}
-                  </Link>
-                </Stack>
-              </Group>
-              <Text size="sm" mt="md">
-                {price.reporter.description}
-              </Text>
-            </HoverCard.Dropdown>
-          </HoverCard>
-        </td>
-      </tr>
+            <Group align="center">
+              <Avatar src={price.reporter.avatarUrl} radius="sm"></Avatar>
+              {price.reporter.username}
+              {price.reporter.role.filter((v) => v.name === "admin") && (
+                <IconStar height={15} style={{ color: "#FFD43B" }} />
+              )}
+            </Group>
+          </Link>
+        </Table.Cell>
+      </Table.Row>
     ));
 
+  const CustomCard = ({ children }: { children: ReactNode }) => {
+    return (
+      <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
+        <div className="flex h-full flex-col gap-4 p-6">{children}</div>
+      </div>
+    );
+  };
+
   return (
-    <Container>
       <div style={{ margin: "8px" }}>
         <ArticleCardVertical
           image={item.iconUrl}
@@ -118,50 +94,42 @@ export default function Item() {
           date=""
         />
         <Space h="lg" />
-        <Grid justify="center" grow>
-          <Grid.Col md={6} lg={3}>
-            <Card withBorder h="100%">
-              <Title order={3} color="dark.4">
-                入手方法
-              </Title>
-              <List>
-                {item.droparias.map((aria) => (
-                  <List.Item key={aria.name}>{aria.name}</List.Item>
-                ))}
-              </List>
-            </Card>
-          </Grid.Col>
-          <Grid.Col md={6} lg={3}>
-            {item.type == "ability" && (
-              <Card withBorder h="100%">
-                <Title order={3} color="dark.4">
-                  効果
-                </Title>
-                {item?.ability?.effects.map((effect) => (
-                  <div key={effect.name}>{effect.name}</div>
-                ))}
-              </Card>
-            )}
-          </Grid.Col>
-        </Grid>
+        <div className="grid grid-cols-2 gap-4">
+          <CustomCard>
+            <h2 className="font-bold text-lg">
+              入手方法
+            </h2>
+            <ul>
+              {item.droparias.map((aria) => (
+                <li key={aria.name}>{aria.name}</li>
+              ))}
+            </ul>
+          </CustomCard>
+          {item.type == "ability" && (
+            <CustomCard>
+              <h2 className="font-bold text-lg">
+                効果
+              </h2>
+              {item?.ability?.effects.map((effect) => (
+                <div key={effect.name}>{effect.name}</div>
+              ))}
+            </CustomCard>
+          )}
+        </div>
         <Space h="lg" />
-        <Tabs defaultValue="prices">
-          <Card withBorder>
-            <Tabs.List>
-              <Tabs.Tab value="prices">価格</Tabs.Tab>
-              <Tabs.Tab value="chart">チャート</Tabs.Tab>
-            </Tabs.List>
-            <Tabs.Panel value="prices">
+        <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
+          <Tabs.Group defaultValue="prices">
+            <Tabs.Item title="価格">
               {item.prices.length > 0 ? (
-                <Table striped highlightOnHover withBorder>
-                  <thead>{priceThs}</thead>
-                  <tbody>{priceRow}</tbody>
+                <Table striped>
+                  {priceThs}
+                  <Table.Body>{priceRow}</Table.Body>
                 </Table>
               ) : (
                 <Text>まだ報告が存在しないようです</Text>
               )}
-            </Tabs.Panel>
-            <Tabs.Panel value="chart">
+            </Tabs.Item>
+            <Tabs.Item title="チャート">
               <ClientOnly fallback={<></>}>
                 {() => (
                   <>
@@ -169,10 +137,9 @@ export default function Item() {
                   </>
                 )}
               </ClientOnly>
-            </Tabs.Panel>
-          </Card>
-        </Tabs>
+            </Tabs.Item>
+          </Tabs.Group>
+        </div>
       </div>
-    </Container>
   );
 }

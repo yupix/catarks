@@ -20,11 +20,11 @@ import { useSessionState, useUserDevice } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
 import { ReportPriceModal } from "./components/modals/reportPrice";
 import { NotificationsProvider } from '@mantine/notifications';
-import { ModalsProvider } from '@mantine/modals';
 import { authenticator } from "./utils/auth.server";
 import { useSnapshot } from "valtio";
 import { assertIsDefined } from "./utils/utils";
 import CSS from "./css/app.css"
+import { ClientOnly } from "remix-utils";
 
 
 export const meta: MetaFunction = () => ({
@@ -74,7 +74,6 @@ export default function App() {
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <ModalsProvider>
         <NotificationsProvider>
 
           <html lang="ja">
@@ -84,7 +83,9 @@ export default function App() {
               <Links />
             </head>
             <body>
-              <ReportPriceModal />
+              <ClientOnly>
+              {() => <ReportPriceModal />}
+              </ClientOnly>
               <Outlet />
               {transition.state === 'submitting' && <div style={{ position: "fixed", display: "flex", zIndex: 300, top: 14, right: 20 }}>
                 <Loader />
@@ -96,7 +97,6 @@ export default function App() {
             </body>
           </html>
         </NotificationsProvider>
-          </ModalsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

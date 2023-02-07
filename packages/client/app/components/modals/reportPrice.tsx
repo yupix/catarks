@@ -1,13 +1,6 @@
-import {
-  Button,
-  Checkbox,
-  Modal,
-  NumberInput,
-  Select,
-  Space,
-  Tooltip,
-  useMantineTheme,
-} from "@mantine/core";
+import { Select, Space } from "@mantine/core";
+import { Label, TextInput, Checkbox, Button } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import { useEffect, useReducer, useState } from "react";
 import { useSnapshot } from "valtio";
 import { useModalState, useSessionState } from "~/states/common";
@@ -59,7 +52,6 @@ export const ReportPriceModal = () => {
   }, []);
   const [state, dispatch] = useReducer(reducer, initialState);
   const isOpen = useSnapshot(useModalState).isOpenedPriceRepost;
-  const theme = useMantineTheme();
   const fetcher = useFetcher<TgetItemsLoader | TCreateItemPriceAction>();
 
   useEffect(() => {
@@ -98,79 +90,78 @@ export const ReportPriceModal = () => {
 
   return (
     <Modal
-      overlayColor={
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[9]
-          : theme.colors.gray[2]
-      }
-      overlayOpacity={0.55}
-      overlayBlur={3}
-      opened={isOpen}
-      shadow="lg"
-      radius="md"
+      show={isOpen}
       onClose={() => (useModalState.isOpenedPriceRepost = false)}
     >
-      <fetcher.Form action="/api/items/price" method="post">
-        <Select
-          label="アイテムを選択してください"
-          name="itemId"
-          placeholder="Pick one"
-          itemComponent={SelectItem}
-          onChange={(itemId) => {
-            dispatch({
-              type: "INPUT",
-              field: "selectItemId",
-              payload: itemId,
-            });
-          }}
-          data={items}
-          searchable
-          maxDropdownHeight={400}
-          nothingFound="Nobody here"
-          filter={(value, item) =>
-            item.label?.toLowerCase().includes(value.toLowerCase().trim()) ||
-            false
-          }
-        ></Select>
-        <NumberInput
-          name="price"
-          label="値段"
-          step={1000}
-          defaultValue={1000}
-          min={1000}
-          max={99999999999}
-          parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-        />
-        <Tooltip
-          label="売上から報告する際に一つあたりの値段を取得するのに使用します"
-          withArrow
-        >
-          <NumberInput
-            name="qty"
-            label="個数"
-            step={1}
-            defaultValue={1}
-            min={1}
-            max={999}
-            parser={(value) => value?.replace(/\$\s?|(,*)/g, "")}
-          />
-        </Tooltip>
-        <NumberInput
-          name="ship"
-          label="シップ番号"
-          step={1}
-          defaultValue={user?.ship || 8}
-          min={1}
-          max={10}
-        />
-        <Space h="sm" />
-        <Tooltip label="売上から報告する際は外してください">
-          <Checkbox name="useTax" label="税込み" />
-        </Tooltip>
-        <Button fullWidth mt="xl" type="submit">
-          送信
-        </Button>
-      </fetcher.Form>
+          <Modal.Header>
+      <p>価格の報告</p>
+    </Modal.Header>
+      <Modal.Body>
+        <fetcher.Form action="/api/items/price" method="post">
+          <Select
+          classNames={{input: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}}
+            label="アイテムを選択してください"
+            name="itemId"
+            placeholder="アイテムを選択"
+            itemComponent={SelectItem}
+            onChange={(itemId) => {
+              dispatch({
+                type: "INPUT",
+                field: "selectItemId",
+                payload: itemId,
+              });
+            }}
+            data={items}
+            searchable
+            maxDropdownHeight={400}
+            nothingFound="Nobody here"
+            filter={(value, item) =>
+              item.label?.toLowerCase().includes(value.toLowerCase().trim()) ||
+              false
+            }
+          ></Select>
+          <div>
+            <Label htmlFor="price" value="値段" />
+            <TextInput
+              id="price"
+              required
+              name="price"
+              step={1000}
+              defaultValue={1000}
+              min={1000}
+              max={99999999999}
+            />
+          </div>
+          <div>
+            <Label htmlFor="qty" value="個数" />
+            <TextInput
+              id="qty"
+              name="qty"
+              step={1}
+              defaultValue={1}
+              min={1}
+              max={999}
+            />
+          </div>
+          <div>
+            <Label htmlFor="ship" value="シップ番号" />
+            <TextInput
+              id="ship"
+              name="ship"
+              step={1}
+              defaultValue={user?.ship || 8}
+              min={1}
+              max={10}
+            />
+          </div>
+          <div>
+            <Label htmlFor="tax" value="税込み" />
+            <Checkbox id="tax" name="useTax" />
+          </div>
+          <Button type="submit">送信</Button>
+        </fetcher.Form>
+      </Modal.Body>
+      <Modal.Footer></Modal.Footer>
     </Modal>
   );
 };
