@@ -1,5 +1,5 @@
 import { prisma } from "~/utils/prisma.server";
-import { TItemQuery } from "~/validations/items/index.query";
+import type { TItemQuery } from "~/validations/items/index.query";
 
 export const getItems = async ({ limit, skip, type }: TItemQuery) => {
   const maxCount = await prisma.items.count();
@@ -9,6 +9,9 @@ export const getItems = async ({ limit, skip, type }: TItemQuery) => {
     },
     skip,
     take: limit,
+    orderBy: {
+      name: "asc"
+    },
     include: {
       ability: {
         include: {
