@@ -1,14 +1,7 @@
-import type { ITEM_TYPE } from "@catarks/utils";
 import type { LoaderArgs } from "@remix-run/node";
-import { SearchClient } from "~/utils/search.server";
+import { SearchItemByQuery } from "~/middlewares/search";
 import { searchParams } from "~/utils/utils";
 import { validateSearchItemQuery } from "~/validations/search/item.query";
-
-const CategoryToIndexMapping: {[key in ITEM_TYPE]: string} = {
-  "ability": "index_ops",
-  "weapon": "index_ops",
-  "armor": "index_ops",
-}
 
 export async function loader({request}: LoaderArgs) {
   const params = searchParams(request)
@@ -22,7 +15,6 @@ export async function loader({request}: LoaderArgs) {
     limit,
     q
   })
-  const itemIndex = await SearchClient.getIndex(CategoryToIndexMapping[query.category])
-  const items = await itemIndex.search(query.q, {limit: query.limit, offset: query.skip})
-  return items
+  
+  return await SearchItemByQuery(query)
 }
