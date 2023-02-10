@@ -19,12 +19,12 @@ export async function loader({ params, request }: LoaderArgs) {
   const category = params.category as PickType<ItemDto, "type"> | undefined;
   if (!category) throw new Error();
   const res = await SearchItemByQuery({ q, limit, skip, category });
-  return json({ body: res, category: params.category, page: Number(page) });
+  return json({ body: res, category: params.category, page: Number(page), q });
 }
 
 export default function Category() {
-  const { body, page, category } = useLoaderData<typeof loader>();
-  const [query, setQuery] = useState<string>();
+  const { body, page, category, q } = useLoaderData<typeof loader>();
+  const [query, setQuery] = useState<string | undefined>(q);
   const debouncedValue = useDebounce(query, 500);
   const navigate = useNavigate();
 
