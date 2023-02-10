@@ -2,6 +2,7 @@ import {
   Abilities,
   AbilityEffects,
   DropArias,
+  Items,
   PrismaClient,
 } from "@catarks/db";
 import { Logger, config } from "@catarks/shared";
@@ -20,6 +21,18 @@ interface IEffect {
   percent: boolean;
   value: number;
   types: string[];
+}
+
+const createDocument = (item: Items, ability: any) => {
+  return {
+    id: item.id,
+    title: item.name,
+    iconUrl: item.iconUrl,
+    effects: ability.effects,
+    droparias: ability.aria,
+    rarity: item.rarity,
+    type: item.type
+  }
 }
 
 export class RegisterAbility implements BaseRegister {
@@ -107,14 +120,7 @@ export class RegisterAbility implements BaseRegister {
       });
       if (existsItem) {
         logger.info(`${ability.name} is already exists. skip`);
-        index_body.push({
-          id: existsItem.id,
-          title: existsItem.name,
-          iconUrl: existsItem.iconUrl,
-          effects: ability.effects,
-          droparias: ability.aria,
-          rarity: existsItem.rarity
-        });
+        index_body.push(createDocument(existsItem, ability));
         continue;
       }
       const aria_ids = await this.registerDropAria(ability.aria);
@@ -132,25 +138,20 @@ export class RegisterAbility implements BaseRegister {
           droparias: { connect: aria_ids },
         },
       });
-      index_body.push({
-        id: item.id,
-        title: item.name,
-        iconUrl: item.iconUrl,
-        effects: ability.effects,
-        droparias: ability.aria,
-        rarity: item.rarity
-      });
+      index_body.push(createDocument(item, ability));
       logger.info(`successed register ${ability.name}.`);
     }
     try {
       let index = await client.getIndex("index_ops");
       await index.deleteDocument('index_ops');
       await index.addDocuments(index_body);
+      await index.updateFilterableAttributes(['type'])
     } catch (err: any) {
       if (err.code === "index_not_found") {
         await client.createIndex('index_ops')
         let index = await client.getIndex("index_ops");
         await index.addDocuments(index_body);
+        await index.updateFilterableAttributes(['type'])
       }
     }
 
