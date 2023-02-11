@@ -1,4 +1,5 @@
-import { LoaderArgs, TypedResponse, json } from "@remix-run/node";
+import type { LoaderArgs, TypedResponse} from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { getItems } from "~/middlewares/items";
 import { searchParams } from "~/utils/utils";
 import { validateItemQuery } from "~/validations/items/index.query";

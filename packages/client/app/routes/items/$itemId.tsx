@@ -1,13 +1,8 @@
-import {
-  Avatar,
-  Text,
-  Group,
-  Space,
-} from "@mantine/core";
-import { Tabs, Table } from "flowbite-react";
+import { Avatar, Text, Group, Space } from "@mantine/core";
+import { Tabs, Table, Dropdown } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { SITE_META_PREFIX } from "~/const";
 import { getItemByID } from "~/middlewares/items";
@@ -16,8 +11,13 @@ import { getCategoryName } from "~/utils/utils";
 import { ClientOnly } from "remix-utils";
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
-import { IconStar } from "@tabler/icons";
+import { IconCheck, IconDots, IconStar } from "@tabler/icons";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
+import type { TCreateItemPriceAction } from "../api/items/price";
+import { showNotification } from "@mantine/notifications";
+import { useSessionState } from "~/states/common";
+import { useSnapshot } from "valtio";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -43,11 +43,28 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 
 export default function Item() {
   const { item, charts } = useLoaderData<typeof loader>();
+  const fetcher = useFetcher<TCreateItemPriceAction>();
+  const { user } = useSnapshot(useSessionState);
+
+  useEffect(() => {
+    console.log(fetcher.data);
+    if (fetcher.data?.status === "success") {
+      if (fetcher.data.intent === "deletePrice") {
+        showNotification({
+          color: "green",
+          icon: <IconCheck />,
+          title: "削除に成功しました",
+          message: "",
+        });
+      }
+    }
+  }, [fetcher.data]);
 
   const priceThs = (
     <Table.Head>
       <Table.HeadCell>値段</Table.HeadCell>
       <Table.HeadCell>報告者</Table.HeadCell>
+      <Table.HeadCell></Table.HeadCell>
     </Table.Head>
   );
   const priceRow = item.prices
@@ -74,6 +91,37 @@ export default function Item() {
             </Group>
           </Link>
         </Table.Cell>
+        <Table.Cell>
+          <Dropdown
+            arrowIcon={false}
+            inline={true}
+            label={
+              <button
+                type="button"
+                className="focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                <IconDots />
+              </button>
+            }
+          >
+            {price.reporterId === user?.id && (
+              <Dropdown.Item>
+                <button
+                  className="text-red-400"
+                  onClick={() =>
+                    fetcher.submit(
+                      { priceId: price.id },
+                      { action: "/api/items/price", method: "delete" }
+                    )
+                  }
+                >
+                  報告の削除
+                </button>
+              </Dropdown.Item>
+            )}
+            <Dropdown.Item>報告</Dropdown.Item>
+          </Dropdown>
+        </Table.Cell>
       </Table.Row>
     ));
 
@@ -86,60 +134,56 @@ export default function Item() {
   };
 
   return (
-      <div style={{ margin: "8px" }}>
-        <ArticleCardVertical
-          image={item.iconUrl}
-          category={getCategoryName(item.type)}
-          title={item.name}
-          date=""
-        />
-        <Space h="lg" />
-        <div className="grid grid-cols-2 gap-4">
+    <div style={{ margin: "8px" }}>
+      <ArticleCardVertical
+        image={item.iconUrl}
+        category={getCategoryName(item.type)}
+        title={item.name}
+        date=""
+      />
+      <Space h="lg" />
+      <div className="grid grid-cols-2 gap-4">
+        <CustomCard>
+          <h2 className="font-bold text-lg">入手方法</h2>
+          <ul>
+            {item.droparias.map((aria) => (
+              <li key={aria.name}>{aria.name}</li>
+            ))}
+          </ul>
+        </CustomCard>
+        {item.type == "ability" && (
           <CustomCard>
-            <h2 className="font-bold text-lg">
-              入手方法
-            </h2>
-            <ul>
-              {item.droparias.map((aria) => (
-                <li key={aria.name}>{aria.name}</li>
-              ))}
-            </ul>
+            <h2 className="font-bold text-lg">効果</h2>
+            {item?.ability?.effects.map((effect) => (
+              <div key={effect.name}>{effect.name}</div>
+            ))}
           </CustomCard>
-          {item.type == "ability" && (
-            <CustomCard>
-              <h2 className="font-bold text-lg">
-                効果
-              </h2>
-              {item?.ability?.effects.map((effect) => (
-                <div key={effect.name}>{effect.name}</div>
-              ))}
-            </CustomCard>
-          )}
-        </div>
-        <Space h="lg" />
-        <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
-          <Tabs.Group defaultValue="prices">
-            <Tabs.Item title="価格">
-              {item.prices.length > 0 ? (
-                <Table striped>
-                  {priceThs}
-                  <Table.Body>{priceRow}</Table.Body>
-                </Table>
-              ) : (
-                <Text>まだ報告が存在しないようです</Text>
-              )}
-            </Tabs.Item>
-            <Tabs.Item title="チャート">
-              <ClientOnly fallback={<></>}>
-                {() => (
-                  <>
-                    <PriceChart chartData={charts} />
-                  </>
-                )}
-              </ClientOnly>
-            </Tabs.Item>
-          </Tabs.Group>
-        </div>
+        )}
       </div>
+      <Space h="lg" />
+      <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
+        <Tabs.Group defaultValue="prices">
+          <Tabs.Item title="価格">
+            {item.prices.length > 0 ? (
+              <Table striped>
+                {priceThs}
+                <Table.Body>{priceRow}</Table.Body>
+              </Table>
+            ) : (
+              <Text>まだ報告が存在しないようです</Text>
+            )}
+          </Tabs.Item>
+          <Tabs.Item title="チャート">
+            <ClientOnly fallback={<></>}>
+              {() => (
+                <>
+                  <PriceChart chartData={charts} />
+                </>
+              )}
+            </ClientOnly>
+          </Tabs.Item>
+        </Tabs.Group>
+      </div>
+    </div>
   );
 }
