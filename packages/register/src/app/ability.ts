@@ -145,12 +145,14 @@ export class RegisterAbility implements BaseRegister {
       let index = await client.getIndex("index_ops");
       await index.deleteDocument('index_ops');
       await index.addDocuments(index_body);
+      await index.updateSortableAttributes(['title'])
       await index.updateFilterableAttributes(['type'])
     } catch (err: any) {
       if (err.code === "index_not_found") {
         await client.createIndex('index_ops')
         let index = await client.getIndex("index_ops");
         await index.addDocuments(index_body);
+        await index.updateSortableAttributes(['title'])
         await index.updateFilterableAttributes(['type'])
       }
     }
