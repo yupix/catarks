@@ -32,7 +32,7 @@ export default function Settings() {
       ))}
     </div>
   ))
-  return (<DefaultLayout currentActive="settings">
+  return (<DefaultLayout >
     <Container>
       <Grid>
         <Grid.Col sm={2}>

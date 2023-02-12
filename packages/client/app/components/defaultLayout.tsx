@@ -6,7 +6,6 @@ import { DefaultHeader } from "./header";
 export const DefaultLayout: FC<{
   children?: React.ReactNode;
   currentUser?: TUserSession | null;
-  currentActive: string;
   navbar?: React.ReactNode | undefined;
   header?:
     | React.ReactElement<any, string | React.JSXElementConstructor<any>>
@@ -14,7 +13,7 @@ export const DefaultLayout: FC<{
   footer?:
     | React.ReactElement<any, string | React.JSXElementConstructor<any>>
     | undefined;
-}> = ({ children, currentActive, navbar }) => {
+}> = ({ children, navbar }) => {
   return (
     <>
       <DefaultHeader />
