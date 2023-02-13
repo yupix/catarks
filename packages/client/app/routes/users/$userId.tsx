@@ -69,7 +69,7 @@ export default function UserCardImage() {
           ></span>
         </div>
       </div>
-      <p className="text-center">aaa</p>
+      <p className="text-center"></p>
     </div>
   );
 }
