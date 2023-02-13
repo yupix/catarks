@@ -1,7 +1,7 @@
 import { Authenticator } from "remix-auth";
 import { Auth0Strategy } from "remix-auth-auth0";
 
-import { UserSettings, Users } from "@catarks/db";
+import type { UserSettings, Users } from "@catarks/db";
 
 import { sessionStorage } from "~/utils/session.server";
 import { prisma } from "~/utils/prisma.server";
