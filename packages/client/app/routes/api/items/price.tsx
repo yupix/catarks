@@ -8,15 +8,14 @@ import { assertIsDefined } from "~/utils/utils";
 
 export type TCreateItemPriceAction = typeof action;
 
+
 export async function action({
   request,
 }: ActionArgs): Promise<
   TypedResponse<
-    ActionResponse<
-      "createPrice" | "deletePrice" | "?",
-      ItemPrices | null,
-      "BELOW_THE_MINIMUM_PRICE"
-    >
+     ActionResponse<"createPrice", AwaitedReturnType<typeof ItemActions.CreateItemPrice>, "BELOW_THE_MINIMUM_PRICE"> |
+     ActionResponse<"deletePrice", ItemPrices> |
+     ActionResponse<"?", null>
   >
 > {
   const user = await authenticator.authenticate("auth0", request);
@@ -38,7 +37,7 @@ export async function action({
           ? originalPrice - originalPrice * 0.1
           : originalPrice;
       if (
-        (price < 1000 && useTax?.toString() === "on") ||
+        (price < 900 && useTax?.toString() === "on") ||
         (price < 900 && useTax?.toString() !== "on")
       ) {
         return json({
