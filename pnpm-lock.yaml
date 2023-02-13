@@ -56,6 +56,7 @@ importers:
       chart.js: ^4.2.0
       concurrently: ^7.6.0
       core-js: ^3.27.2
+      daisyui: ^2.50.0
       dayjs: ^1.11.7
       embla-carousel-react: ^7.0.9
       eslint: ^8.33.0
@@ -71,6 +72,7 @@ importers:
       react: ^18.2.0
       react-chartjs-2: ^5.2.0
       react-dom: ^18.2.0
+      react-hot-toast: ^2.4.0
       react-instantsearch-dom: ^6.39.0
       react-native-blurhash: ^1.1.10
       redoc: ^2.0.0
@@ -122,6 +124,7 @@ importers:
       chart.js: 4.2.0
       concurrently: 7.6.0
       core-js: 3.27.2
+      daisyui: 2.50.0_gbtt6ss3tbiz4yjtvdr6fbrj44
       dayjs: 1.11.7
       embla-carousel-react: 7.0.9_react@18.2.0
       flowbite: 1.6.3
@@ -135,6 +138,7 @@ importers:
       react: 18.2.0
       react-chartjs-2: 5.2.0_uxqdnqzacoapcp4mwytn5yclyu
       react-dom: 18.2.0_react@18.2.0
+      react-hot-toast: 2.4.0_owo25xnefcwdq3zjgtohz6dbju
       react-instantsearch-dom: 6.39.0_lcvw2wliyvolumce2ki4t5bwom
       react-native-blurhash: 1.1.10_4abxuapkhmo52mhwaeeet7psu4
       redoc: 2.0.0_xwu4qnzab5spnqevpza6qbrlui
@@ -4747,6 +4751,22 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
+  /autoprefixer/10.4.13_postcss@8.4.21:
+    resolution: {integrity: sha512-49vKpMqcZYsJjwotvt4+h/BCjJVnhGwcLpDt5xkcaOG3eLrG/HUYLagrihYsQ+qrIBgIzX1Rw7a6L8I/ZA1Atg==}
+    engines: {node: ^10 || ^12 || >=14}
+    hasBin: true
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      browserslist: 4.21.5
+      caniuse-lite: 1.0.30001450
+      fraction.js: 4.2.0
+      normalize-range: 0.1.2
+      picocolors: 1.0.0
+      postcss: 8.4.21
+      postcss-value-parser: 4.2.0
+    dev: false
+
   /available-typed-arrays/1.0.5:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
@@ -5617,6 +5637,13 @@ packages:
     engines: {node: '>=4'}
     dev: false
 
+  /css-selector-tokenizer/0.8.0:
+    resolution: {integrity: sha512-Jd6Ig3/pe62/qe5SBPTN8h8LeUg/pT4lLgtavPf7updwwHpvFzxvOQBHYj2LZDMjUnBzgvIUSjRcf6oT5HzHFg==}
+    dependencies:
+      cssesc: 3.0.0
+      fastparse: 1.1.2
+    dev: false
+
   /css-to-react-native/3.1.0:
     resolution: {integrity: sha512-AryfkFA29b4I3vG7N4kxFboq15DxwSXzhXM37XNEjwJMgjYIc8BcqfiprpAqX0zadI5PMByEIwAMzXxk5Vcc4g==}
     dependencies:
@@ -5641,6 +5668,22 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /daisyui/2.50.0_gbtt6ss3tbiz4yjtvdr6fbrj44:
+    resolution: {integrity: sha512-KiqRvqMXi9rgoH84M8D69gXPg6x+cbdiaHqm8pFHOsXXN1rTl/+OcCKkSnkEwTtIge9VJVDGU6l4B8/n+Juc5g==}
+    peerDependencies:
+      autoprefixer: ^10.0.2
+      postcss: ^8.1.6
+    dependencies:
+      autoprefixer: 10.4.13_postcss@8.4.21
+      color: 4.2.3
+      css-selector-tokenizer: 0.8.0
+      postcss: 8.4.21
+      postcss-js: 4.0.0_postcss@8.4.21
+      tailwindcss: 3.2.4_postcss@8.4.21
+    transitivePeerDependencies:
+      - ts-node
+    dev: false
 
   /damerau-levenshtein/1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -6893,6 +6936,10 @@ packages:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
     dev: false
 
+  /fastparse/1.1.2:
+    resolution: {integrity: sha512-483XLLxTVIwWK3QTrMGRqUfUpoOs/0hbQrl2oz4J0pAcm3A3bu84wxTFqGqkJzewCLdME38xJLJAxBABfQT8sQ==}
+    dev: false
+
   /fastq/1.15.0:
     resolution: {integrity: sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==}
     dependencies:
@@ -7126,6 +7173,10 @@ packages:
   /forwarded/0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
     engines: {node: '>= 0.6'}
+
+  /fraction.js/4.2.0:
+    resolution: {integrity: sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==}
+    dev: false
 
   /fragment-cache/0.2.1:
     resolution: {integrity: sha512-GMBAbW9antB8iZRHLoGw0b3HANt57diZYFO/HL1JGIC1MjKrdmhxvrJbupnVvpys0zsz7yBApXdQyfepKly2kA==}
@@ -7402,6 +7453,14 @@ packages:
   /globrex/0.1.2:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
     dev: true
+
+  /goober/2.1.12_csstype@3.1.1:
+    resolution: {integrity: sha512-yXHAvO08FU1JgTXX6Zn6sYCUFfB/OJSX8HHjDSgerZHZmFKAb08cykp5LBw5QnmyMcZyPRMqkdyHUSSzge788Q==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dependencies:
+      csstype: 3.1.1
+    dev: false
 
   /gopd/1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
@@ -9979,6 +10038,11 @@ packages:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
 
+  /normalize-range/0.1.2:
+    resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /normalize-url/6.1.0:
     resolution: {integrity: sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==}
     engines: {node: '>=10'}
@@ -11216,6 +11280,20 @@ packages:
 
   /react-fast-compare/3.2.0:
     resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
+    dev: false
+
+  /react-hot-toast/2.4.0_owo25xnefcwdq3zjgtohz6dbju:
+    resolution: {integrity: sha512-qnnVbXropKuwUpriVVosgo8QrB+IaPJCpL8oBI6Ov84uvHZ5QQcTp2qg6ku2wNfgJl6rlQXJIQU5q+5lmPOutA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      goober: 2.1.12_csstype@3.1.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - csstype
     dev: false
 
   /react-icons/4.7.1_react@18.2.0:
