@@ -2,13 +2,14 @@ import {
   Abilities,
   AbilityEffects,
   DropArias,
+  ItemTypes,
   Items,
   PrismaClient,
 } from "@catarks/db";
 import { Logger, config } from "@catarks/shared";
-import abilities from "../assets/ops.json";
-import { ORM } from "../db/session";
-import { BaseRegister } from "../types/register";
+import abilities from "../../assets/ops.json";
+import { ORM } from "../../db/session";
+import { BaseRegister } from "../../types/register";
 import { MeiliSearch } from "meilisearch";
 
 const client = new MeiliSearch({
@@ -31,9 +32,9 @@ const createDocument = (item: Items, ability: any) => {
     effects: ability.effects,
     droparias: ability.aria,
     rarity: item.rarity,
-    type: item.type
-  }
-}
+    type: item.type,
+  };
+};
 
 export class RegisterAbility implements BaseRegister {
   orm!: PrismaClient;
@@ -48,16 +49,23 @@ export class RegisterAbility implements BaseRegister {
         where: { name: effect.name },
       });
 
+      const data = {
+        name: effect.name,
+        value: effect.value,
+        percent: effect.percent,
+      };
+
       let abilityEffect: AbilityEffects;
       if (existsEffect) {
-        abilityEffect = existsEffect;
+        abilityEffect = await this.orm.abilityEffects.update({
+          where: {
+            name: effect.name,
+          },
+          data,
+        });
       } else {
         abilityEffect = await this.orm.abilityEffects.create({
-          data: {
-            name: effect.name,
-            value: effect.value,
-            percent: effect.percent,
-          },
+          data,
         });
       }
       effect_ids.push({ name: abilityEffect.name });
@@ -72,17 +80,23 @@ export class RegisterAbility implements BaseRegister {
         name,
       },
     });
+    const effect_ids = await this.registerEffect(effects);
+    const data = {
+      name,
+      effects: {
+        connect: effect_ids,
+      },
+    };
     if (existsAbility) {
-      ability = existsAbility;
-    } else {
-      const effect_ids = await this.registerEffect(effects);
-      ability = await this.orm.abilities.create({
-        data: {
+      ability = await this.orm.abilities.update({
+        where: {
           name,
-          effects: {
-            connect: effect_ids,
-          },
         },
+        data,
+      });
+    } else {
+      ability = await this.orm.abilities.create({
+        data,
       });
       ability.name = name;
     }
@@ -118,44 +132,51 @@ export class RegisterAbility implements BaseRegister {
       const existsItem = await this.orm.items.findFirst({
         where: { name: ability.name },
       });
-      if (existsItem) {
-        logger.info(`${ability.name} is already exists. skip`);
-        index_body.push(createDocument(existsItem, ability));
-        continue;
-      }
       const aria_ids = await this.registerDropAria(ability.aria);
       const ability_ids = await this.registerAbility(
         ability.name,
         ability.effects
       );
-      const item = await this.orm.items.create({
-        data: {
-          name: ability.name,
-          rarity: 1,
-          type: "ability",
-          iconUrl: `https://s3.akarinext.org/assets/*/pso2/op/${ability.image_type}.webp`,
-          ability: { connect: ability_ids },
-          droparias: { connect: aria_ids },
-        },
-      });
-      index_body.push(createDocument(item, ability));
-      logger.info(`successed register ${ability.name}.`);
+      const data = {
+        name: ability.name,
+        rarity: ability.rarity,
+        type: "ability" as ItemTypes,
+        iconUrl: `https://s3.akarinext.org/assets/*/pso2/op/${ability.image_type}.webp`,
+        ability: { connect: ability_ids },
+        droparias: { connect: aria_ids },
+      };
+      if (existsItem) {
+        logger.info(`${ability.name} is already exists. do update`);
+        const item = await this.orm.items.update({
+          where: {
+            name: ability.name,
+          },
+          data,
+        });
+        index_body.push(createDocument(item, ability));
+      } else {
+        // 特殊能力が存在しない
+        const item = await this.orm.items.create({
+          data,
+        });
+        index_body.push(createDocument(item, ability));
+        logger.info(`successed register ${ability.name}.`);
+      }
     }
     try {
       let index = await client.getIndex("index_ops");
-      await index.deleteDocument('index_ops');
+      await index.deleteDocument("index_ops");
       await index.addDocuments(index_body);
-      await index.updateSortableAttributes(['title'])
-      await index.updateFilterableAttributes(['type'])
+      await index.updateSortableAttributes(["title"]);
+      await index.updateFilterableAttributes(["type"]);
     } catch (err: any) {
       if (err.code === "index_not_found") {
-        await client.createIndex('index_ops')
+        await client.createIndex("index_ops");
         let index = await client.getIndex("index_ops");
         await index.addDocuments(index_body);
-        await index.updateSortableAttributes(['title'])
-        await index.updateFilterableAttributes(['type'])
+        await index.updateSortableAttributes(["title"]);
+        await index.updateFilterableAttributes(["type"]);
       }
     }
-
   }
 }
