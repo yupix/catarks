@@ -79,7 +79,7 @@ export const PriceChart: FC<{
         plugins: {
           title: {
             display: true,
-            text: "平均価格の変動",
+            text: "平均価格の変動（毎日0時に更新）",
           },
         },
       }}
