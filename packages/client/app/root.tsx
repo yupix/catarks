@@ -90,37 +90,35 @@ export default function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <NotificationsProvider>
-          <html lang="ja" data-theme="winter">
-            <head>
-              <StylesPlaceholder />
-              <Meta />
-              <Links />
-            </head>
-            <body>
-              <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
-              <Outlet />
-              <Toaster />
-              {transition.state === "submitting" && (
-                <div
-                  style={{
-                    position: "fixed",
-                    display: "flex",
-                    zIndex: 300,
-                    top: 14,
-                    right: 20,
-                  }}
-                >
-                  <Loader />
-                </div>
-              )}
-              {transition.state === "loading" && <ProgressBar />}
-              <ScrollRestoration />
-              <Scripts />
-              <LiveReload />
-            </body>
-          </html>
-        </NotificationsProvider>
+        <html lang="ja" data-theme="winter">
+          <head>
+            <StylesPlaceholder />
+            <Meta />
+            <Links />
+          </head>
+          <body>
+            <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
+            <Outlet />
+            <Toaster />
+            {transition.state === "submitting" && (
+              <div
+                style={{
+                  position: "fixed",
+                  display: "flex",
+                  zIndex: 300,
+                  top: 14,
+                  right: 20,
+                }}
+              >
+                <Loader />
+              </div>
+            )}
+            {transition.state === "loading" && <ProgressBar />}
+            <ScrollRestoration />
+            <Scripts />
+            <LiveReload />
+          </body>
+        </html>
       </MantineProvider>
     </ColorSchemeProvider>
   );
