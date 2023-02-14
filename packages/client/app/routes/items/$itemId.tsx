@@ -1,5 +1,5 @@
 import { Avatar, Text, Group, Space } from "@mantine/core";
-import { Tabs, Table, Dropdown } from "flowbite-react";
+import { Tabs } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
@@ -11,13 +11,13 @@ import { getCategoryName } from "~/utils/utils";
 import { ClientOnly } from "remix-utils";
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
-import { IconCheck, IconDots, IconStar } from "@tabler/icons";
+import { IconDots, IconStar } from "@tabler/icons";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import type { TCreateItemPriceAction } from "../api/items/price";
-import { showNotification } from "@mantine/notifications";
 import { useSessionState } from "~/states/common";
 import { useSnapshot } from "valtio";
+import { toast } from "react-hot-toast";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -50,11 +50,8 @@ export default function Item() {
     console.log(fetcher.data);
     if (fetcher.data?.status === "success") {
       if (fetcher.data.intent === "deletePrice") {
-        showNotification({
-          color: "green",
-          icon: <IconCheck />,
-          title: "削除に成功しました",
-          message: "",
+        toast.success("削除に成功しました", {
+          position: "bottom-right"
         });
       }
     }
