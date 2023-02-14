@@ -1,5 +1,5 @@
 import { BaseRegister } from "@/types/register";
-import items from "../assets/material.json";
+import items from "../assets/materials.json";
 import { prisma } from "../db/session";
 import { Indexer, findItemByName, registerDropAria } from "./shared";
 import { DropArias, ItemTypes, Items } from "@catarks/db";
