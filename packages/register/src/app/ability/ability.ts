@@ -1,21 +1,15 @@
 import {
   Abilities,
   AbilityEffects,
-  DropArias,
   ItemTypes,
   Items,
   PrismaClient,
 } from "@catarks/db";
-import { Logger, config } from "@catarks/shared";
+import { Logger } from "@catarks/shared";
 import abilities from "../../assets/ops.json";
-import { ORM } from "../../db/session";
 import { BaseRegister } from "../../types/register";
-import { MeiliSearch } from "meilisearch";
-
-const client = new MeiliSearch({
-  host: config.meilisearch.host,
-  apiKey: config.meilisearch.apikey,
-});
+import { prisma } from "../../db/session";
+import { Indexer, registerDropAria } from "../shared";
 
 interface IEffect {
   name: string;
@@ -39,7 +33,7 @@ const createDocument = (item: Items, ability: any) => {
 export class RegisterAbility implements BaseRegister {
   orm!: PrismaClient;
   constructor() {
-    this.orm = ORM.instance();
+    this.orm = prisma;
   }
 
   async registerEffect(effects: IEffect[]) {
@@ -103,28 +97,6 @@ export class RegisterAbility implements BaseRegister {
     return { name: ability.name };
   }
 
-  async registerDropAria(aries: string[]) {
-    let droparias = [];
-    for (const aria of aries) {
-      const hitAria = await this.orm.dropArias.findFirst({
-        where: {
-          name: aria,
-        },
-      });
-      if (hitAria === null) {
-        const createdAria = await this.orm.dropArias.create({
-          data: {
-            name: aria,
-          },
-        });
-        droparias.push({ name: createdAria.name });
-      } else {
-        droparias.push({ name: hitAria.name });
-      }
-    }
-    return droparias;
-  }
-
   async run() {
     const index_body = [];
     for (const ability of abilities) {
@@ -132,7 +104,7 @@ export class RegisterAbility implements BaseRegister {
       const existsItem = await this.orm.items.findFirst({
         where: { name: ability.name },
       });
-      const aria_ids = await this.registerDropAria(ability.aria);
+      const aria_ids = await registerDropAria(ability.aria);
       const ability_ids = await this.registerAbility(
         ability.name,
         ability.effects
@@ -163,20 +135,6 @@ export class RegisterAbility implements BaseRegister {
         logger.info(`successed register ${ability.name}.`);
       }
     }
-    try {
-      let index = await client.getIndex("index_ops");
-      await index.deleteDocument("index_ops");
-      await index.addDocuments(index_body);
-      await index.updateSortableAttributes(["title"]);
-      await index.updateFilterableAttributes(["type"]);
-    } catch (err: any) {
-      if (err.code === "index_not_found") {
-        await client.createIndex("index_ops");
-        let index = await client.getIndex("index_ops");
-        await index.addDocuments(index_body);
-        await index.updateSortableAttributes(["title"]);
-        await index.updateFilterableAttributes(["type"]);
-      }
-    }
+    await Indexer('index_ops', index_body, {FilterableAttributes: ["type"], sortableattributes: ["title"]})
   }
 }
