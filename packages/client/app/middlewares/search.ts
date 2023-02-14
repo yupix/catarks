@@ -8,6 +8,7 @@ const CategoryToIndexMapping: {[key in ITEM_TYPE]: string} = {
   "ability": "index_ops",
   "weapon": "index_ops",
   "armor": "index_ops",
+  "material": "index_materials"
 }
 
 export async function SearchItemByQuery(query: SearchItemQuery): Promise<SearchResponse<Items>> {
