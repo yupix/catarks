@@ -61,11 +61,11 @@ export default function Item() {
   }, [fetcher.data]);
 
   const priceThs = (
-    <Table.Head>
-      <Table.HeadCell>値段</Table.HeadCell>
-      <Table.HeadCell>報告者</Table.HeadCell>
-      <Table.HeadCell></Table.HeadCell>
-    </Table.Head>
+    <thead>
+      <th>値段</th>
+      <th>報告者</th>
+      <th></th>
+    </thead>
   );
   const priceRow = item.prices
     .sort((a, b) => {
@@ -75,9 +75,9 @@ export default function Item() {
     })
     .reverse()
     .map((price) => (
-      <Table.Row key={price.id}>
-        <Table.Cell>{price.price}</Table.Cell>
-        <Table.Cell>
+      <tr key={price.id}>
+        <td>{price.price}</td>
+        <td>
           <Link
             to={`/users/${price.reporter.id}`}
             style={{ textDecoration: "none", color: "black" }}
@@ -90,22 +90,22 @@ export default function Item() {
               )}
             </Group>
           </Link>
-        </Table.Cell>
-        <Table.Cell>
-          <Dropdown
-            arrowIcon={false}
-            inline={true}
-            label={
+        </td>
+        <td>
+          <div className="dropdown">
+            <label tabIndex={0}>
               <button
                 type="button"
                 className="focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 <IconDots />
               </button>
-            }
-          >
-            {price.reporterId === user?.id && (
-              <Dropdown.Item>
+            </label>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
                 <button
                   className="text-red-400"
                   onClick={() =>
@@ -117,12 +117,14 @@ export default function Item() {
                 >
                   報告の削除
                 </button>
-              </Dropdown.Item>
-            )}
-            <Dropdown.Item>報告</Dropdown.Item>
-          </Dropdown>
-        </Table.Cell>
-      </Table.Row>
+              </li>
+              <li>
+                <button>Coming soon...</button>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
     ));
 
   const CustomCard = ({ children }: { children: ReactNode }) => {
@@ -165,10 +167,10 @@ export default function Item() {
         <Tabs.Group defaultValue="prices">
           <Tabs.Item title="価格">
             {item.prices.length > 0 ? (
-              <Table striped>
-                {priceThs}
-                <Table.Body>{priceRow}</Table.Body>
-              </Table>
+                <table className="table w-full">
+                  {priceThs}
+                  <tbody>{priceRow}</tbody>
+                </table>
             ) : (
               <Text>まだ報告が存在しないようです</Text>
             )}
