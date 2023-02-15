@@ -1,8 +1,3 @@
-import { Loader } from "@mantine/core";
-import {
-  createEmotionCache,
-} from "@mantine/core";
-import { StylesPlaceholder } from "@mantine/remix";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -15,7 +10,7 @@ import {
   useLoaderData,
   useTransition,
 } from "@remix-run/react";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import styles from "./assets/main.css";
 import { useSessionState, useUserDevice } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
@@ -26,6 +21,9 @@ import { assertIsDefined } from "./utils/utils";
 import CSS from "./assets/css/tailwind.css";
 import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
+import { withEmotionCache } from "@emotion/react";
+import ClientStyleContext from "./styles/client.context";
+import ServerStyleContext from "./styles/server.context";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -45,7 +43,75 @@ export async function loader({ request }: LoaderArgs) {
   return json(user ? user : null);
 }
 
-createEmotionCache({ key: "catarks" });
+interface DocumentProps {
+  children: React.ReactNode;
+  title?: string;
+}
+
+const Document = withEmotionCache(
+  ({ children, title }: DocumentProps, emotionCache) => {
+    const serverStyleData = useContext(ServerStyleContext);
+    const clientStyleData = useContext(ClientStyleContext);
+    const transition = useTransition();
+
+    // Only executed on client
+    useEffect(() => {
+      // re-link sheet container
+      emotionCache.sheet.container = document.head;
+
+      // re-inject tags
+      const tags = emotionCache.sheet.tags;
+      emotionCache.sheet.flush();
+      tags.forEach((tag) => {
+        (emotionCache.sheet as any)._insertTag(tag);
+      });
+
+      // reset cache to re-apply global styles
+      clientStyleData.reset();
+    }, [clientStyleData, emotionCache.sheet]);
+
+    return (
+      <html lang="ja" data-theme="winter">
+        <head>
+          {title ? <title>{title}</title> : null}
+          <Meta />
+          <Links />
+          {serverStyleData?.map(({ key, ids, css }) => (
+            <style
+              key={key}
+              data-emotion={`${key} ${ids.join(" ")}`}
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: css }}
+            />
+          ))}
+        </head>
+        <body>
+          <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
+          {children}
+          <Toaster />
+          {transition.state === "submitting" && (
+            <div
+              style={{
+                position: "fixed",
+                display: "flex",
+                zIndex: 300,
+                top: 14,
+                right: 20,
+              }}
+            >
+              {/* <Loader /> */}
+            </div>
+          )}
+          {transition.state === "loading" && <ProgressBar />}
+
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </body>
+      </html>
+    );
+  }
+);
 
 export default function App() {
   const currentUser = useLoaderData<typeof loader>();
@@ -57,7 +123,6 @@ export default function App() {
     useSessionState.user = currentUser;
   }
   const transition = useTransition();
-
 
   useEffect(() => {
     const warningMessage = () => {
@@ -74,36 +139,8 @@ export default function App() {
   }, []);
 
   return (
-
-
-        <html lang="ja" data-theme="winter">
-          <head>
-            <StylesPlaceholder />
-            <Meta />
-            <Links />
-          </head>
-          <body>
-            <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
-            <Outlet />
-            <Toaster />
-            {transition.state === "submitting" && (
-              <div
-                style={{
-                  position: "fixed",
-                  display: "flex",
-                  zIndex: 300,
-                  top: 14,
-                  right: 20,
-                }}
-              >
-                <Loader />
-              </div>
-            )}
-            {transition.state === "loading" && <ProgressBar />}
-            <ScrollRestoration />
-            <Scripts />
-            <LiveReload />
-          </body>
-        </html>
+    <Document>
+      <Outlet />
+    </Document>
   );
 }
