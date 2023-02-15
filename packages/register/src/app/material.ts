@@ -27,7 +27,7 @@ export class RegisterMaterials implements BaseRegister {
       rarity: item.rarity,
       type: "material",
       droparias: { connect: item.droparias },
-      iconUrl: `https://s3.akarinext.org/assets/*/pso2/items/material/${item.name}.webp`,
+      iconUrl: `https://s3.akarinext.org/catarks/*/items/material/${item.name}.webp`,
     };
   }
 

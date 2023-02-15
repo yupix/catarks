@@ -113,7 +113,7 @@ export class RegisterAbility implements BaseRegister {
         name: ability.name,
         rarity: ability.rarity,
         type: "ability" as ItemTypes,
-        iconUrl: `https://s3.akarinext.org/assets/*/pso2/op/${ability.image_type}.webp`,
+        iconUrl: `https://s3.akarinext.org/catarks/*/items/abilities/${ability.image_type}.webp`,
         ability: { connect: ability_ids },
         droparias: { connect: aria_ids },
       };
