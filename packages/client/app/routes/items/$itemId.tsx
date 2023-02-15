@@ -1,4 +1,3 @@
-import { Avatar, Text, Group, Space } from "@mantine/core";
 import { Tabs } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -77,13 +76,25 @@ export default function Item() {
             to={`/users/${price.reporter.id}`}
             style={{ textDecoration: "none", color: "black" }}
           >
-            <Group align="center">
-              <Avatar src={price.reporter.avatarUrl} radius="sm"></Avatar>
-              {price.reporter.username}
-              {price.reporter.role.filter((v) => v.name === "admin") && (
-                <IconStar height={15} style={{ color: "#FFD43B" }} />
-              )}
-            </Group>
+            <div className="flex items-center gap-2">
+              <img
+                src={price.reporter.avatarUrl}
+                alt={`${price.reporter.username} Avatar`}
+                className="rounded-md h-10"
+              ></img>
+              <p className="inline-block">
+                {price.reporter.username}
+                <span>
+                  {price.reporter.role.filter((v) => v.name === "admin") && (
+                    <IconStar
+                      className="inline-block"
+                      height={15}
+                      style={{ color: "#FFD43B" }}
+                    />
+                  )}
+                </span>
+              </p>
+            </div>
           </Link>
         </td>
         <td>
@@ -140,7 +151,7 @@ export default function Item() {
         title={item.name}
         date=""
       />
-      <Space h="lg" />
+      <div className="h-5" />
       <div className="grid grid-cols-2 gap-4">
         <CustomCard>
           <h2 className="font-bold text-lg">入手方法</h2>
@@ -159,7 +170,7 @@ export default function Item() {
           </CustomCard>
         )}
       </div>
-      <Space h="lg" />
+      <div className="h-5" />
       <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
         <Tabs.Group defaultValue="prices">
           <Tabs.Item title="価格">
@@ -169,7 +180,7 @@ export default function Item() {
                 <tbody>{priceRow}</tbody>
               </table>
             ) : (
-              <Text>まだ報告が存在しないようです</Text>
+              <p>まだ報告が存在しないようです</p>
             )}
           </Tabs.Item>
           <Tabs.Item title="チャート">

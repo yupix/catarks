@@ -1,4 +1,3 @@
-import { Avatar, Text, Group } from "@mantine/core";
 import { Card } from "flowbite-react";
 
 interface ArticleCardVerticalProps {
@@ -36,13 +35,13 @@ export function ArticleCardVertical({
           <p className="font-bold mt-2">{title}</p>
           {author && (
             <div className="flex flex-nowrap">
-              <Group spacing="xs" noWrap>
-                <Avatar size={20} src={author?.avatar} />
-                <Text size="xs">{author?.name}</Text>
-              </Group>
-              <Text size="xs" color="dimmed">
+              <div className="flex flex-nowrap ">
+                <img height={20} alt={author.name} src={author?.avatar} />
+                <p>{author?.name}</p>
+              </div>
+              <p color="dimmed">
                 {date}
-              </Text>
+              </p>
             </div>
           )}
         </div>

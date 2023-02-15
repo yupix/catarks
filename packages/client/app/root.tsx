@@ -1,9 +1,6 @@
-import type { ColorScheme } from "@mantine/core";
 import { Loader } from "@mantine/core";
 import {
-  ColorSchemeProvider,
   createEmotionCache,
-  MantineProvider,
 } from "@mantine/core";
 import { StylesPlaceholder } from "@mantine/remix";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
@@ -18,7 +15,7 @@ import {
   useLoaderData,
   useTransition,
 } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "./assets/main.css";
 import { useSessionState, useUserDevice } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
@@ -48,7 +45,7 @@ export async function loader({ request }: LoaderArgs) {
   return json(user ? user : null);
 }
 
-createEmotionCache({ key: "mantine" });
+createEmotionCache({ key: "catarks" });
 
 export default function App() {
   const currentUser = useLoaderData<typeof loader>();
@@ -59,11 +56,8 @@ export default function App() {
     assertIsDefined(currentUser);
     useSessionState.user = currentUser;
   }
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
   const transition = useTransition();
-  const toggleColorScheme = (value?: ColorScheme) => {
-    setColorScheme(value || (device.useTheme === "dark" ? "light" : "dark"));
-  };
+
 
   useEffect(() => {
     const warningMessage = () => {
@@ -80,15 +74,8 @@ export default function App() {
   }, []);
 
   return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
-    >
-      <MantineProvider
-        theme={{ colorScheme }}
-        withGlobalStyles
-        withNormalizeCSS
-      >
+
+
         <html lang="ja" data-theme="winter">
           <head>
             <StylesPlaceholder />
@@ -118,7 +105,5 @@ export default function App() {
             <LiveReload />
           </body>
         </html>
-      </MantineProvider>
-    </ColorSchemeProvider>
   );
 }
