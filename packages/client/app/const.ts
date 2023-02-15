@@ -18,7 +18,7 @@ export const CATEGORIES = [
   },
   {
     title: "防具",
-    value: "armmor",
+    value: "armor",
     icon: "https://s3.akarinext.org/assets/*/pso2/items/armors/エイジャクスアーマ.webp",
   },
   {
