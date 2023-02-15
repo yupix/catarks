@@ -23,7 +23,6 @@ export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
   if (typeof itemId !== "string")
     throw new Error("アイテムIdが指定されていません");
-
   const item = await getItemByID(itemId);
   const charts = await getItemPriceChartById(itemId);
   if (!item) throw Error("Item Not Found");
@@ -47,11 +46,10 @@ export default function Item() {
   const { user } = useSnapshot(useSessionState);
 
   useEffect(() => {
-    console.log(fetcher.data);
     if (fetcher.data?.status === "success") {
       if (fetcher.data.intent === "deletePrice") {
         toast.success("削除に成功しました", {
-          position: "bottom-right"
+          position: "bottom-right",
         });
       }
     }
@@ -102,19 +100,21 @@ export default function Item() {
               tabIndex={0}
               className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
-                <button
-                  className="text-red-400"
-                  onClick={() =>
-                    fetcher.submit(
-                      { priceId: price.id },
-                      { action: "/api/items/price", method: "delete" }
-                    )
-                  }
-                >
-                  報告の削除
-                </button>
-              </li>
+              {price.reporterId === user?.id && (
+                <li>
+                  <button
+                    className="text-red-400"
+                    onClick={() =>
+                      fetcher.submit(
+                        { priceId: price.id },
+                        { action: "/api/items/price", method: "delete" }
+                      )
+                    }
+                  >
+                    報告の削除
+                  </button>
+                </li>
+              )}
               <li>
                 <button>Coming soon...</button>
               </li>
@@ -164,10 +164,10 @@ export default function Item() {
         <Tabs.Group defaultValue="prices">
           <Tabs.Item title="価格">
             {item.prices.length > 0 ? (
-                <table className="table w-full">
-                  {priceThs}
-                  <tbody>{priceRow}</tbody>
-                </table>
+              <table className="table w-full">
+                {priceThs}
+                <tbody>{priceRow}</tbody>
+              </table>
             ) : (
               <Text>まだ報告が存在しないようです</Text>
             )}
