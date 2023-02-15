@@ -23,11 +23,10 @@ import styles from "./assets/main.css";
 import { useSessionState, useUserDevice } from "./states/common";
 import ProgressBar from "./components/ProgressBar";
 import { ReportPriceModal } from "./components/modals/reportPrice";
-import { NotificationsProvider } from "@mantine/notifications";
 import { authenticator } from "./utils/auth.server";
 import { useSnapshot } from "valtio";
 import { assertIsDefined } from "./utils/utils";
-import CSS from "./css/app.css";
+import CSS from "./assets/css/tailwind.css";
 import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
 
