@@ -113,15 +113,15 @@ export const ReportPriceModal = () => {
       <Modal.Header>
         <p>価格の報告</p>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body style={{padding: 0}}>
         <div className="block sm:flex">
-          <div className="flex-0 bg-base-200 flex justify-center items-center rounded-lg p-5 shadow-md">
+          <div className="flex-0 bg-base-200 flex justify-center items-center p-5 rounded-r-lg">
             <div
-              className="rounded-full h-24 w-24 bg-cover bg-center bg-white"
+              className="rounded-full h-24 w-24 bg-cover bg-center bg-white border-solid border-gray-600 border-4 shadow-lg"
               style={itemIcon}
             />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 p-6">
             <fetcher.Form action="/api/items/price" method="post">
               <AutocompleteInput
                 name="itemId"
