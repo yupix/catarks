@@ -87,6 +87,18 @@ model Users {
   Files       Files[]
   Diaries     Diaries[]
   role        UserRoles[]
+  Teams       Teams[]
+  leader      Teams[] @relation("team_leader")
+}
+
+model Teams {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  ship        Int
+  leader      Users   @relation("team_leader", fields: [usersId], references: [id])
+  members     Users[]
+  usersId     String
 }
 
 model UserRoles {
@@ -120,4 +132,5 @@ enum ItemTypes {
   ability
   weapon
   armor
+  material
 }

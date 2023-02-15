@@ -1,0 +1,140 @@
+import {
+  Abilities,
+  AbilityEffects,
+  ItemTypes,
+  Items,
+  PrismaClient,
+} from "@catarks/db";
+import { Logger } from "@catarks/shared";
+import abilities from "../../assets/ops.json";
+import { BaseRegister } from "../../types/register";
+import { prisma } from "../../db/session";
+import { Indexer, registerDropAria } from "../shared";
+
+interface IEffect {
+  name: string;
+  percent: boolean;
+  value: number;
+  types: string[];
+}
+
+const createDocument = (item: Items, ability: any) => {
+  return {
+    id: item.id,
+    title: item.name,
+    iconUrl: item.iconUrl,
+    effects: ability.effects,
+    droparias: ability.aria,
+    rarity: item.rarity,
+    type: item.type,
+  };
+};
+
+export class RegisterAbility implements BaseRegister {
+  orm!: PrismaClient;
+  constructor() {
+    this.orm = prisma;
+  }
+
+  async registerEffect(effects: IEffect[]) {
+    let effect_ids = [];
+    for (const effect of effects) {
+      const existsEffect = await this.orm.abilityEffects.findFirst({
+        where: { name: effect.name },
+      });
+
+      const data = {
+        name: effect.name,
+        value: effect.value,
+        percent: effect.percent,
+      };
+
+      let abilityEffect: AbilityEffects;
+      if (existsEffect) {
+        abilityEffect = await this.orm.abilityEffects.update({
+          where: {
+            name: effect.name,
+          },
+          data,
+        });
+      } else {
+        abilityEffect = await this.orm.abilityEffects.create({
+          data,
+        });
+      }
+      effect_ids.push({ name: abilityEffect.name });
+    }
+    return effect_ids;
+  }
+
+  async registerAbility(name: string, effects: IEffect[]) {
+    let ability: Abilities;
+    const existsAbility = await this.orm.abilities.findFirst({
+      where: {
+        name,
+      },
+    });
+    const effect_ids = await this.registerEffect(effects);
+    const data = {
+      name,
+      effects: {
+        connect: effect_ids,
+      },
+    };
+    if (existsAbility) {
+      ability = await this.orm.abilities.update({
+        where: {
+          name,
+        },
+        data,
+      });
+    } else {
+      ability = await this.orm.abilities.create({
+        data,
+      });
+      ability.name = name;
+    }
+    return { name: ability.name };
+  }
+
+  async run() {
+    const index_body = [];
+    for (const ability of abilities) {
+      const logger = Logger.getInstance;
+      const existsItem = await this.orm.items.findFirst({
+        where: { name: ability.name },
+      });
+      const aria_ids = await registerDropAria(ability.aria);
+      const ability_ids = await this.registerAbility(
+        ability.name,
+        ability.effects
+      );
+      const data = {
+        name: ability.name,
+        rarity: ability.rarity,
+        type: "ability" as ItemTypes,
+        iconUrl: `https://s3.akarinext.org/catarks/*/items/abilities/${ability.image_type}.webp`,
+        ability: { connect: ability_ids },
+        droparias: { connect: aria_ids },
+      };
+      if (existsItem) {
+        logger.info(`${ability.name} is already exists. do update`);
+        const item = await this.orm.items.update({
+          where: {
+            name: ability.name,
+          },
+          data,
+        });
+        index_body.push(createDocument(item, ability));
+      } else {
+        // 特殊能力が存在しない
+        const item = await this.orm.items.create({
+          data,
+        });
+        index_body.push(createDocument(item, ability));
+        logger.info(`successed register ${ability.name}.`);
+      }
+    }
+    await Indexer('index_ops', index_body, {FilterableAttributes: ["type"], sortableattributes: ["title"]})
+  }
+}

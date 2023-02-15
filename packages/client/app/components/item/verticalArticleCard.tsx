@@ -1,23 +1,4 @@
-import { createStyles, Card, Image, Avatar, Text, Group, Center } from '@mantine/core';
-
-const useStyles = createStyles((theme) => ({
-  card: {
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-  },
-
-  title: {
-    fontWeight: 700,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    lineHeight: 1.2,
-    flexGrow: 1
-  },
-
-  body: {
-    display: "flex",
-    flexDirection: "column",
-    padding: theme.spacing.md,
-  },
-}));
+import { Card } from "flowbite-react";
 
 interface ArticleCardVerticalProps {
   image: string;
@@ -37,37 +18,34 @@ export function ArticleCardVertical({
   date,
   author,
 }: ArticleCardVerticalProps) {
-  const { classes } = useStyles();
   return (
-    <Card withBorder radius="md" p={0} className={classes.card} style={{ height: '100%' }}>
-      <Group noWrap spacing={0} style={{ height: '100%' }}>
-        <Center>
-          <Image src={image} height="75" width={75} radius="md" style={{ marginLeft: '16px' }} withPlaceholder alt={title}></Image>
-        </Center>
-        {/* <img src={image} height={75} width={75} style={{ borderRadius: '6%', marginLeft: "16px" }} /> */}
-        <div className={classes.body}>
-          <Text transform="uppercase" color="dimmed" weight={700} size="xs">
-            {category}
-          </Text>
-          <Text className={classes.title} mt="xs" mb="md" >
-            {title}
-          </Text>
-          {author &&
-            <Group noWrap spacing="xs">
-              <Group spacing="xs" noWrap>
-                <Avatar size={20} src={author?.avatar} />
-                <Text size="xs">{author?.name}</Text>
-              </Group>
-              {/* <Text size="xs" color="dimmed">
-              •
-            </Text> */}
-              <Text size="xs" color="dimmed">
-                {date}
-              </Text>
-            </Group>
-          }
+    <Card className="h-full">
+      <div className="grid justify-center items-center grid-cols-none sm:grid-cols-2">
+        <div className="flex justify-center sm:justify-between">
+        <img
+          src={image}
+          width={75}
+          height={75}
+          alt={title}
+          className="rounded-xl mr-2"
+        />
         </div>
-      </Group>
-    </Card >
+        <div className="flex flex-col justify-center sm:justify-between">
+          <p className="text-gray-400 font-bold text-xs">{category}</p>
+          <p className="font-bold mt-2">{title}</p>
+          {author && (
+            <div className="flex flex-nowrap">
+              <div className="flex flex-nowrap ">
+                <img height={20} alt={author.name} src={author?.avatar} />
+                <p>{author?.name}</p>
+              </div>
+              <p color="dimmed">
+                {date}
+              </p>
+            </div>
+          )}
+        </div>
+        </div>
+    </Card>
   );
 }

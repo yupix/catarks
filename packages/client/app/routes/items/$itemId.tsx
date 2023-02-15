@@ -1,22 +1,7 @@
-import {
-  Avatar,
-  Card,
-  Text,
-  Container,
-  Grid,
-  Group,
-  HoverCard,
-  List,
-  Space,
-  Table,
-  Title,
-  Stack,
-  Tabs,
-  Tooltip,
-} from "@mantine/core";
+import { Tabs } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { SITE_META_PREFIX } from "~/const";
 import { getItemByID } from "~/middlewares/items";
@@ -25,13 +10,18 @@ import { getCategoryName } from "~/utils/utils";
 import { ClientOnly } from "remix-utils";
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
-import { IconStar } from "@tabler/icons";
+import { IconDots, IconStar } from "@tabler/icons";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
+import type { TCreateItemPriceAction } from "../api/items/price";
+import { useSessionState } from "~/states/common";
+import { useSnapshot } from "valtio";
+import { toast } from "react-hot-toast";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
   if (typeof itemId !== "string")
     throw new Error("アイテムIdが指定されていません");
-
   const item = await getItemByID(itemId);
   const charts = await getItemPriceChartById(itemId);
   if (!item) throw Error("Item Not Found");
@@ -51,12 +41,25 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 
 export default function Item() {
   const { item, charts } = useLoaderData<typeof loader>();
+  const fetcher = useFetcher<TCreateItemPriceAction>();
+  const { user } = useSnapshot(useSessionState);
+
+  useEffect(() => {
+    if (fetcher.data?.status === "success") {
+      if (fetcher.data.intent === "deletePrice") {
+        toast.success("削除に成功しました", {
+          position: "bottom-right",
+        });
+      }
+    }
+  }, [fetcher.data]);
 
   const priceThs = (
-    <tr>
+    <thead>
       <th>値段</th>
       <th>報告者</th>
-    </tr>
+      <th></th>
+    </thead>
   );
   const priceRow = item.prices
     .sort((a, b) => {
@@ -69,110 +72,128 @@ export default function Item() {
       <tr key={price.id}>
         <td>{price.price}</td>
         <td>
-          <HoverCard
-            width={280}
-            shadow="md"
-            withinPortal
-            withArrow
-            position="bottom-start"
+          <Link
+            to={`/users/${price.reporter.id}`}
+            style={{ textDecoration: "none", color: "black" }}
           >
-            <HoverCard.Target>
-              <Link to={`/users/${price.reporter.id}`} style={{textDecoration:"none", color: "black"}}>
-                <Group align="center">
-                  <Avatar src={price.reporter.avatarUrl} radius="sm"></Avatar>
-                  {price.reporter.username}
-                  {price.reporter.role.filter((v) => v.name === 'admin') && 
-                  <IconStar height={15} style={{color: "#FFD43B"}}/>
-                  }
-                </Group>
-              </Link>
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
-              <Group>
-                <Avatar src={price.reporter.avatarUrl} radius="xl" />
-                <Stack spacing={5}>
-                  <Text size="sm" weight={700} sx={{ lineHeight: 1 }}>
-                    {price.reporter.username}
-                  </Text>
-                  <Link to={`/users/${price.reporter.id}`} color="dimmed">
-                    @{price.reporter.username}
-                  </Link>
-                </Stack>
-              </Group>
-              <Text size="sm" mt="md">
-                {price.reporter.description}
-              </Text>
-            </HoverCard.Dropdown>
-          </HoverCard>
+            <div className="flex items-center gap-2">
+              <img
+                src={price.reporter.avatarUrl}
+                alt={`${price.reporter.username} Avatar`}
+                className="rounded-md h-10"
+              ></img>
+              <p className="inline-block">
+                {price.reporter.username}
+                <span>
+                  {price.reporter.role.filter((v) => v.name === "admin") && (
+                    <IconStar
+                      className="inline-block"
+                      height={15}
+                      style={{ color: "#FFD43B" }}
+                    />
+                  )}
+                </span>
+              </p>
+            </div>
+          </Link>
+        </td>
+        <td>
+          <div className="dropdown">
+            <label tabIndex={0}>
+              <button
+                type="button"
+                className="focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                <IconDots />
+              </button>
+            </label>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              {price.reporterId === user?.id && (
+                <li>
+                  <button
+                    className="text-red-400"
+                    onClick={() =>
+                      fetcher.submit(
+                        { priceId: price.id },
+                        { action: "/api/items/price", method: "delete" }
+                      )
+                    }
+                  >
+                    報告の削除
+                  </button>
+                </li>
+              )}
+              <li>
+                <button>Coming soon...</button>
+              </li>
+            </ul>
+          </div>
         </td>
       </tr>
     ));
 
-  return (
-    <Container>
-      <div style={{ margin: "8px" }}>
-        <ArticleCardVertical
-          image={item.iconUrl}
-          category={getCategoryName(item.type)}
-          title={item.name}
-          date=""
-        />
-        <Space h="lg" />
-        <Grid justify="center" grow>
-          <Grid.Col md={6} lg={3}>
-            <Card withBorder h="100%">
-              <Title order={3} color="dark.4">
-                入手方法
-              </Title>
-              <List>
-                {item.droparias.map((aria) => (
-                  <List.Item key={aria.name}>{aria.name}</List.Item>
-                ))}
-              </List>
-            </Card>
-          </Grid.Col>
-          <Grid.Col md={6} lg={3}>
-            {item.type == "ability" && (
-              <Card withBorder h="100%">
-                <Title order={3} color="dark.4">
-                  効果
-                </Title>
-                {item?.ability?.effects.map((effect) => (
-                  <div key={effect.name}>{effect.name}</div>
-                ))}
-              </Card>
-            )}
-          </Grid.Col>
-        </Grid>
-        <Space h="lg" />
-        <Tabs defaultValue="prices">
-          <Card withBorder>
-            <Tabs.List>
-              <Tabs.Tab value="prices">価格</Tabs.Tab>
-              <Tabs.Tab value="chart">チャート</Tabs.Tab>
-            </Tabs.List>
-            <Tabs.Panel value="prices">
-              {item.prices.length > 0 ? (
-                <Table striped highlightOnHover withBorder>
-                  <thead>{priceThs}</thead>
-                  <tbody>{priceRow}</tbody>
-                </Table>
-              ) : (
-                <Text>まだ報告が存在しないようです</Text>
-              )}
-            </Tabs.Panel>
-            <Tabs.Panel value="chart">
-              <ClientOnly fallback={<></>}>
-                {() => (
-                  <>
-                    <PriceChart chartData={charts} />
-                  </>
-                )}
-              </ClientOnly>
-            </Tabs.Panel>
-          </Card>
-        </Tabs>
+  const CustomCard = ({ children }: { children: ReactNode }) => {
+    return (
+      <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
+        <div className="flex h-full flex-col gap-4 p-6">{children}</div>
       </div>
-    </Container>
+    );
+  };
+
+  return (
+    <div style={{ margin: "8px" }}>
+      <ArticleCardVertical
+        image={item.iconUrl}
+        category={getCategoryName(item.type)}
+        title={item.name}
+        date=""
+      />
+      <div className="h-5" />
+      <div className="grid grid-cols-2 gap-4">
+        <CustomCard>
+          <h2 className="font-bold text-lg">入手方法</h2>
+          <ul>
+            {item.droparias.map((aria) => (
+              <li key={aria.name}>{aria.name}</li>
+            ))}
+          </ul>
+        </CustomCard>
+        {item.type == "ability" && (
+          <CustomCard>
+            <h2 className="font-bold text-lg">効果</h2>
+            {item?.ability?.effects.map((effect) => (
+              <div key={effect.name}>{effect.name}</div>
+            ))}
+          </CustomCard>
+        )}
+      </div>
+      <div className="h-5" />
+      <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
+        <Tabs.Group defaultValue="prices">
+          <Tabs.Item title="価格">
+            {item.prices.length > 0 ? (
+              <table className="table w-full">
+                {priceThs}
+                <tbody>{priceRow}</tbody>
+              </table>
+            ) : (
+              <p>まだ報告が存在しないようです</p>
+            )}
+          </Tabs.Item>
+          <Tabs.Item title="チャート">
+            <ClientOnly fallback={<></>}>
+              {() => (
+                <>
+                  <PriceChart chartData={charts} />
+                </>
+              )}
+            </ClientOnly>
+          </Tabs.Item>
+        </Tabs.Group>
+      </div>
+    </div>
   );
 }

@@ -45,6 +45,10 @@ interface IConfig {
     accessKeyId: string;
     secretAccessKey: string;
   };
+  meilisearch: {
+    host: string;
+    apikey: string;
+  }
 }
 
 function loadConfig() {

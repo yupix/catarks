@@ -1,12 +1,13 @@
 import { ArrayElement } from "./type";
 
-export const ITEM_TYPES = ['ability', 'weapon', 'armor'] as const
+export const ITEM_TYPES = ['ability', 'weapon', 'armor', 'material'] as const
 export type ITEM_TYPE = ArrayElement<typeof ITEM_TYPES>
 
 export const TYPE_TO_CATEGORY: { [key in ITEM_TYPE]: string } = {
   ability: "特殊能力",
   weapon: "武器",
-  armor: '防具'
+  armor: '防具',
+  material: "素材"
 };
 
 

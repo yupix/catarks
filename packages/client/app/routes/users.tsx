@@ -6,7 +6,7 @@ import { DefaultLayout } from "~/components/defaultLayout";
 export default function Users() {
 
   return (
-    <DefaultLayout currentActive="">
+    <DefaultLayout >
       <Outlet></Outlet>
     </DefaultLayout>
   );

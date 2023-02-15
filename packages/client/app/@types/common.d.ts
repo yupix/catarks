@@ -5,3 +5,4 @@ interface ActionResponse<I extends string, T = undefined, M=undefined> {
   body?: T;
 }
 
+type AwaitedReturnType <T extends (...args: any) => any>=  Awaited<ReturnType<T>>
