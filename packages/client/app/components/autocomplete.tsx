@@ -1,4 +1,5 @@
-import React, { memo, useState } from "react";
+import { TextInput } from "flowbite-react";
+import React, { useState } from "react";
 import {
   hiraganaToKatagana,
   replaceNumbersWithRoman,
@@ -76,13 +77,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       {selectedOption && (
         <input type="hidden" name={name} value={selectedOption.value} />
       )}
-      <input
-        className="input input-bordered w-full max-w-xs"
-        required={required}
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-      />
+      <TextInput value={inputValue} onChange={handleInputChange} required={required}/>
       {isOptionsVisible && filteredOptions.length > 0 && (
         <ul className="absolute bg-white z-10 h-36 overflow-y-scroll shadow-md rounded-md p-3">
           {filteredOptions.map((option) => (
