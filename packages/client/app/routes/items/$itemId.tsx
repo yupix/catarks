@@ -56,7 +56,7 @@ export default function Item() {
 
   const priceThs = (
     <thead>
-      <th>売値</th>
+      <th>売値 <span className="badge">New</span></th>
       <th>純売上</th>
       <th>報告者</th>
       <th></th>
@@ -71,7 +71,7 @@ export default function Item() {
     .reverse()
     .map((price) => (
       <tr key={price.id}>
-        <td>{price.price + (price.price * 0.1)}</td>
+        <td>{price.price / (1 - 0.1)}</td>
         <td>{price.price}</td>
         <td>
           <Link
