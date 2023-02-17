@@ -3,9 +3,9 @@ import { Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { useModalState, useSessionState } from "~/states/common";
-import { Link, useFetcher } from "@remix-run/react";
+import { Link, useFetcher, useLocation } from "@remix-run/react";
 import type { TgetItemsLoader } from "~/routes/api/items";
-import { assertIsDefined } from "~/utils/utils";
+import { assertIsDefined, isUUID } from "~/utils/utils";
 import type { TCreateItemPriceAction } from "~/routes/api/items/price";
 import { toast } from "react-hot-toast";
 import AutocompleteInput from "../autocomplete";
@@ -14,7 +14,25 @@ import type { Items } from "@catarks/db";
 
 export const ReportPriceModal = () => {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
+  const [option, setOption] = useState<
+    { value: string; label: string } | undefined
+  >(undefined);
   const user = useSnapshot(useSessionState).user;
+  const location = useLocation();
+  useEffect(() => {
+    const itemId = location.pathname.split("/").pop();
+    if (isUUID(itemId) && items) {
+      const hitItems = items.filter((v) => v.value === itemId);
+      if (hitItems.length > 0) {
+        setOption(hitItems[0]);
+        fetcher.submit(null, {
+          action: `/api/items/${hitItems[0].value}`,
+          method: "get",
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, items]);
 
   useEffect(() => {
     fetcher.submit(null, { action: "/api/items?index", method: "get" });
@@ -54,7 +72,6 @@ export const ReportPriceModal = () => {
               position: "bottom-right",
             });
           }
-          
         }
         if (data.status === "success") {
           toast.custom(
@@ -119,7 +136,7 @@ export const ReportPriceModal = () => {
       <Modal.Header>
         <p>価格の報告</p>
       </Modal.Header>
-      <Modal.Body style={{padding: 0}}>
+      <Modal.Body style={{ padding: 0 }}>
         <div className="block sm:flex">
           <div className="flex-0 bg-base-200 flex justify-center items-center p-5 rounded-r-lg">
             <div
@@ -130,6 +147,7 @@ export const ReportPriceModal = () => {
           <div className="flex-1 p-6">
             <fetcher.Form action="/api/items/price" method="post">
               <AutocompleteInput
+                defaultValue={option}
                 name="itemId"
                 options={items}
                 label="アイテム名"
