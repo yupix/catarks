@@ -13,7 +13,7 @@ export async function action({
   request,
 }: ActionArgs): Promise<
   TypedResponse<
-     ActionResponse<"createPrice", AwaitedReturnType<typeof ItemActions.CreateItemPrice>, "BELOW_THE_MINIMUM_PRICE"> |
+     ActionResponse<"createPrice", AwaitedReturnType<typeof ItemActions.CreateItemPrice>, "BELOW_THE_MINIMUM_PRICE" | "INVALID_PRICE"> |
      ActionResponse<"deletePrice", ItemPrices> |
      ActionResponse<"?", null>
   >
@@ -36,6 +36,13 @@ export async function action({
         useTax?.toString() === "on"
           ? originalPrice - originalPrice * 0.1
           : originalPrice;
+      if (price % 100 !== 0) {
+        return json({
+          intent: 'createPrice',
+          status: "failed",
+          message: 'INVALID_PRICE'
+        })
+      }
       if (
         (price < 900 && useTax?.toString() === "on") ||
         (price < 900 && useTax?.toString() !== "on")

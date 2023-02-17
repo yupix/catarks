@@ -49,6 +49,12 @@ export const ReportPriceModal = () => {
               position: "bottom-right",
             });
           }
+          if (data.message === "INVALID_PRICE") {
+            toast.error("不正な価格です", {
+              position: "bottom-right",
+            });
+          }
+          
         }
         if (data.status === "success") {
           toast.custom(
