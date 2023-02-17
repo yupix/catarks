@@ -12,6 +12,7 @@ type TItemBase = {
 
 type TItem = TItemBase & {
   droparias: { name: string }[];
+  image_type?: string
 };
 
 export class RegisterMaterials implements BaseRegister {
@@ -27,7 +28,7 @@ export class RegisterMaterials implements BaseRegister {
       rarity: item.rarity,
       type: "material",
       droparias: { connect: item.droparias },
-      iconUrl: `https://s3.akarinext.org/catarks/*/items/material/${item.name}.webp`,
+      iconUrl: `https://s3.akarinext.org/catarks/*/items/materials/${item.image_type ?  item.image_type : item.name}.webp`,
     };
   }
 

@@ -21,7 +21,7 @@ interface IEffect {
 const createDocument = (item: Items, ability: any) => {
   return {
     id: item.id,
-    title: item.name,
+      title: item.name,
     iconUrl: item.iconUrl,
     effects: ability.effects,
     droparias: ability.aria,
@@ -99,6 +99,7 @@ export class RegisterAbility implements BaseRegister {
 
   async run() {
     const index_body = [];
+    
     for (const ability of abilities) {
       const logger = Logger.getInstance;
       const existsItem = await this.orm.items.findFirst({
