@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
+import {
+  hiraganaToKatagana,
+  replaceNumbersWithRoman,
+} from "~/utils/utils.client";
 
 type Option = {
   label: string;
   value: string;
 };
+
 interface AutocompleteInputProps {
   options: Option[];
   name?: string;
@@ -33,7 +38,14 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     const filteredOptions = options.filter(
       (option) =>
         option.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-        option.value.toLowerCase().includes(inputValue.toLowerCase())
+        hiraganaToKatagana(option.label.toLowerCase()).includes(
+          hiraganaToKatagana(inputValue.toLowerCase())
+        ) ||
+        replaceNumbersWithRoman(
+          hiraganaToKatagana(option.label.toLowerCase())
+        ).includes(
+          replaceNumbersWithRoman(hiraganaToKatagana(inputValue.toLowerCase()))
+        )
     );
     setFilteredOptions(filteredOptions);
     setIsOptionsVisible(true);
@@ -43,7 +55,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     setInputValue(option.label);
     setFilteredOptions([]);
     setIsOptionsVisible(false);
-    setSelectedOption(option)
+    setSelectedOption(option);
     if (onSelected) {
       onSelected(option);
     }
