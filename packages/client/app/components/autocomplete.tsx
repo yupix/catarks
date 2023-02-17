@@ -1,5 +1,5 @@
 import { TextInput } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   hiraganaToKatagana,
   replaceNumbersWithRoman,
@@ -18,12 +18,13 @@ interface AutocompleteInputProps {
   onSelected?: (option: Option) => void;
 }
 
-const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
+const AutocompleteInput: React.FC<AutocompleteInputProps & {   defaultValue?: Option}> = ({
   name,
   options,
   required,
   label,
   onSelected,
+  defaultValue
 }) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
@@ -32,6 +33,13 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     label: string;
     value: string;
   } | null>(null);
+
+  useEffect(() => {
+    if (defaultValue) {
+      setInputValue(defaultValue.label);
+      setSelectedOption(defaultValue);
+    }
+  }, [defaultValue])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
