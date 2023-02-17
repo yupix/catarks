@@ -13,6 +13,7 @@
   "dependencies": {
     "@catarks/db": "workspace:^1.0.0",
     "@catarks/shared": "workspace:*",
+    "@elastic/elasticsearch": "^8.6.0",
     "@mikro-orm/core": "^5.5.3",
     "@mikro-orm/postgresql": "^5.5.3",
     "meilisearch": "^0.30.0"
