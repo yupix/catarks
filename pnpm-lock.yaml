@@ -56,6 +56,7 @@ importers:
       react: ^18.2.0
       react-chartjs-2: ^5.2.0
       react-dom: ^18.2.0
+      react-hook-form: ^7.43.1
       react-hot-toast: ^2.4.0
       react-instantsearch-dom: ^6.39.0
       react-native-blurhash: ^1.1.10
@@ -107,6 +108,7 @@ importers:
       react: 18.2.0
       react-chartjs-2: 5.2.0_t5yjg6ab35jnsudnh2qdighszm
       react-dom: 18.2.0_react@18.2.0
+      react-hook-form: 7.43.1_react@18.2.0
       react-hot-toast: 2.4.0_owo25xnefcwdq3zjgtohz6dbju
       react-instantsearch-dom: 6.39.0_lcvw2wliyvolumce2ki4t5bwom
       react-native-blurhash: 1.1.10_yqouayos4dnow7nnkhah4yzuzq
@@ -10675,6 +10677,15 @@ packages:
 
   /react-fast-compare/3.2.0:
     resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
+    dev: false
+
+  /react-hook-form/7.43.1_react@18.2.0:
+    resolution: {integrity: sha512-+s3+s8LLytRMriwwuSqeLStVjRXFGxgjjx2jED7Z+wz1J/88vpxieRQGvJVvzrzVxshZ0BRuocFERb779m2kNg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-hot-toast/2.4.0_owo25xnefcwdq3zjgtohz6dbju:
