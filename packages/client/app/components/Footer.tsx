@@ -3,12 +3,12 @@ import { Link } from "@remix-run/react";
 export function Footer() {
   return (
     <footer className="bg-white rounded-lg shadow md:px-6 md:py-8 dark:bg-gray-900">
-      <div className="sm:grid grid-cols-2">
+      <div className="sm:grid grid-cols-2 p-2">
         <div className="mb-2">
           <p className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             CatArks
           </p>
-          <p className="text-gray-500">
+          <p className="text-gray-500 p-2">
             本サイト内で使用している画像や文章データは株式会社セガに帰属します。（C）SEGA
             <br />
             また、画像、動画は公式サイト、および公式が配信したものの他、ゲーム内画像が含まれます。
@@ -45,7 +45,7 @@ export function Footer() {
         <div></div>
       </div>
       <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-      <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
+      <span className="block text-sm text-gray-500 text-center dark:text-gray-400">
         &copy; 2023{" "}
         <Link to="/" className="hover:underline">
           catarks.org

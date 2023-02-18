@@ -29,7 +29,7 @@ export const DefaultLayout: FC<{
                 {children}
               </div>
             </article>
-            <div style={{ height: 400 }} />
+            <div style={{ height: 50 }} />
             <div>
               <Footer />
             </div>
@@ -42,6 +42,9 @@ export const DefaultLayout: FC<{
               <Link to="/" className="btn btn-ghost normal-case text-xl">
                 Cat Arks
               </Link>
+              <p className="font-mono text-xs text-opacity-50">
+                0.1.0
+              </p>
             </div>
             <div className="mt-2"></div>
             <ul className="menu menu-compact flex flex-col p-0 px-4">
@@ -61,7 +64,10 @@ export const DefaultLayout: FC<{
                 return (
                   <li key={category.value}>
                     <Link to={`/categories/${category.value}`}>
-                      {category.title}{category.value === 'material' && <span className="badge">New</span>}
+                      {category.title}
+                      {category.value === "material" && (
+                        <span className="badge">New</span>
+                      )}
                     </Link>
                   </li>
                 );
