@@ -36,7 +36,7 @@ export function ArticleCardVertical({
           {author && (
             <div className="flex flex-nowrap">
               <div className="flex flex-nowrap ">
-                <img height={20} alt={author.name} src={author?.avatar} />
+                <img height={20} alt={author.name} src={author?.avatar} loading="lazy"/>
                 <p>{author?.name}</p>
               </div>
               <p color="dimmed">
