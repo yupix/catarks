@@ -1,4 +1,5 @@
 import { Card } from "flowbite-react";
+import { memo } from "react";
 
 interface ArticleCardVerticalProps {
   image: string;
@@ -11,7 +12,7 @@ interface ArticleCardVerticalProps {
   };
 }
 
-export function ArticleCardVertical({
+export const ArticleCardVertical = memo(function ArticleCardVertical({
   image,
   category,
   title,
@@ -49,3 +50,4 @@ export function ArticleCardVertical({
     </Card>
   );
 }
+)
