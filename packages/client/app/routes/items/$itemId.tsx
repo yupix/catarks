@@ -56,10 +56,12 @@ export default function Item() {
 
   const priceThs = (
     <thead>
-      <th>売値 <span className="badge">New</span></th>
+      <tr>
+      <th>売値</th>
       <th>純売上</th>
       <th>報告者</th>
       <th></th>
+      </tr>
     </thead>
   );
   const priceRow = item.prices
@@ -177,10 +179,12 @@ export default function Item() {
         <Tabs.Group defaultValue="prices">
           <Tabs.Item title="価格">
             {item.prices.length > 0 ? (
+              <div className="overflow-x-auto overflow-y-hidden">
               <table className="table w-full">
                 {priceThs}
                 <tbody>{priceRow}</tbody>
               </table>
+              </div>
             ) : (
               <p>まだ報告が存在しないようです</p>
             )}
