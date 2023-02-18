@@ -1,6 +1,6 @@
-import { Label, TextInput, Checkbox } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 import { Modal } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSnapshot } from "valtio";
 import { useModalState, useSessionState } from "~/states/common";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
@@ -8,17 +8,20 @@ import type { TgetItemsLoader } from "~/routes/api/items";
 import { assertIsDefined, isUUID } from "~/utils/utils";
 import type { TCreateItemPriceAction } from "~/routes/api/items/price";
 import { toast } from "react-hot-toast";
+import type { AutocompleteInputOption } from "../autocomplete";
 import AutocompleteInput from "../autocomplete";
 import type { TGetItemByIdLoader } from "~/routes/api/items/$itemId";
 import type { Items } from "@catarks/db";
+import { useMount } from "@reactuses/core";
+import { useForm } from "react-hook-form";
 
-export const ReportPriceModal = () => {
+export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
-  const [option, setOption] = useState<
-    { value: string; label: string } | undefined
-  >(undefined);
-  const user = useSnapshot(useSessionState).user;
+  const { user } = useSnapshot(useSessionState);
   const location = useLocation();
+  const [option, setOption] = useState<AutocompleteInputOption | undefined>(
+    undefined
+  );
   useEffect(() => {
     const itemId = location.pathname.split("/").pop();
     if (isUUID(itemId) && items) {
@@ -34,9 +37,9 @@ export const ReportPriceModal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, items]);
 
-  useEffect(() => {
+  useMount(() => {
     fetcher.submit(null, { action: "/api/items?index", method: "get" });
-  }, []);
+  });
   const isOpen = useSnapshot(useModalState).isOpenedPriceRepost;
   const fetcher = useFetcher<
     TgetItemsLoader | TCreateItemPriceAction | TGetItemByIdLoader
@@ -123,7 +126,23 @@ export const ReportPriceModal = () => {
   const handleSelectChange = (itemId: string) => {
     fetcher.submit(null, { action: `/api/items/${itemId}`, method: "get" });
   };
-
+  type FormData = {
+    itemId: string;
+    price: number;
+    qty: number;
+    ship: number;
+    useTax: string;
+  };
+  const { register, watch } = useForm<FormData>({
+    criteriaMode: "all",
+    defaultValues: {
+      itemId: "",
+      price: 900,
+      qty: 1,
+      ship: 8,
+      useTax: "",
+    },
+  });
   const itemIcon = selectedItem
     ? { backgroundImage: `url(${selectedItem.iconUrl})` }
     : {};
@@ -158,38 +177,50 @@ export const ReportPriceModal = () => {
                 <TextInput
                   id="price"
                   required
-                  name="price"
                   step={1000}
                   defaultValue={1000}
                   min={1000}
                   max={99999999999}
+                  {...register("price")}
                 />
               </div>
               <div>
                 <Label htmlFor="qty" value="個数" />
                 <TextInput
                   id="qty"
-                  name="qty"
                   step={1}
                   defaultValue={1}
                   min={1}
                   max={999}
+                  {...register("qty")}
                 />
               </div>
               <div>
                 <Label htmlFor="ship" value="シップ番号" />
                 <TextInput
                   id="ship"
-                  name="ship"
                   step={1}
                   defaultValue={user?.ship || 8}
                   min={1}
                   max={10}
+                  {...register("ship")}
                 />
               </div>
               <div>
-                <Label htmlFor="tax" value="税込み" />
-                <Checkbox id="tax" name="useTax" />
+                <Label htmlFor="useTax" value="税込み" />
+                <input
+                  id="useTax"
+                  type="checkbox"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  {...register("useTax")}
+                />
+              </div>
+              <div>
+                {watch("useTax") ? (
+                  <p>純売上: {watch("price") * (1 - 0.1)}</p>
+                ) : (
+                  <p>売値: {watch("price") / (1 - 0.1)}</p>
+                )}
               </div>
               <div className="card-actions justify-end">
                 <button type="submit" className="btn btn-primary">
@@ -203,4 +234,4 @@ export const ReportPriceModal = () => {
       <Modal.Footer></Modal.Footer>
     </Modal>
   );
-};
+});

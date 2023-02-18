@@ -5,20 +5,20 @@ import {
   replaceNumbersWithRoman,
 } from "~/utils/utils.client";
 
-type Option = {
+export type AutocompleteInputOption = {
   label: string;
   value: string;
 };
 
 interface AutocompleteInputProps {
-  options: Option[];
+  options: AutocompleteInputOption[];
   name?: string;
   required?: boolean;
   label?: string;
-  onSelected?: (option: Option) => void;
+  onSelected?: (option: AutocompleteInputOption) => void;
 }
 
-const AutocompleteInput: React.FC<AutocompleteInputProps & {   defaultValue?: Option}> = ({
+const AutocompleteInput: React.FC<AutocompleteInputProps & {   defaultValue?: AutocompleteInputOption}> = ({
   name,
   options,
   required,
@@ -27,7 +27,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps & {   defaultValue?: Op
   defaultValue
 }) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<AutocompleteInputOption[]>([]);
   const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<{
     label: string;
