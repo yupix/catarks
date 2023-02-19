@@ -9,3 +9,11 @@ export const validateItemQuery = z.object({
 })
 
 export type TItemQuery = z.infer<typeof validateItemQuery>
+
+export const validateItemRankingQuery = z.object({
+  type: z.optional(z.enum(ITEM_TYPES)),
+  ship: z.optional(z.string().transform((val) => Number(val))),
+  sort: z.optional(z.enum(['asc', 'desc'])).default('desc')
+})
+
+export type TItemRankingQuery = z.infer<typeof validateItemRankingQuery>
