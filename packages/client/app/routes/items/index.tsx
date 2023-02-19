@@ -77,7 +77,7 @@ export default function ItemsIndex() {
                 return (
                   <option
                     key={type}
-                    selected={query.type === type ? true : false}
+                    selected={!queryState.type && query.type === type ? true : false || queryState.type === type}
                     value={type}
                   >
                     {getCategoryName(type)}
@@ -95,14 +95,14 @@ export default function ItemsIndex() {
                 表示順序
               </option>
               <option
-                selected={query.sort === "asc" ? true : false}
+                selected={!queryState.sort &&  query.sort === "asc" ? true : false || queryState.sort === 'asc'}
                 value={"asc"}
               >
                 昇順
               </option>
               ;
               <option
-                selected={query.sort === "desc" ? true : false}
+                selected={!queryState.sort && query.sort === "desc" ? true : false || queryState.sort === 'desc'}
                 value={"desc"}
               >
                 降順
@@ -122,7 +122,7 @@ export default function ItemsIndex() {
                 {(i) => (
                   <option
                     key={i}
-                    selected={query.ship === i ? true : false}
+                    selected={!queryState.ship && query.ship === i ? true : false || queryState.ship === i.toString()}
                     value={i}
                   >
                     {i === 0 ? "全て" : i}
