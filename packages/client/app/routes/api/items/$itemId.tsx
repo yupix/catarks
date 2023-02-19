@@ -5,7 +5,6 @@ import { prisma } from "~/utils/prisma.server";
 import { assertIsDefined } from "~/utils/utils";
 
 export type TGetItemByIdLoader = typeof loader
-
 export async function loader({
   params,
 }: LoaderArgs): Promise<TypedResponse<ActionResponse<"getItemById", Items>>> {
