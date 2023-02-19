@@ -12,7 +12,7 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 import styles from "./assets/main.css";
-import { useSessionState, useUserDevice } from "./states/common";
+import { useModalState, useSessionState, useUserDevice } from "./states/common";
 import { ReportPriceModal } from "./components/modals/reportPrice";
 import { authenticator } from "./utils/auth.server";
 import { useSnapshot } from "valtio";
@@ -20,6 +20,7 @@ import { assertIsDefined } from "./utils/utils";
 import CSS from "./assets/css/tailwind.css";
 import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
+import {useKey} from "rooks"
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -50,6 +51,9 @@ export default function App() {
     useSessionState.user = currentUser;
   }
   const transition = useTransition();
+  useKey(["n"], ()=> {
+    useModalState.isOpenedPriceRepost = true
+  })
 
   useEffect(() => {
     const warningMessage = () => {
