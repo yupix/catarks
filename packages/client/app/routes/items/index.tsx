@@ -33,7 +33,7 @@ export async function loader() {
 export default function ItemsIndex() {
   const items = useLoaderData<typeof loader>();
   return (
-    <div className="block sm:flex gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       {items.map((item, i) => (
         <Link
           key={item.id}
