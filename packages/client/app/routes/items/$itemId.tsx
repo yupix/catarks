@@ -59,6 +59,7 @@ export default function Item() {
       <tr>
       <th>売値</th>
       <th>純売上</th>
+      <th>ship</th>
       <th>報告者</th>
       <th></th>
       </tr>
@@ -75,6 +76,7 @@ export default function Item() {
       <tr key={price.id}>
         <td>{price.price / (1 - 0.1)}</td>
         <td>{price.price}</td>
+        <td>{price.ship}</td>
         <td>
           <Link
             to={`/users/${price.reporter.id}`}
