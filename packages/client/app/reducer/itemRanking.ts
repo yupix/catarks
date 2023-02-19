@@ -1,12 +1,12 @@
 export type ActionType =
   | { type: 'UPDATE_TYPE'; payload: string }
   | { type: 'UPDATE_SORT'; payload: string }
-  | { type: 'UPDATE_SHIP'; payload: number }
+  | { type: 'UPDATE_SHIP'; payload: string }
 
 export interface QueryState {
   type?: string,
   sort?: string,
-  ship?: number 
+  ship?: string
 }
 
 
