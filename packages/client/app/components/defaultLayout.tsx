@@ -42,9 +42,7 @@ export const DefaultLayout: FC<{
               <Link to="/" className="btn btn-ghost normal-case text-xl">
                 Cat Arks
               </Link>
-              <p className="font-mono text-xs text-opacity-50">
-                0.1.0
-              </p>
+              <p className="font-mono text-xs text-opacity-50">0.1.0</p>
             </div>
             <div className="mt-2"></div>
             <ul className="menu menu-compact flex flex-col p-0 px-4">
@@ -58,7 +56,9 @@ export const DefaultLayout: FC<{
             <ul className="menu menu-compact flex flex-col p-0 px-4">
               <li></li>
               <li>
-                <span className="menu-title">CATEGORIES</span>
+                <Link to="/categories">
+                  <span className="menu-title">CATEGORIES</span>
+                </Link>
               </li>
               {CATEGORIES.map((category) => {
                 return (
@@ -72,6 +72,14 @@ export const DefaultLayout: FC<{
                   </li>
                 );
               })}
+            </ul>
+            <ul className="menu menu-compact flex flex-col p-0 px-4">
+              <li></li>
+              <li>
+                <Link to="/items">
+                  <span className="menu-title">ITEMS</span>
+                </Link>
+              </li>
             </ul>
           </aside>
         </div>
