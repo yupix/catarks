@@ -28,6 +28,7 @@ importers:
       '@remix-run/react': ^1.13.0
       '@remix-run/serve': ^1.13.0
       '@tabler/icons': ^1.119.0
+      '@tailwindcss/container-queries': ^0.1.0
       '@tiptap/extension-link': 2.0.0-beta.204
       '@tiptap/react': 2.0.0-beta.204
       '@tiptap/starter-kit': 2.0.0-beta.204
@@ -87,6 +88,7 @@ importers:
       '@remix-run/react': 1.13.0_biqbaboplfbrettd7655fr4n2y
       '@remix-run/serve': 1.13.0
       '@tabler/icons': 1.119.0_biqbaboplfbrettd7655fr4n2y
+      '@tailwindcss/container-queries': 0.1.0_tailwindcss@3.2.6
       '@tiptap/extension-link': 2.0.0-beta.204_pv7cmqvutaztpd4mucego55zca
       '@tiptap/react': 2.0.0-beta.204_6cynlrg7wtsnnol642bufaujhy
       '@tiptap/starter-kit': 2.0.0-beta.204_@tiptap+pm@2.0.0-beta.217
@@ -3066,6 +3068,14 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@tailwindcss/container-queries/0.1.0_tailwindcss@3.2.6:
+    resolution: {integrity: sha512-t1GeJ9P8ual160BvKy6Y1sG7bjChArMaK6iRXm3ZYjZGN2FTzmqb5ztsTDb9AsTSJD4NMHtsnaI2ielrXEk+hw==}
+    peerDependencies:
+      tailwindcss: '>=3.2.0'
+    dependencies:
+      tailwindcss: 3.2.6_postcss@8.4.21
     dev: false
 
   /@testing-library/dom/8.20.0:
