@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData, useNavigate } from "@remix-run/react";
+import { Link, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import { getPaginationPageNumber, searchParams } from "~/utils/utils";
 import type { PickType } from "@catarks/utils";
 import { Pagination } from "flowbite-react";
@@ -9,6 +9,7 @@ import { SearchItemByQuery } from "~/middlewares/search";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@reactuses/core";
 import { ItemCard } from "~/components/item/ItemCard";
+import {CatPagination} from "~/components/common/CatPagination";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = searchParams(request);
@@ -27,10 +28,11 @@ export default function Category() {
   const [query, setQuery] = useState<string | undefined>(q);
   const debouncedValue = useDebounce(query, 500);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (debouncedValue) {
-      navigate(`/categories/${category}?q=${debouncedValue}`);
+        setSearchParams({q: debouncedValue, page: page.toString()})
     } else {
       navigate(`/categories/${category}`);
     }
@@ -69,15 +71,20 @@ export default function Category() {
         ))}
       </div>
       <div className="flex justify-center">
-        <Pagination
-          totalPages={Math.ceil(body.estimatedTotalHits / 20)}
-          currentPage={page}
-          onPageChange={(page) => {
-            navigate(`/categories/${category}?page=${page}`, {
-              preventScrollReset: true,
-            });
-          }}
-        />
+        <CatPagination
+                  totalPages={Math.ceil(body.estimatedTotalHits / 20)}
+                  currentPage={page}
+                  pageRangeDisplayed={3}
+                  onChange={(page) => {
+                    if (debouncedValue) {
+                    setSearchParams({page: page.toString(), q: debouncedValue})
+                  } else {
+                    
+                    setSearchParams({page: page.toString()})
+                  }
+                  }}
+        ></CatPagination>
+
       </div>
     </div>
   );
