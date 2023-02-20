@@ -25,7 +25,12 @@ module.exports = {
       },
     },
   },
-  plugins: [require("flowbite-typography"), require("flowbite/plugin"), require("daisyui")],
+  plugins: [
+    require("flowbite-typography"),
+    require("flowbite/plugin"),
+    require("daisyui"),
+    require("@tailwindcss/container-queries"),
+  ],
   daisyui: {
     themes: ["winter"],
   },
