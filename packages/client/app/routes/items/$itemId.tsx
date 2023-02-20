@@ -2,11 +2,9 @@ import { Tabs } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
 import { SITE_META_PREFIX } from "~/const";
 import { getItemByID } from "~/middlewares/items";
 import { generateSvg } from "~/utils/og.server";
-import { getCategoryName } from "~/utils/utils";
 import { ClientOnly } from "remix-utils";
 import { getItemPriceChartById } from "~/middlewares/charts";
 import { PriceChart } from "~/components/item/priceChart";
@@ -17,6 +15,7 @@ import type { TCreateItemPriceAction } from "../api/items/price";
 import { useSessionState } from "~/states/common";
 import { useSnapshot } from "valtio";
 import { toast } from "react-hot-toast";
+import { ItemCard } from "~/components/item/ItemCard";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -57,11 +56,11 @@ export default function Item() {
   const priceThs = (
     <thead>
       <tr>
-      <th>売値</th>
-      <th>純売上</th>
-      <th>ship</th>
-      <th>報告者</th>
-      <th></th>
+        <th>売値</th>
+        <th>純売上</th>
+        <th>ship</th>
+        <th>報告者</th>
+        <th></th>
       </tr>
     </thead>
   );
@@ -148,15 +147,10 @@ export default function Item() {
       </div>
     );
   };
-
   return (
     <div style={{ margin: "8px" }}>
-      <ArticleCardVertical
-        image={item.iconUrl}
-        category={getCategoryName(item.type)}
-        title={item.name}
-        date=""
-      />
+      <ItemCard item={item} />
+
       <div className="h-5" />
       <div className="grid grid-cols-2 gap-4">
         <CustomCard>
@@ -182,10 +176,10 @@ export default function Item() {
           <Tabs.Item title="価格">
             {item.prices.length > 0 ? (
               <div className="overflow-x-auto overflow-y-hidden">
-              <table className="table w-full">
-                {priceThs}
-                <tbody>{priceRow}</tbody>
-              </table>
+                <table className="table w-full">
+                  {priceThs}
+                  <tbody>{priceRow}</tbody>
+                </table>
               </div>
             ) : (
               <p>まだ報告が存在しないようです</p>

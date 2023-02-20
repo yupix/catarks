@@ -1,14 +1,14 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useNavigate } from "@remix-run/react";
-import { ArticleCardVertical } from "~/components/item/verticalArticleCard";
-import { getCategoryName, getPaginationPageNumber, searchParams } from "~/utils/utils";
+import { getPaginationPageNumber, searchParams } from "~/utils/utils";
 import type { PickType } from "@catarks/utils";
 import { Pagination } from "flowbite-react";
 import { IconSearch, IconX } from "@tabler/icons";
 import { SearchItemByQuery } from "~/middlewares/search";
 import { useEffect, useState } from "react";
-import { useDebounce } from '@reactuses/core';
+import { useDebounce } from "@reactuses/core";
+import { ItemCard } from "~/components/item/ItemCard";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = searchParams(request);
@@ -30,25 +30,25 @@ export default function Category() {
 
   useEffect(() => {
     if (debouncedValue) {
-    navigate(`/categories/${category}?q=${debouncedValue}`)
+      navigate(`/categories/${category}?q=${debouncedValue}`);
     } else {
-      navigate(`/categories/${category}`)
+      navigate(`/categories/${category}`);
     }
-  }, [debouncedValue])
+  }, [debouncedValue]);
 
   return (
-    <div className="container">
+    <div className="">
       <form className="flex items-center">
         <div className="relative w-full">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <IconSearch className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </div>
           <input
-          defaultValue={query}
-          onChange={(e) => setQuery(e.target.value)}
+            defaultValue={query}
+            onChange={(e) => setQuery(e.target.value)}
             type="search"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="検索"
+            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="アイテム名で検索"
           />
           <button
             type="button"
@@ -59,16 +59,11 @@ export default function Category() {
           </button>
         </div>
       </form>
-      <div className="grid justify-center grow grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-3">
+      <div className="mt-5 grid justify-center grow grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-3">
         {body.hits.map((item) => (
           <div key={item.id}>
             <Link to={`/items/${item.id}`} style={{ textDecoration: "none" }}>
-              <ArticleCardVertical
-                image={item.iconUrl}
-                category={getCategoryName('ability')}
-                title={item.title}
-                date=""
-              />
+              <ItemCard item={item} />
             </Link>
           </div>
         ))}
