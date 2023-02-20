@@ -3,6 +3,7 @@ import { objectStorage } from "./aws.server";
 import type { UploadHandler } from "@remix-run/node";
 import type { Users } from "@catarks/db";
 import { prisma } from "./prisma.server";
+import { config } from "@catarks/shared";
 const crypto = require("crypto");
 const mime = require("mime-types");
 const uploadStreamToS3 = async (
@@ -19,7 +20,7 @@ const uploadStreamToS3 = async (
   if (hitFile) return hitFile.url;
   const params: S3.PutObjectRequest = {
     Bucket: BUCKET_NAME,
-    Key: `*/user-content/${key}.${mime.extension(contentType)}`,
+    Key: `${config.objectStorage.uploadPath}/${key}.${mime.extension(contentType)}`,
     Body: file,
     ContentType: contentType,
   };

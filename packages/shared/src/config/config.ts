@@ -44,6 +44,7 @@ interface IConfig {
     endpoint: string;
     accessKeyId: string;
     secretAccessKey: string;
+    uploadPath: string;
   };
   meilisearch: {
     host: string;
