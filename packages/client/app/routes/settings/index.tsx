@@ -2,10 +2,24 @@ import { useFetcher } from "@remix-run/react";
 import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
 import type { TUpdateUserAction } from "../api/users/$userId";
+import { TextInput } from "~/components/common/textInput";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 export default function Settings() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const user = useSnapshot(useSessionState).user;
   const fetcher = useFetcher<TUpdateUserAction>();
+
+  useEffect(() => {
+    if (fetcher.state === 'submitting') {
+      setIsSubmitting(true)
+    }
+    if (fetcher.state === 'idle'  && isSubmitting) {
+      setIsSubmitting(false)
+      toast.success('保存しました')
+    }
+  }, [fetcher, isSubmitting])
 
   return (
     <div>
@@ -29,8 +43,11 @@ export default function Settings() {
             type="file"
             className="file-input file-input-bordered w-full max-w-xs"
           />
+          <TextInput label="ニックネーム" name="nickname" defaultValue={user!.nickname} />
 
-          <button type="submit" className="btn btn-primary btn-square">保存</button>
+          <button type="submit" className="btn btn-primary btn-square">
+            保存
+          </button>
         </div>
       </fetcher.Form>
     </div>

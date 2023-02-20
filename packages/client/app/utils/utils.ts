@@ -1,12 +1,10 @@
-import type { ItemTypes } from "@catarks/db";
+import type { ItemTypes, Users } from "@catarks/db";
 import { TYPE_TO_CATEGORY } from "@catarks/utils";
-import { apiClient } from "strictcat";
 import { authenticator } from "~/utils/auth.server";
 
-export const api = apiClient<Schema>("https://api.catarks.org", {
-  contentType: "application/json",
-});
-
+export const getName = (user: Users) => {
+  return user.nickname ? user.nickname : user.username
+}
 export function isUUID(uuid?: string) {
   if (!uuid) return false
   const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

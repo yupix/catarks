@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Tooltip } from "flowbite-react";
 
-import { assertIsDefined } from "~/utils/utils";
+import { assertIsDefined, getName } from "~/utils/utils";
 import { getUserFromId } from "~/middlewares/users";
 import { IconStar } from "@tabler/icons";
 
@@ -44,7 +44,7 @@ export default function UserCardImage() {
                 className="font-medium"
                 style={{ textShadow: "0px 0px 4px #000" }}
               >
-                {user.username}
+                {getName(user)}
               </h1>
               {user.role.filter((v) => v.name === "admin").length > 0 && (
                 <Tooltip content={<p>管理者</p>}>

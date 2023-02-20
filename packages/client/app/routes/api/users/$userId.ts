@@ -20,7 +20,7 @@ export async function action({
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
-  console.log(request.method);
+  const _formData = NotNullableFormData(await request.clone().formData())
   switch (request.method.toLowerCase()) {
     case "put": {
       const uploader = UploaderHandler(user);
@@ -31,8 +31,9 @@ export async function action({
         )
       );
       const avatarUrl = formData.get("avatar");
-      const description = formData.get("description");
-      const body = validateUpdateUser.parse({ avatarUrl, description });
+      const description = _formData.get("description");
+      const nickname = _formData.get("nickname");
+      const body = validateUpdateUser.parse({ avatarUrl, description, nickname });
       const updatedUser = await prisma.users.update({
         where: {
           id: user.id,
@@ -40,15 +41,15 @@ export async function action({
         data: {
           avatarUrl: body.avatarUrl,
           description: body.description,
+          nickname: body.nickname
         },
         include: {settings: true}
       });
       let session = await sessionStorage.getSession(
         request.headers.get("cookie")
       );
-      console.log(session.data)
       session.set(authenticator.sessionKey, updatedUser);
-      console.log(session.data)
+      console.log(session.data, updatedUser, body.nickname)
       return redirect("/settings", {headers: {"Set-Cookie": await commitSession(session)}});
     }
   }

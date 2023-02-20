@@ -15,6 +15,7 @@ const uploadStreamToS3 = async (
   const BUCKET_NAME = "catarks";
   const key = crypto.randomUUID();
   const file = await convertToBuffer(data)
+  if (!filename) return undefined
   const hash = crypto.createHash('md5').update(file.toString()).digest('hex')
   const hitFile = await prisma.files.findFirst({where: {hash}})
   if (hitFile) return hitFile.url;
@@ -52,6 +53,7 @@ export const UploaderHandler = (author: Users) => {
     filename,
     contentType,
   }) => {
+
     return await uploadStreamToS3(data, filename!, contentType, author);
   };
   return { s3UploaderHandler };

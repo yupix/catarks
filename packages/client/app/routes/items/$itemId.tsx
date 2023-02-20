@@ -16,6 +16,7 @@ import { useSessionState } from "~/states/common";
 import { useSnapshot } from "valtio";
 import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
+import { getName } from "~/utils/utils";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -88,7 +89,7 @@ export default function Item() {
                 className="rounded-md h-10"
               ></img>
               <p className="inline-block">
-                {price.reporter.username}
+                {getName(price.reporter)}
                 <span>
                   {price.reporter.role.filter((v) => v.name === "admin") && (
                     <IconStar
