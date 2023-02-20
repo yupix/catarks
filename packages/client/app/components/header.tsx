@@ -56,13 +56,18 @@ export const DefaultHeader = () => {
                 >
                   <li>
                     <Link to={`/users/${user.id}`} className="justify-between">
-                      プロフィール<span className="badge">New</span>
+                      プロフィール
                     </Link>
                   </li>
                   <li>
                     <Form action="/auth/auth0/logout" method="post">
                       <button type="submit">ログアウト</button>
                     </Form>
+                  </li>
+                  <li>
+                    <Link to="/settings" className="justify-between">
+                      設定<span className="badge">New</span>
+                    </Link>
                   </li>
                 </ul>
               </div>
