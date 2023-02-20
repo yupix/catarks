@@ -13,6 +13,13 @@ export function isUUID(uuid?: string) {
   return uuidPattern.test(uuid);
 }
 
+export const NotNullableFormData = (formData: FormData) => {
+  const get = (key: string) => {
+    return formData.get(key) || undefined
+  }
+  return {get}
+}
+
 export const searchParams = (request: Request) => {
   const url = new URL(request.url);
   const get = (key: string) => {

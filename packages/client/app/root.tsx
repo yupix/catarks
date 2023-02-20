@@ -15,12 +15,11 @@ import styles from "./assets/main.css";
 import { useModalState, useSessionState, useUserDevice } from "./states/common";
 import { ReportPriceModal } from "./components/modals/reportPrice";
 import { authenticator } from "./utils/auth.server";
-import { useSnapshot } from "valtio";
 import { assertIsDefined } from "./utils/utils";
 import CSS from "./assets/css/tailwind.css";
 import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
-import {useKey} from "rooks"
+import { useKey } from "rooks";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -40,20 +39,18 @@ export async function loader({ request }: LoaderArgs) {
   return json(user ? user : null);
 }
 
-
 export default function App() {
   const currentUser = useLoaderData<typeof loader>();
   useUserDevice.useTheme =
     currentUser?.settings?.useDarkTheme || false ? "dark" : "light";
-  const device = useSnapshot(useUserDevice);
   if (currentUser) {
     assertIsDefined(currentUser);
     useSessionState.user = currentUser;
   }
   const transition = useTransition();
-  useKey(["n"], ()=> {
-    useModalState.isOpenedPriceRepost = true
-  })
+  useKey(["n"], () => {
+    useModalState.isOpenedPriceRepost = true;
+  });
 
   useEffect(() => {
     const warningMessage = () => {
@@ -70,34 +67,33 @@ export default function App() {
   }, []);
   return (
     <html lang="ja" data-theme="winter">
-    <head>
-      <Meta />
-      <Links />
+      <head>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
+        <Outlet />
+        <Toaster />
+        {transition.state === "submitting" && (
+          <div
+            style={{
+              position: "fixed",
+              display: "flex",
+              zIndex: 300,
+              top: 14,
+              right: 20,
+            }}
+          >
+            {/* <Loader /> */}
+          </div>
+        )}
+        {/* {transition.state === "loading" && <ProgressBar />} */}
 
-    </head>
-    <body>
-      <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
-      <Outlet />
-      <Toaster />
-      {transition.state === "submitting" && (
-        <div
-          style={{
-            position: "fixed",
-            display: "flex",
-            zIndex: 300,
-            top: 14,
-            right: 20,
-          }}
-        >
-          {/* <Loader /> */}
-        </div>
-      )}
-      {/* {transition.state === "loading" && <ProgressBar />} */}
-
-      <ScrollRestoration />
-      <Scripts />
-      <LiveReload />
-    </body>
-  </html>
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+      </body>
+    </html>
   );
 }

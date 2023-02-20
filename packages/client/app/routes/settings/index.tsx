@@ -1,48 +1,39 @@
-// import { ActionArgs, json } from "@remix-run/node";
-// import { Form } from "@remix-run/react";
-// import { useSnapshot } from "valtio";
-// import { authenticator } from "~/utils/auth.server";
-// import { useSessionState } from "~/states/common";
-// import { api, createAuthHeaders } from "~/utils/utils";
-// import { assertIsShip } from "@catarks/utils"
-// import { assertIsSuccess } from "strictcat/built/rpc"
+import { useFetcher } from "@remix-run/react";
+import { useSnapshot } from "valtio";
+import { useSessionState } from "~/states/common";
+import { Avatar, Button } from "flowbite-react";
+import type { TUpdateUserAction } from "../api/users/$userId";
 
-// export async function action({ request }: ActionArgs) {
-//   await authenticator.isAuthenticated(request, { failureRedirect: '/signin' })
-//   const form = await request.formData()
-//   const avatarUrl = form.get('avatarUrl')?.toString()
-//   const bannerUrl = form.get('bannerUrl')?.toString()
-//   const description = form.get('description')?.toString()
-//   let ship: string | number | undefined = form.get('ship')?.toString()
-//   if (ship) {
-//     ship = Number(ship)
-//   }
+export default function Settings() {
+  const user = useSnapshot(useSessionState).user;
+  const fetcher = useFetcher<TUpdateUserAction>();
 
-//   const res = await api.call('PATCH', '/api/user', {
-//     body: {
-//       avatarUrl,
-//       bannerUrl,
-//       description,
-//       ship: assertIsShip(ship) ? ship : undefined
-//     },
-//     headers: {
-//       ...await createAuthHeaders(request)
-//     }
-//   })
-//   assertIsSuccess(res)
-//   return json(res.data)
-// }
+  return (
+    <div>
+      <Avatar img={user?.avatarUrl} size="lg" />
+      {/* <TextInput
+          label="自己紹介"
+          name="description"
+          value={user?.description}
+        /> */}
+      <fetcher.Form
+        method="put"
+        action={`/api/users/${user!.id}`}
+        encType="multipart/form-data"
+      >
+        <div className="form-control w-full max-w-xs">
+          <label className="label">
+            <span className="label-text">アバターを編集</span>
+          </label>
+          <input
+            name="avatar"
+            type="file"
+            className="file-input file-input-bordered w-full max-w-xs"
+          />
 
-// export default function Settings() {
-//   const user = useSnapshot(useSessionState).user
-
-//   return (
-//     <Paper>
-//       <Form method="patch">
-//         <Avatar src={user?.avatarUrl} size="lg" />
-//         <TextInput label="自己紹介" name="description" defaultValue={user?.description} />
-//         <Button type="submit" />
-//       </Form>
-//     </Paper>
-//   )
-// }
+          <Button type="submit" />
+        </div>
+      </fetcher.Form>
+    </div>
+  );
+}

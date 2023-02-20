@@ -64,12 +64,13 @@ model DefaultAvatars {
 }
 
 model Files {
-  hash     String    @id
-  filename String    @unique
-  url      String
-  author   Users     @relation(fields: [userId], references: [id])
-  userId   String
-  Diaries  Diaries[]
+  hash         String    @id
+  filename     String    @unique
+  UUIDFilename String    @unique
+  url          String
+  author       Users     @relation(fields: [userId], references: [id])
+  userId       String
+  Diaries      Diaries[]
 }
 
 model Users {
@@ -88,7 +89,7 @@ model Users {
   Diaries     Diaries[]
   role        UserRoles[]
   Teams       Teams[]
-  leader      Teams[] @relation("team_leader")
+  leader      Teams[]       @relation("team_leader")
 }
 
 model Teams {
