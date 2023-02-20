@@ -75,7 +75,7 @@ export default function Category() {
       </div>
       <div className="flex justify-center">
         <Pagination
-          totalPages={Math.floor(body.estimatedTotalHits / 20)}
+          totalPages={Math.ceil(body.estimatedTotalHits / 20)}
           currentPage={page}
           onPageChange={(page) => {
             navigate(`/categories/${category}?page=${page}`, {
