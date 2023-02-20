@@ -1,7 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
-import { Avatar, Button } from "flowbite-react";
 import type { TUpdateUserAction } from "../api/users/$userId";
 
 export default function Settings() {
@@ -10,7 +9,7 @@ export default function Settings() {
 
   return (
     <div>
-      <Avatar img={user?.avatarUrl} size="lg" />
+      <img src={user?.avatarUrl} className="avatar rounded-full h-32" />
       {/* <TextInput
           label="自己紹介"
           name="description"
@@ -31,7 +30,7 @@ export default function Settings() {
             className="file-input file-input-bordered w-full max-w-xs"
           />
 
-          <Button type="submit" />
+          <button type="submit" className="btn btn-primary btn-square">保存</button>
         </div>
       </fetcher.Form>
     </div>
