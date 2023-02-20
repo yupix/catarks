@@ -69,7 +69,6 @@ importers:
       rooks: ^7.4.3
       satori: ^0.1.2
       sharp: ^0.31.3
-      strictcat: 0.0.1-alpha.20
       styled-components: ^5.3.6
       tailwind-merge: ^1.9.1
       tailwindcss: ^3.2.6
@@ -123,7 +122,6 @@ importers:
       rooks: 7.4.3_biqbaboplfbrettd7655fr4n2y
       satori: 0.1.2
       sharp: 0.31.3
-      strictcat: 0.0.1-alpha.20
       styled-components: 5.3.6_7i5myeigehqah43i5u7wbekgba
       tailwind-merge: 1.9.1
       tailwindcss: 3.2.6_postcss@8.4.21
@@ -11945,10 +11943,6 @@ packages:
 
   /strictcat/0.0.1-alpha.16:
     resolution: {integrity: sha512-xfBbPu3LD7j/UJFnVgLeDzI0xRcBjVglWiBiCASbk8hhLe3lNroJ9qYnvE0sr+aWqLpf2hCMQZooBIzARcKOmw==}
-    dev: false
-
-  /strictcat/0.0.1-alpha.20:
-    resolution: {integrity: sha512-N96W62b6xTPJGOJ2OVqVBm/nO/jHz76R4WZ8xoKw96gBw0FO7kUA/xiWm4BzotwA2HZ1HD606QIAOtghbokYsw==}
     dev: false
 
   /string-hash/1.1.3:
