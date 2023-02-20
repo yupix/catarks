@@ -13,6 +13,6 @@ const CategoryToIndexMapping: {[key in ITEM_TYPE]: string} = {
 
 export async function SearchItemByQuery(query: SearchItemQuery): Promise<SearchResponse<Items>> {
   const itemIndex = await SearchClient.getIndex(CategoryToIndexMapping[query.category])
-   const items = await itemIndex.search<Items>(query.q, {limit: query.limit, offset: query.skip, filter: [`type = ${query.category}`], sort: ["title:asc"]})
+   const items = await itemIndex.search<Items>(query.q, {limit: query.limit, offset: query.skip, filter: [`type = ${query.category}`], sort: ["name:asc"]})
    return items
 }

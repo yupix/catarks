@@ -21,7 +21,7 @@ interface IEffect {
 const createDocument = (item: Items, ability: any) => {
   return {
     id: item.id,
-      title: item.name,
+      name: item.name,
     iconUrl: item.iconUrl,
     effects: ability.effects,
     droparias: ability.aria,
@@ -136,6 +136,6 @@ export class RegisterAbility implements BaseRegister {
         logger.info(`successed register ${ability.name}.`);
       }
     }
-    await Indexer('index_ops', index_body, {FilterableAttributes: ["type"], sortableattributes: ["title"]})
+    await Indexer('index_ops', index_body, {FilterableAttributes: ["type"], sortableattributes: ["name"]})
   }
 }

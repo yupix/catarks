@@ -55,7 +55,7 @@ export class RegisterMaterials implements BaseRegister {
   ) {
     return {
       id: item.id,
-      title: item.name,
+      name: item.name,
       iconUrl: item.iconUrl,
       droparias: item.droparias.map((droparia) => droparia.name),
       rarity: item.rarity,
@@ -80,7 +80,7 @@ export class RegisterMaterials implements BaseRegister {
       }
       await Indexer("index_materials", index_body, {
         FilterableAttributes: ["type"],
-        sortableattributes: ["title"],
+        sortableattributes: ["name"],
       });
     }
   }
