@@ -179,7 +179,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                   id="price"
                   label="値段"
                   required
-                  step={1000}
+                  step={100}
                   min={900}
                   max={99999999999}
                   {...register("price")}
