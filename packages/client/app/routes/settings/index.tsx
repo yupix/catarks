@@ -5,8 +5,11 @@ import type { TUpdateUserAction } from "../api/users/$userId";
 import { TextInput } from "~/components/common/textInput";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import type { ErrorBoundaryComponent } from "@remix-run/node";
+import { useMount } from "@reactuses/core";
+import { Card } from "~/components/common/Card";
 
-export default function Settings() {
+const SettingBody = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const user = useSnapshot(useSessionState).user;
   const fetcher = useFetcher<TUpdateUserAction>();
@@ -22,13 +25,11 @@ export default function Settings() {
   }, [fetcher, isSubmitting])
 
   return (
-    <div>
+    <Card classes={{root: "@container"}}>
+      <div className="block @sm:flex justify-between flex-row-reverse">
       <img src={user?.avatarUrl} className="avatar rounded-full h-32" />
-      {/* <TextInput
-          label="自己紹介"
-          name="description"
-          value={user?.description}
-        /> */}
+      <div className="divider lg:divider-horizontal" />
+
       <fetcher.Form
         method="put"
         action={`/api/users/${user!.id}`}
@@ -50,6 +51,21 @@ export default function Settings() {
           </button>
         </div>
       </fetcher.Form>
-    </div>
+
+      </div>
+    </Card>
   );
 }
+
+export default function Settings() {
+  return <SettingBody />
+}
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  useMount(() => {
+    let ErrorMessage = ''
+    if (error.message === 'Not allowed Content-Type') ErrorMessage = '指定できない種類のファイルです'
+    toast.error('エラーが発生しました: ' + ErrorMessage)
+  })
+  return <SettingBody />
+};
