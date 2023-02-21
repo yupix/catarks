@@ -1,5 +1,5 @@
 import { TextInput } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   hiraganaToKatagana,
   replaceNumbersWithRoman,
@@ -18,16 +18,13 @@ interface AutocompleteInputProps {
   onSelected?: (option: AutocompleteInputOption) => void;
 }
 
-const AutocompleteInput: React.FC<AutocompleteInputProps & {   defaultValue?: AutocompleteInputOption}> = ({
-  name,
-  options,
-  required,
-  label,
-  onSelected,
-  defaultValue
-}) => {
+const AutocompleteInput: React.FC<
+  AutocompleteInputProps & { defaultValue?: AutocompleteInputOption }
+> = ({ name, options, required, label, onSelected, defaultValue }) => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [filteredOptions, setFilteredOptions] = useState<AutocompleteInputOption[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<
+    AutocompleteInputOption[]
+  >([]);
   const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<{
     label: string;
@@ -39,22 +36,26 @@ const AutocompleteInput: React.FC<AutocompleteInputProps & {   defaultValue?: Au
       setInputValue(defaultValue.label);
       setSelectedOption(defaultValue);
     }
-  }, [defaultValue])
+  }, [defaultValue]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setInputValue(inputValue);
+    const hiraganaInputValue = hiraganaToKatagana(
+      inputValue.replace("・", "").toLowerCase()
+    );
     const filteredOptions = options.filter(
       (option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase()) ||
+        option.label
+          .replace("・", "")
+          .toLowerCase()
+          .includes(inputValue.replace("・", "").toLowerCase()) ||
         hiraganaToKatagana(option.label.toLowerCase()).includes(
-          hiraganaToKatagana(inputValue.toLowerCase())
+          hiraganaInputValue
         ) ||
         replaceNumbersWithRoman(
-          hiraganaToKatagana(option.label.toLowerCase())
-        ).includes(
-          replaceNumbersWithRoman(hiraganaToKatagana(inputValue.toLowerCase()))
-        )
+          hiraganaToKatagana(option.label.replace("・", "").toLowerCase())
+        ).includes(replaceNumbersWithRoman(hiraganaInputValue))
     );
     setFilteredOptions(filteredOptions);
     setIsOptionsVisible(true);
@@ -85,16 +86,18 @@ const AutocompleteInput: React.FC<AutocompleteInputProps & {   defaultValue?: Au
       {selectedOption && (
         <input type="hidden" name={name} value={selectedOption.value} />
       )}
-      <TextInput value={inputValue} onChange={handleInputChange} required={required}/>
+      <TextInput
+        value={inputValue}
+        onChange={handleInputChange}
+        required={required}
+      />
       {isOptionsVisible && filteredOptions.length > 0 && (
         <ul className="absolute bg-white z-10 h-36 overflow-y-scroll shadow-md rounded-md p-3">
           {filteredOptions.map((option) => (
-            <li
-              className="normal-case"
-              key={option.value}
-              onClick={() => handleOptionClick(option)}
-            >
-              {option.label}
+            <li className="normal-case" key={option.value}>
+              <button tabIndex={0} onClick={() => handleOptionClick(option)}>
+                {option.label}
+              </button>
             </li>
           ))}
         </ul>
