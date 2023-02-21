@@ -16,7 +16,7 @@ import { useSessionState } from "~/states/common";
 import { useSnapshot } from "valtio";
 import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
-import { getName } from "~/utils/utils";
+import { getCDNUrl, getName } from "~/utils/utils";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -84,7 +84,10 @@ export default function Item() {
           >
             <div className="flex items-center gap-2">
               <img
-                src={price.reporter.avatarUrl}
+                src={getCDNUrl(price.reporter.avatarUrl!, {
+                  format: "webp",
+                  size: "40x40",
+                })}
                 alt={`${price.reporter.username} Avatar`}
                 className="rounded-md h-10"
               ></img>

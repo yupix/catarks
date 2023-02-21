@@ -3,6 +3,7 @@ import { IconMenu2 } from "@tabler/icons";
 import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
 import { Button } from "flowbite-react";
+import { getCDNUrl } from "~/utils/utils";
 
 export const DefaultHeader = () => {
   const user = useSnapshot(useSessionState).user;
@@ -36,8 +37,7 @@ export const DefaultHeader = () => {
             htmlFor="drawer"
             className="btn btn-square btn-ghost drawer-button lg:hidden"
           >
-          <IconMenu2 />
-
+            <IconMenu2 />
           </label>
         </div>
         <div className="flex md:order-2 navbar-end">
@@ -47,7 +47,13 @@ export const DefaultHeader = () => {
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
-                    <img src={user.avatarUrl} />
+                    <img
+                      src={getCDNUrl(user.avatarUrl!, {
+                        format: "webp",
+                        size: "40x40",
+                      })}
+                      alt="Avatar"
+                    />
                   </div>
                 </label>
                 <ul

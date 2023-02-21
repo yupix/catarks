@@ -11,6 +11,10 @@ export function isUUID(uuid?: string) {
   return uuidPattern.test(uuid);
 }
 
+export const getCDNUrl = (link: string, options: {format: 'webp', size: string}) => {
+  return `https://cdn.catarks.org/unsafe/${options.size}/filters:format(${options.format})/${link}`
+}
+
 export const NotNullableFormData = (formData: FormData) => {
   const get = (key: string) => {
     return formData.get(key) || undefined
