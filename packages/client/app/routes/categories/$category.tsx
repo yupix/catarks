@@ -55,6 +55,7 @@ export default function Category() {
           <button
             type="button"
             className="absolute inset-y-0 right-0 flex items-center pr-3"
+            aria-label="検索条件を削除"
             onClick={() => setQuery("")}
           >
             <IconX className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" />

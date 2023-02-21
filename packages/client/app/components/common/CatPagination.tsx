@@ -50,6 +50,7 @@ export const CatPagination = ({
     <div className="flex items-center justify-center space-x-4">
       {currentPage > 1 && (
         <button
+          aria-label="前に戻る"
           // to={linkGenerator(currentPage - 1)}
           onClick={goToPreviousPage}
           className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
@@ -99,6 +100,7 @@ export const CatPagination = ({
 
       {currentPage < totalPages && (
         <button
+          aria-label="次に進む"
           onClick={goToNextPage}
           className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         >
