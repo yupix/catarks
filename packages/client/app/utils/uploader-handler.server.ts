@@ -47,13 +47,22 @@ async function convertToBuffer(a: AsyncIterable<Uint8Array>) {
   }
   return Buffer.concat(result);
 }
-export const UploaderHandler = (author: Users) => {
+export const UploaderHandler = (author: Users, allowedContentTypes?: string[]) => {
+
   const s3UploaderHandler: UploadHandler = async ({
     data,
     filename,
     contentType,
   }) => {
-
+    if (!filename) return undefined
+    if (allowedContentTypes) {
+      let canUpload = false
+      for (const allowedContentType of allowedContentTypes) {
+        const _contentType =  mime.lookup(allowedContentType)
+        if (_contentType === contentType) canUpload = true
+      }
+      if (!canUpload) throw Error('Not allowed Content-Type')
+    }
     return await uploadStreamToS3(data, filename!, contentType, author);
   };
   return { s3UploaderHandler };
