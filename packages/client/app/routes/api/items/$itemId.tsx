@@ -16,5 +16,5 @@ export async function loader({
     intent: "getItemById",
     status: "success",
     body: item,
-  });
+  }, {headers: {"Cache-Control": "public, s-maxage=300"}});
 }
