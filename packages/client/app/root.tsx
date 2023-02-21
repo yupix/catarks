@@ -1,4 +1,8 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {
+  ErrorBoundaryComponent,
+  LoaderArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -7,6 +11,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
   useLoaderData,
   useTransition,
 } from "@remix-run/react";
@@ -20,6 +25,7 @@ import CSS from "./assets/css/tailwind.css";
 import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
 import { useKey } from "rooks";
+import { NotFoundError } from "./components/errors/notfoundError";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -93,6 +99,26 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+      </body>
+    </html>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  return (
+    <html>
+      <head>
+        <title>Oops!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <h1>
+          {caught.status === 404 && <NotFoundError/>}
+          {/* {caught.status} {caught.statusText} */}
+        </h1>
+        <Scripts />
       </body>
     </html>
   );
