@@ -24,36 +24,24 @@ export async function loader({ request }: LoaderArgs) {
     if (query.ship) where["ship"] = query.ship;
     if (query.type) where["item"] = { type: query.type };
 
-    const prices = await prisma.itemPriceAverage.groupBy({
-      by: ["itemsId"],
+
+    const items = await prisma.itemPriceAverage.findMany({
+      distinct: "itemsId",
       where,
-      _max: {
-        price: true,
-      },
-      orderBy: {
-        _max: {
-          price: query.sort,
-        },
-      },
+      orderBy: {createdAt: "desc"},
+      include: {item: true}
     });
-    const items = await Promise.all(
-      prices.map(async (price) => {
-        const item = await prisma.items.findFirst({
-          where: { id: price.itemsId },
-        });
-        assertIsDefined(item);
-        return { ...item, price: price._max?.price };
-      })
-    );
-    return json({ items, query });
+
+    
+    const newItems = items.sort((a, b) => a.price - b.price).reverse().map((v) => {return {...v.item, price: v.price}})
+    return json({ newItems, query });
   } catch (err) {
-    console.log(err);
     throw Error("Invalidate Query");
   }
 }
 
 export default function ItemsIndex() {
-  const { items, query } = useLoaderData<typeof loader>();
+  const { newItems, query } = useLoaderData<typeof loader>();
 
   const [queryState, dispatch] = useReducer(queryReducer, {});
   const [searchParams, setSearchParams] = useSearchParams();
@@ -146,7 +134,7 @@ export default function ItemsIndex() {
       <Search />
       <div className="h-5" />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {items.map((item, i) => (
+        {newItems.map((item, i) => (
           <Link
             key={item.id}
             to={`/items/${item.id}`}
