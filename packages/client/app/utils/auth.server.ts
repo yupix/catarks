@@ -46,7 +46,7 @@ let auth0Strategy = new Auth0Strategy(
               },
             },
           },
-          include: { settings: true },
+          include: { settings: true, role: true },
         });
   }
 );

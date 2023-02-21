@@ -1,16 +1,18 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Tooltip } from "flowbite-react";
 
-import { assertIsDefined, getName } from "~/utils/utils";
+import { getName } from "~/utils/utils";
 import { getUserFromId } from "~/middlewares/users";
 import { IconStar } from "@tabler/icons";
 
 export async function loader({ params }: LoaderArgs) {
-  assertIsDefined(params.userId);
-  const user = await getUserFromId(params.userId);
+  const userId = params.userId
+  if (!userId) throw new Error('')
+  const user = await getUserFromId(userId);
   if (!user) throw new Error("User Not Found");
+  
   return json(user);
 }
 
@@ -72,4 +74,10 @@ export default function UserCardImage() {
       <p className="text-center"></p>
     </div>
   );
+}
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({error}) => {
+  return (
+    <>{error.message}</>
+  )
 }
