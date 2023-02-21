@@ -1,8 +1,8 @@
-import type { Users } from "@catarks/db";
+import type { UserRoles, Users } from "@catarks/db";
 import { proxy } from "valtio";
 
-export const useSessionState = proxy<{ user: Users | null }>({
-  user: null
+export const useSessionState = proxy<{ user: Users & {role: UserRoles} | undefined }>({
+  user: undefined
 })
 
 export const useUserDevice = proxy<{useTheme: 'dark' | 'light'}>({

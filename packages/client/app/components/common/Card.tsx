@@ -1,7 +1,7 @@
 import type { FC} from "react";
 import { twMerge } from "tailwind-merge";
 
-type CardProps = {
+export type CardProps = {
   classes?: {
     root?: string;
     body?: string;
