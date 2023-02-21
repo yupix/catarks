@@ -14,6 +14,7 @@ import type { TGetItemByIdLoader } from "~/routes/api/items/$itemId";
 import type { Items } from "@catarks/db";
 import { useMount } from "@reactuses/core";
 import { useForm } from "react-hook-form";
+import { NumberInput } from "../common/numberInput";
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
@@ -137,7 +138,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
     criteriaMode: "all",
     defaultValues: {
       itemId: "",
-      price: 900,
+      price: 1000,
       qty: 1,
       ship: 8,
       useTax: "",
@@ -173,23 +174,24 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 onSelected={(option) => handleSelectChange(option.value)}
               />
               <div>
-                <Label htmlFor="price" value="値段" />
-                <TextInput
+                {/* <Label htmlFor="price" value="値段" /> */}
+                <NumberInput
                   id="price"
+                  label="値段"
                   required
                   step={1000}
-                  defaultValue={1000}
-                  min={1000}
+                  min={900}
                   max={99999999999}
                   {...register("price")}
                 />
               </div>
               <div>
-                <Label htmlFor="qty" value="個数" />
-                <TextInput
+                {/* <Label htmlFor="qty" value="個数" /> */}
+                <NumberInput
+                label="個数"
                   id="qty"
                   step={1}
-                  defaultValue={1}
+                  // defaultValue={1}
                   min={1}
                   max={999}
                   {...register("qty")}
@@ -217,9 +219,9 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
               </div>
               <div>
                 {watch("useTax") ? (
-                  <p>純売上: {watch("price") * (1 - 0.1)}</p>
+                  <p>純売上: {(watch("price") * (1 - 0.1)).toLocaleString()}</p>
                 ) : (
-                  <p>売値: {watch("price") / (1 - 0.1)}</p>
+                  <p>売値: {(watch("price") / (1 - 0.1)).toLocaleString()}</p>
                 )}
               </div>
               <div className="card-actions justify-end">
