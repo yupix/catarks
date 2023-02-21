@@ -1,5 +1,5 @@
 import type { Users } from "@catarks/db";
-import type { ActionArgs, TypedResponse} from "@remix-run/node";
+import type { ActionArgs, TypedResponse } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { unstable_parseMultipartFormData } from "@remix-run/node";
@@ -20,10 +20,16 @@ export async function action({
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
-  const _formData = NotNullableFormData(await request.clone().formData())
+  const _formData = NotNullableFormData(await request.clone().formData());
   switch (request.method.toLowerCase()) {
     case "put": {
-      const uploader = UploaderHandler(user);
+      const uploader = UploaderHandler(user, [
+        "png",
+        "gif",
+        "jpeg",
+        "svg",
+        "webp",
+      ]);
       const formData = NotNullableFormData(
         await unstable_parseMultipartFormData(
           request,
@@ -33,7 +39,11 @@ export async function action({
       const avatarUrl = formData.get("avatar");
       const description = _formData.get("description");
       const nickname = _formData.get("nickname");
-      const body = validateUpdateUser.parse({ avatarUrl, description, nickname });
+      const body = validateUpdateUser.parse({
+        avatarUrl,
+        description,
+        nickname,
+      });
       const updatedUser = await prisma.users.update({
         where: {
           id: user.id,
@@ -41,16 +51,18 @@ export async function action({
         data: {
           avatarUrl: body.avatarUrl,
           description: body.description,
-          nickname: body.nickname
+          nickname: body.nickname,
         },
-        include: {settings: true}
+        include: { settings: true },
       });
       let session = await sessionStorage.getSession(
         request.headers.get("cookie")
       );
       session.set(authenticator.sessionKey, updatedUser);
-      console.log(session.data, updatedUser, body.nickname)
-      return redirect("/settings", {headers: {"Set-Cookie": await commitSession(session)}});
+      console.log(session.data, updatedUser, body.nickname);
+      return redirect("/settings", {
+        headers: { "Set-Cookie": await commitSession(session) },
+      });
     }
   }
   return json({ intent: "?", status: "failed", body: null });
