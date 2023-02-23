@@ -42,11 +42,7 @@ export function links() {
 
 export async function loader({ request }: LoaderArgs) {
   let user = await authenticator.isAuthenticated(request);
-  if (user) {
-    
-    const userSettings = await prisma.userSettings.findFirst({where: {userId: user.id}})
-    user.settings = userSettings
-  }
+
   return json(user ? user : null);
 }
 
@@ -55,9 +51,6 @@ export default function App() {
   if (currentUser) {
     assertIsDefined(currentUser);
     useSessionState.user = currentUser; // TODO: createdAtをDateに変える
-    if (currentUser?.settings) {
-    useSessionState.settings = currentUser?.settings
-    }
   }
   const transition = useTransition();
   useKey(["n"], () => {

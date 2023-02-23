@@ -5,7 +5,7 @@ import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
 
 export default function SettingsCommonPage() {
-  const {settings, user} = useSnapshot(useSessionState)
+  const { user } = useSnapshot(useSessionState);
   const fetcher = useFetcher<TUpdateUserSettingsAction>();
   return (
     <Card>
@@ -18,12 +18,14 @@ export default function SettingsCommonPage() {
             <input
               name="defaultUseTax"
               type="checkbox"
-              defaultChecked={settings?.defaultUseTax}
+              defaultChecked={user!.settings.defaultUseTax}
               className="toggle toggle-primary"
             />
           </label>
         </div>
-        <button className="btn" type="submit">保存</button>
+        <button className="btn" type="submit">
+          保存
+        </button>
       </fetcher.Form>
     </Card>
   );

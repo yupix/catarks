@@ -19,7 +19,7 @@ import { NumberInput } from "../common/numberInput";
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
-  const { user, settings } = useSnapshot(useSessionState);
+  const { user } = useSnapshot(useSessionState);
   const location = useLocation();
   const [option, setOption] = useState<AutocompleteInputOption | undefined>(
     undefined
@@ -222,7 +222,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 <input
                   id="useTax"
                   type="checkbox"
-                  defaultChecked={settings?.defaultUseTax}
+                  defaultChecked={user!.settings.defaultUseTax}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   {...register("useTax")}
                 />
