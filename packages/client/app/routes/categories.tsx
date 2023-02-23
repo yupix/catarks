@@ -1,15 +1,15 @@
 import { Outlet } from "@remix-run/react";
-import { useSnapshot } from "valtio";
+import { useAtom } from "jotai";
 import { DefaultLayout } from "~/components/defaultLayout";
 import { SpeedDial } from "~/components/speedDial";
 import { useSessionState } from "~/states/common";
 
 export default function Categories() {
-  const { user } = useSnapshot(useSessionState);
+  const [session] = useAtom(useSessionState);
   return (
     <DefaultLayout>
       <Outlet></Outlet>
-      {user && <SpeedDial />}
+      {session?.user && <SpeedDial />}
     </DefaultLayout>
   );
 }

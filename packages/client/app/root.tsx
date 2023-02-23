@@ -26,6 +26,8 @@ import { Toaster } from "react-hot-toast";
 import { useKey } from "rooks";
 import { NotFoundError } from "./components/errors/notfoundError";
 import { prisma } from "./utils/prisma.server";
+import { useHydrateAtoms } from "jotai/utils"
+import { useAtom } from "jotai";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -47,11 +49,9 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function App() {
+  useHydrateAtoms([[useSessionState, undefined]])
+  const [user, setUser] = useAtom(useSessionState)
   const currentUser = useLoaderData<typeof loader>();  
-  if (currentUser) {
-    assertIsDefined(currentUser);
-    useSessionState.user = currentUser; // TODO: createdAtをDateに変える
-  }
   const transition = useTransition();
   useKey(["n"], () => {
     if (currentUser) {
@@ -60,6 +60,10 @@ export default function App() {
   });
 
   useEffect(() => {
+    if (currentUser) {
+      assertIsDefined(currentUser);
+      setUser({user: currentUser}); // TODO: createdAtをDateに変える
+    }
     const warningMessage = () => {
       console.log("%cSTOP\n", "color:red;font-size:8em");
       console.log(
@@ -71,7 +75,8 @@ export default function App() {
       );
     };
     warningMessage();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser]);
   return (
     <html lang="ja" data-theme={`${currentUser?.settings?.useTheme ? currentUser.settings.useTheme : "winter"}`}>
       <head>

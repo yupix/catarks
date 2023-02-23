@@ -4,13 +4,14 @@ import type { TUpdateUserSettingsAction } from "../api/users/$userId/settings";
 import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
 import { THEMES } from "~/const";
+import { useAtom } from "jotai";
 
 export default function SettingsCommonPage() {
-  const { user } = useSnapshot(useSessionState);
+  const [session] = useAtom(useSessionState);
   const fetcher = useFetcher<TUpdateUserSettingsAction>();
   return (
     <Card>
-      <fetcher.Form action={`/api/users/${user!.id}/settings`} method="put">
+      <fetcher.Form action={`/api/users/${session?.user.id}/settings`} method="put">
         <select name="useTheme" className="select w-full max-w-xs">
           <option disabled selected>
             テーマを選択

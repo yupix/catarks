@@ -1,11 +1,11 @@
 import { Form, Link } from "@remix-run/react";
 import { IconMenu2 } from "@tabler/icons";
-import { useSnapshot } from "valtio";
+import { useAtom } from "jotai";
 import { useSessionState } from "~/states/common";
 import { getCDNUrl } from "~/utils/utils";
 
 export const DefaultHeader = () => {
-  const user = useSnapshot(useSessionState).user;
+  const [session] = useAtom(useSessionState);
   return (
     <>
       {process.env.NODE_ENV === "development" && (
@@ -40,14 +40,14 @@ export const DefaultHeader = () => {
           </label>
         </div>
         <div className="flex md:order-2 navbar-end">
-          {user ? (
+          {session?.user ? (
             <div className="flex items-center">
               <div className="pl-2" />
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
                     <img
-                      src={getCDNUrl(user.avatarUrl!, {
+                      src={getCDNUrl(session?.user.avatarUrl!, {
                         format: "webp",
                         size: "40x40",
                       })}
@@ -60,7 +60,7 @@ export const DefaultHeader = () => {
                   className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <Link to={`/users/${user.id}`} className="justify-between">
+                    <Link to={`/users/${session?.user.id}`} className="justify-between">
                       プロフィール
                     </Link>
                   </li>

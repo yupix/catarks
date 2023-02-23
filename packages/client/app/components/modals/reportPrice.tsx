@@ -1,4 +1,3 @@
-import { Label, TextInput } from "flowbite-react";
 import { Modal } from "flowbite-react";
 import { memo, useEffect, useMemo, useState } from "react";
 import { useSnapshot } from "valtio";
@@ -15,10 +14,11 @@ import type { Items } from "@catarks/db";
 import { useMount } from "@reactuses/core";
 import { useForm } from "react-hook-form";
 import { NumberInput } from "../common/numberInput";
+import { useAtom } from "jotai";
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
-  const { user } = useSnapshot(useSessionState);
+  const [session] = useAtom(useSessionState);
   const location = useLocation();
   const [option, setOption] = useState<AutocompleteInputOption | undefined>(
     undefined
@@ -213,7 +213,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                   label="シップ番号"
                   id="ship"
                   step={1}
-                  defaultValue={user?.ship || 8}
+                  defaultValue={session?.user?.ship || 8}
                   min={1}
                   max={10}
                   {...register("ship")}

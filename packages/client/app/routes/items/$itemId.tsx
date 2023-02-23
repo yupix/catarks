@@ -17,6 +17,7 @@ import { useSnapshot } from "valtio";
 import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
 import { getCDNUrl, getName } from "~/utils/utils";
+import { useAtom } from "jotai";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -42,7 +43,7 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 export default function Item() {
   const { item, charts } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<TCreateItemPriceAction>();
-  const { user } = useSnapshot(useSessionState);
+  const [session] = useAtom(useSessionState);
 
   useEffect(() => {
     if (fetcher.data?.status === "success") {
@@ -120,7 +121,7 @@ export default function Item() {
               tabIndex={0}
               className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >
-              {price.reporterId === user?.id && (
+              {price.reporterId === session?.user?.id && (
                 <li>
                   <button
                     className="text-red-400"

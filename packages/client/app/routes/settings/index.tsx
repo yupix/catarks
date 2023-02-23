@@ -8,10 +8,11 @@ import { toast } from "react-hot-toast";
 import type { ErrorBoundaryComponent } from "@remix-run/node";
 import { useMount } from "@reactuses/core";
 import { Card } from "~/components/common/Card";
+import { useAtom } from "jotai";
 
 const SettingBody = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const user = useSnapshot(useSessionState).user;
+  const [session] = useAtom(useSessionState);
   const fetcher = useFetcher<TUpdateUserAction>();
 
   useEffect(() => {
@@ -27,12 +28,12 @@ const SettingBody = () => {
   return (
     <Card classes={{root: "@container"}}>
       <div className="block @sm:flex justify-between flex-row-reverse">
-      <img src={user?.avatarUrl} className="avatar rounded-full h-32" />
+      <img src={session?.user?.avatarUrl} className="avatar rounded-full h-32" />
       <div className="divider lg:divider-horizontal" />
 
       <fetcher.Form
         method="put"
-        action={`/api/users/${user!.id}`}
+        action={`/api/users/${session?.user.id}`}
         encType="multipart/form-data"
       >
         <div className="form-control w-full max-w-xs">
@@ -44,7 +45,7 @@ const SettingBody = () => {
             type="file"
             className="file-input file-input-bordered w-full max-w-xs"
           />
-          <TextInput label="ニックネーム" name="nickname" defaultValue={user!.nickname} />
+          <TextInput label="ニックネーム" name="nickname" defaultValue={session?.user.nickname} />
 
           <button type="submit" className="btn btn-primary btn-square">
             保存
