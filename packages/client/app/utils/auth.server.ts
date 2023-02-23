@@ -42,7 +42,8 @@ let auth0Strategy = new Auth0Strategy(
             avatarUrl: profile.photos[0].value,
             settings: {
               create: {
-                useDarkTheme: false,
+                useTheme: "winter",
+                defaultUseTax: false
               },
             },
           },
