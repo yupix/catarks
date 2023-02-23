@@ -45,11 +45,14 @@ importers:
       dayjs: ^1.11.7
       embla-carousel-react: ^7.0.9
       eslint: ^8.34.0
+      file-type: ^18.2.1
       flowbite: ^1.6.3
       flowbite-react: ^0.3.8
       flowbite-typography: ^1.0.3
       ioredis: ^5.3.1
       isbot: ^3.6.6
+      jotai: ^2.0.2
+      lru-cache: ^7.17.0
       meilisearch: ^0.30.0
       mime-types: ^2.1.35
       mobx: ^6.8.0
@@ -99,10 +102,13 @@ importers:
       daisyui: 2.50.1_gbtt6ss3tbiz4yjtvdr6fbrj44
       dayjs: 1.11.7
       embla-carousel-react: 7.0.9_react@18.2.0
+      file-type: 18.2.1
       flowbite: 1.6.3
       flowbite-react: 0.3.8_ukbx3q76pieqjcxnhjbwfxxeei
       ioredis: 5.3.1
       isbot: 3.6.6
+      jotai: 2.0.2_react@18.2.0
+      lru-cache: 7.17.0
       meilisearch: 0.30.0
       mime-types: 2.1.35
       mobx: 6.8.0
@@ -2695,7 +2701,7 @@ packages:
       json5: 2.2.3
       lodash: 4.17.21
       lodash.debounce: 4.0.8
-      lru-cache: 7.14.1
+      lru-cache: 7.17.0
       minimatch: 3.1.2
       node-fetch: 2.6.9
       ora: 5.4.1
@@ -4582,7 +4588,7 @@ packages:
     resolution: {integrity: sha512-xq+q3SRMOxGivLhBNaUdC64hDTQwejJ+H0T/NB1XMtTVEwNTrfFF3gAxiyW0Bu/xWEGhjVKgUcMhCrUy2+uCWg==}
     dependencies:
       base64-js: 1.5.1
-      ieee754: 1.1.13
+      ieee754: 1.2.1
       isarray: 1.0.0
     dev: false
 
@@ -6462,6 +6468,15 @@ packages:
       token-types: 5.0.1
     dev: false
 
+  /file-type/18.2.1:
+    resolution: {integrity: sha512-Yw5MtnMv7vgD2/6Bjmmuegc8bQEVA9GmAyaR18bMYWKqsWDG9wgYZ1j4I6gNMF5Y5JBDcUcjRQqNQx7Y8uotcg==}
+    engines: {node: '>=14.16'}
+    dependencies:
+      readable-web-to-node-stream: 3.0.2
+      strtok3: 7.0.0
+      token-types: 5.0.1
+    dev: false
+
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
     dev: true
@@ -7807,6 +7822,18 @@ packages:
       '@sideway/pinpoint': 2.0.0
     dev: false
 
+  /jotai/2.0.2_react@18.2.0:
+    resolution: {integrity: sha512-0yOked08Swa84LUbBjtj7ZLZrE05n3u50rHeZ+bsT86thUjcy0kFgQz9GmEWhYbQDFoT1G8Ww6edSj/MBJHO4A==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /joycon/3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -8210,10 +8237,9 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lru-cache/7.14.1:
-    resolution: {integrity: sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==}
+  /lru-cache/7.17.0:
+    resolution: {integrity: sha512-zSxlVVwOabhVyTi6E8gYv2cr6bXK+8ifYz5/uyJb9feXX6NACVDwY4p5Ut3WC3Ivo/QhpARHU3iujx2xGAYHbQ==}
     engines: {node: '>=12'}
-    dev: true
 
   /lunr/2.3.9:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
