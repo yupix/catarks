@@ -19,7 +19,7 @@ import { NumberInput } from "../common/numberInput";
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
-  const { user } = useSnapshot(useSessionState);
+  const { user, settings } = useSnapshot(useSessionState);
   const location = useLocation();
   const [option, setOption] = useState<AutocompleteInputOption | undefined>(
     undefined
@@ -185,7 +185,6 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 onSelected={(option) => handleSelectChange(option.value)}
               />
               <div>
-                {/* <Label htmlFor="price" value="値段" /> */}
                 <NumberInput
                   id="price"
                   label="値段"
@@ -197,12 +196,11 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 />
               </div>
               <div>
-                {/* <Label htmlFor="qty" value="個数" /> */}
                 <NumberInput
                 label="個数"
                   id="qty"
                   step={1}
-                  // defaultValue={1}
+                  defaultValue={1}
                   min={1}
                   max={999}
                   {...register("qty")}
@@ -224,6 +222,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 <input
                   id="useTax"
                   type="checkbox"
+                  defaultChecked={settings?.defaultUseTax}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   {...register("useTax")}
                 />
