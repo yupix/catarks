@@ -14,7 +14,7 @@ export async function loader({request}: LoaderArgs): Promise<TypedResponse<Actio
     skip,
     limit
   })
-  return json({ intent: 'getItems', status: 'success', body: await getItems(query)}, {headers: {"Cache-Control": "public, s-maxage=300"}})
+  return json({ intent: 'getItems', status: 'success', body: await getItems(query)})
 }
 
 export type TgetItemsLoader = typeof loader
