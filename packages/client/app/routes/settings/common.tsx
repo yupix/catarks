@@ -3,13 +3,14 @@ import { Card } from "~/components/common/Card";
 import type { TUpdateUserSettingsAction } from "../api/users/$userId/settings";
 import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
+import { useAtom } from "jotai";
 
 export default function SettingsCommonPage() {
-  const { user } = useSnapshot(useSessionState);
+  const [session] = useAtom(useSessionState);
   const fetcher = useFetcher<TUpdateUserSettingsAction>();
   return (
     <Card>
-      <fetcher.Form action={`/api/users/${user!.id}/settings`} method="put">
+      <fetcher.Form action={`/api/users/${session?.user.id}/settings`} method="put">
         <div className="form-control">
           <label className="label cursor-pointer">
             <span className="label-text">
@@ -18,7 +19,7 @@ export default function SettingsCommonPage() {
             <input
               name="defaultUseTax"
               type="checkbox"
-              defaultChecked={user!.settings.defaultUseTax}
+              defaultChecked={session?.user.settings?.defaultUseTax}
               className="toggle toggle-primary"
             />
           </label>
