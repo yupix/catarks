@@ -2,7 +2,6 @@ import { Form, Link } from "@remix-run/react";
 import { IconMenu2 } from "@tabler/icons";
 import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
-import { Button } from "flowbite-react";
 import { getCDNUrl } from "~/utils/utils";
 
 export const DefaultHeader = () => {
@@ -80,9 +79,9 @@ export const DefaultHeader = () => {
             </div>
           ) : (
             <Form action="/auth/auth0" method="post">
-              <Button size="xs" type="submit">
+              <button className="btn" type="submit">
                 ログイン
-              </Button>
+              </button>
             </Form>
           )}
         </div>
