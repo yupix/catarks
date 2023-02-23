@@ -55,7 +55,9 @@ export default function App() {
   }
   const transition = useTransition();
   useKey(["n"], () => {
-    useModalState.isOpenedPriceRepost = true;
+    if (currentUser) {
+      useModalState.isOpenedPriceRepost = true;
+    }
   });
 
   useEffect(() => {
@@ -115,7 +117,7 @@ export function CatchBoundary() {
       </head>
       <body>
         <h1>
-          {caught.status === 404 && <NotFoundError/>}
+          {caught.status === 404 && <NotFoundError />}
           {/* {caught.status} {caught.statusText} */}
         </h1>
         <Scripts />
