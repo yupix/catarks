@@ -9,3 +9,10 @@ export const validateUpdateUser = z.object({
 })
 
 export type TUpdateUser = z.infer<typeof validateUpdateUser>
+
+export const validateUpdateUserSettings = z.object({
+  useTheme: z.optional(z.enum(['light', 'winter'])),
+  defaultUseTax: z.optional(z.boolean()),
+})
+
+export type TUpdateUserSettings = z.infer<typeof validateUpdateUserSettings>
