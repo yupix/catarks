@@ -111,10 +111,11 @@ model UserRoles {
 }
 
 model UserSettings {
-  id           String  @id @default(uuid())
-  useDarkTheme Boolean @default(false)
-  User         Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String  @unique
+  id            String  @id @default(uuid())
+  useTheme      Themes  @default(winter)
+  defaultUseTax Boolean @default(false)
+  User          Users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String  @unique
 }
 
 model Diaries {
@@ -123,6 +124,11 @@ model Diaries {
   filesHash String
   author    Users  @relation(fields: [authorId], references: [id])
   file      Files  @relation(fields: [filesHash], references: [hash])
+}
+
+enum Themes {
+  light
+  winter
 }
 
 enum Roles {
