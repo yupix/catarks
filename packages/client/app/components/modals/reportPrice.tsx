@@ -1,6 +1,6 @@
 import { Label, TextInput } from "flowbite-react";
 import { Modal } from "flowbite-react";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSnapshot } from "valtio";
 import { useModalState, useSessionState } from "~/states/common";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
@@ -15,6 +15,7 @@ import type { Items } from "@catarks/db";
 import { useMount } from "@reactuses/core";
 import { useForm } from "react-hook-form";
 import { NumberInput } from "../common/numberInput";
+
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
@@ -144,6 +145,16 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
       useTax: "",
     },
   });
+
+  const price = watch('price')
+  const qty = watch('qty')
+  const useTax = watch("useTax")
+  const proceeds = useMemo(() => {
+    const _price = price / qty
+    return (useTax ? _price * (1-0.1) : _price / (1-0.1)).toLocaleString()
+    
+  }, [price, qty, useTax])
+
   const itemIcon = selectedItem
     ? { backgroundImage: `url(${selectedItem.iconUrl})` }
     : {};
@@ -218,11 +229,18 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 />
               </div>
               <div>
-                {watch("useTax") ? (
-                  <p>純売上: {(watch("price") * (1 - 0.1)).toLocaleString()}</p>
+                {useTax ? (
+                  <>
+                  <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+                  <p>売値: {(price).toLocaleString()}</p>
+                  </>
                 ) : (
-                  <p>売値: {(watch("price") / (1 - 0.1)).toLocaleString()}</p>
+                  <>
+                  <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+                  <p>売値: {Number(price).toLocaleString()}</p>
+                  </>
                 )}
+                <p>一つあたりの価格: {proceeds}</p>
               </div>
               <div className="card-actions justify-end">
                 <button type="submit" className="btn btn-primary">
