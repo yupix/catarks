@@ -2,7 +2,7 @@ import { Link } from "@remix-run/react";
 
 export function Footer() {
   return (
-    <footer className="bg-white rounded-lg shadow md:px-6 md:py-8 dark:bg-gray-900">
+    <footer className="bg-base-100 rounded-lg shadow md:px-6 md:py-8 dark:bg-gray-900">
       <div className="sm:grid grid-cols-2 p-2">
         <div className="mb-2">
           <p className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">

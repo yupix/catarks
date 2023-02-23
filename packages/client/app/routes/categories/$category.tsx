@@ -2,14 +2,13 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import { getPaginationPageNumber, searchParams } from "~/utils/utils";
-import type { PickType } from "@catarks/utils";
-import { Pagination } from "flowbite-react";
 import { IconSearch, IconX } from "@tabler/icons";
 import { SearchItemByQuery } from "~/middlewares/search";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@reactuses/core";
 import { ItemCard } from "~/components/item/ItemCard";
 import {CatPagination} from "~/components/common/CatPagination";
+import type { ItemTypes } from "@catarks/db";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = searchParams(request);
@@ -17,7 +16,7 @@ export async function loader({ params, request }: LoaderArgs) {
   const q = url.get("q");
   const limit = 20;
   const skip = getPaginationPageNumber({ limit, page });
-  const category = params.category as PickType<ItemDto, "type"> | undefined;
+  const category = params.category as ItemTypes | undefined;
   if (!category) throw new Error();
   const res = await SearchItemByQuery({ q, limit, skip, category });
   return json({ body: res, category: params.category, page: Number(page), q });

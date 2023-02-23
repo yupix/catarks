@@ -10,7 +10,7 @@ export const DefaultHeader = () => {
   return (
     <>
       {process.env.NODE_ENV === "development" && (
-        <div className="alert bg-red-500 text-white rounded-none">
+        <div className="alert bg-error text-neutral rounded-none">
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"

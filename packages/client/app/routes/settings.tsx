@@ -6,7 +6,7 @@ import { authenticator } from "~/utils/auth.server";
 
 
 const SETTINGS = [
-  { title: "基本設定", links: [{ title: "プロフィール", link: "/settings" }] },
+  { title: "基本設定", links: [{ title: "プロフィール", link: "/settings" }, {title: "テーマ", link: "/settings/themes" }] },
   { title: "クライアント設定", links: [{ title: "全般", link: "/settings/common" }] },
 ];
 

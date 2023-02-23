@@ -1,4 +1,4 @@
-import type { Users } from "@catarks/db";
+import { Themes, UserSettings, Users } from "@catarks/db";
 import type { ActionArgs, TypedResponse } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -12,7 +12,7 @@ export async function action({
   request,
 }: ActionArgs): Promise<
   TypedResponse<
-    ActionResponse<"updateUserSettings", Users> | ActionResponse<"?", null>
+    ActionResponse<"updateUserSettings", UserSettings> | ActionResponse<"?", null>
   >
 > {
   const user = await authenticator.isAuthenticated(request, {
@@ -29,6 +29,7 @@ export async function action({
         defaultUseTax: defaultUseTax ? defaultUseTax.toString() === 'on' : false,
         useTheme
       });
+      body.useTheme = body.useTheme ? Themes[body.useTheme] : undefined
       const updatedUserSettings = await prisma.userSettings.update({
         where: {
           userId: user.id,
@@ -43,7 +44,7 @@ export async function action({
       );
       user.settings = updatedUserSettings
       session.set(authenticator.sessionKey, user);
-      return redirect("/settings/common", {
+      return json({intent: 'updateUserSettings', status: 'success', body: updatedUserSettings}, {
         headers: { "Set-Cookie": await commitSession(session) },
       });
     }

@@ -5,7 +5,7 @@ import { DefaultHeader } from "./header";
 import { Link } from "@remix-run/react";
 import { CATEGORIES } from "~/const";
 import { IconHome } from "@tabler/icons";
-import { Card } from "./common/Card";
+import { Container } from "./common/container";
 
 export const DefaultLayout: FC<{
   children?: React.ReactNode;
@@ -26,9 +26,9 @@ export const DefaultLayout: FC<{
           <DefaultHeader />
           <div className="mt-5">
             <article>
-              <Card classes={{root: "bg-slate-50 shadow"}}>
+              <Container classes={{root: "bg-base-200 shadow"}}>
                 {children}
-              </Card>
+              </Container>
             </article>
             <div style={{ height: 50 }} />
             <div>

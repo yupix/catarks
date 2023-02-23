@@ -10,13 +10,14 @@ export type CardProps = {
 };
 
 export const Card: FC<CardProps> = ({ classes,children }) => {
-  const baseInputClass =
-    "card bg-base-100 shadow-sm h-full";
-  const baseLabelClass =
-    "card-body";
-  const mergedRootClass = twMerge(baseInputClass, classes?.root);
-  const mergedBodyClass = twMerge(baseLabelClass, classes?.body);
+  const baseCardRootClass =
+    "card bg-base-200 shadow-sm h-full";
+  const baseCardBodyClass =
+    "card-body bg-base-200";
+  const mergedRootClass = twMerge(baseCardRootClass, classes?.root);
+  const mergedBodyClass = twMerge(baseCardBodyClass, classes?.body);
   return (
+    
     <div className={mergedRootClass}>
       <div className={mergedBodyClass}>
       {children}

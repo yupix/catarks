@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { THEMES } from '~/const';
 
 
 export const validateUpdateUser = z.object({
@@ -11,7 +12,7 @@ export const validateUpdateUser = z.object({
 export type TUpdateUser = z.infer<typeof validateUpdateUser>
 
 export const validateUpdateUserSettings = z.object({
-  useTheme: z.optional(z.enum(['light', 'winter'])),
+  useTheme: z.optional(z.enum(THEMES)),
   defaultUseTax: z.optional(z.boolean()),
 })
 

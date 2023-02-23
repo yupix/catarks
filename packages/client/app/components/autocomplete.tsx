@@ -1,9 +1,9 @@
-import { TextInput } from "flowbite-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   hiraganaToKatagana,
   replaceNumbersWithRoman,
 } from "~/utils/utils.client";
+import { TextInput } from "./common/textInput";
 
 export type AutocompleteInputOption = {
   label: string;
@@ -71,22 +71,13 @@ const AutocompleteInput: React.FC<
     }
   };
 
-  const Label = () =>
-    label ? (
-      <label className="label">
-        <span className="label-text">{label}</span>
-      </label>
-    ) : (
-      <></>
-    );
-
   return (
     <div className="relative">
-      <Label />
       {selectedOption && (
         <input type="hidden" name={name} value={selectedOption.value} />
       )}
       <TextInput
+      label={label}
         value={inputValue}
         onChange={handleInputChange}
         required={required}

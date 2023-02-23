@@ -13,7 +13,7 @@ type ItemCardProps = {
 
 export const ItemCard: FC<ItemCardProps> = ({ classes, item }) => {
   return (
-    <Card classes={{ root: "@container" }}>
+    <Card classes={{ root: "@container" , body: "bg-base-100"}}>
       <div className="flex items-center flex-col sm:flex-row @xs:flex-col gap-4">
         <div className="avatar">
           <div className="w-24 sm:w-16 rounded-2xl">
@@ -21,7 +21,7 @@ export const ItemCard: FC<ItemCardProps> = ({ classes, item }) => {
           </div>
         </div>
         <div>
-          <p className="text-gray-400 font-bold text-xs">
+          <p className=" font-bold text-xs">
             {getCategoryName(item.type)}
           </p>
           <p className="font-bold ">{item.name}</p>

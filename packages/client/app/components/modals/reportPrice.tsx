@@ -16,7 +16,6 @@ import { useMount } from "@reactuses/core";
 import { useForm } from "react-hook-form";
 import { NumberInput } from "../common/numberInput";
 
-
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
   const { user } = useSnapshot(useSessionState);
@@ -146,14 +145,13 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
     },
   });
 
-  const price = watch('price')
-  const qty = watch('qty')
-  const useTax = watch("useTax")
+  const price = watch("price");
+  const qty = watch("qty");
+  const useTax = watch("useTax");
   const proceeds = useMemo(() => {
-    const _price = price / qty
-    return (useTax ? _price * (1-0.1) : _price / (1-0.1)).toLocaleString()
-    
-  }, [price, qty, useTax])
+    const _price = price / qty;
+    return (useTax ? _price * (1 - 0.1) : _price / (1 - 0.1)).toLocaleString();
+  }, [price, qty, useTax]);
 
   const itemIcon = selectedItem
     ? { backgroundImage: `url(${selectedItem.iconUrl})` }
@@ -168,7 +166,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
         <p>価格の報告</p>
       </Modal.Header>
       <Modal.Body style={{ padding: 0 }}>
-        <div className="block sm:flex">
+        <div className="block sm:flex bg-base-100">
           <div className="flex-0 bg-base-200 flex justify-center items-center p-5 rounded-r-lg">
             <div
               className="rounded-full h-24 w-24 bg-cover bg-center bg-white border-solid border-gray-600 border-4 shadow-lg"
@@ -176,7 +174,11 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
             />
           </div>
           <div className="flex-1 p-6">
-            <fetcher.Form action="/api/items/price" method="post">
+            <fetcher.Form
+              action="/api/items/price"
+              method="post"
+              className="form-control w-full max-w-xs"
+            >
               <AutocompleteInput
                 defaultValue={option}
                 name="itemId"
@@ -197,7 +199,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
               </div>
               <div>
                 <NumberInput
-                label="個数"
+                  label="個数"
                   id="qty"
                   step={1}
                   defaultValue={1}
@@ -207,8 +209,8 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 />
               </div>
               <div>
-                <Label htmlFor="ship" value="シップ番号" />
-                <TextInput
+                <NumberInput
+                  label="シップ番号"
                   id="ship"
                   step={1}
                   defaultValue={user?.ship || 8}
@@ -218,25 +220,31 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 />
               </div>
               <div>
-                <Label htmlFor="useTax" value="税込み" />
-                <input
-                  id="useTax"
-                  type="checkbox"
-                  defaultChecked={user!.settings.defaultUseTax}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  {...register("useTax")}
-                />
+                <label htmlFor="useTax" className="label">
+                  <span className="label-text">税込み</span>
+                </label>
+                <div className="form-control">
+                  <label className="label cursor-pointer">
+                    <span className="label-text">税込み</span>
+                    <input
+                      id="useTax"
+                      type="checkbox"
+                      className="checkbox"
+                      {...register("useTax")}
+                    />
+                  </label>
+                </div>
               </div>
               <div>
                 {useTax ? (
                   <>
-                  <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
-                  <p>売値: {(price).toLocaleString()}</p>
+                    <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+                    <p>売値: {price.toLocaleString()}</p>
                   </>
                 ) : (
                   <>
-                  <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
-                  <p>売値: {Number(price).toLocaleString()}</p>
+                    <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+                    <p>売値: {Number(price).toLocaleString()}</p>
                   </>
                 )}
                 <p>一つあたりの価格: {proceeds}</p>

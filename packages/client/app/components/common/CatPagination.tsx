@@ -53,7 +53,7 @@ export const CatPagination = ({
           aria-label="前に戻る"
           // to={linkGenerator(currentPage - 1)}
           onClick={goToPreviousPage}
-          className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+          className="btn btn-outline font-semibold py-2 px-4  rounded shadow"
         >
           <IconChevronLeft />
         </button>
@@ -64,15 +64,11 @@ export const CatPagination = ({
           <>
             <button
               onClick={() => onChange(1)}
-              className={`${
-                1 === currentPage
-                  ? "bg-blue-500 text-white"
-                  : "bg-white hover:bg-gray-100 text-gray-700"
-              } font-semibold py-2 px-4 border border-gray-400 rounded shadow`}
+              className={`btn btn-outline font-semibold py-2 px-4  rounded shadow`}
             >
               {1}
             </button>
-            <span className="text-gray-700 font-semibold py-2 px-4">
+            <span className=" font-semibold py-2 px-4">
               <IconDots />
             </span>
           </>
@@ -84,15 +80,15 @@ export const CatPagination = ({
             onClick={() => onChange(pageNumber)}
             className={`${
               pageNumber === currentPage
-                ? "bg-blue-500 text-white"
-                : "bg-white hover:bg-gray-100 text-gray-700"
-            } font-semibold py-2 px-4 border border-gray-400 rounded shadow`}
+                ? "btn-active"
+                : " btn-outline"
+            } btn font-semibold py-2 px-4   rounded shadow`}
           >
             {pageNumber}
           </button>
         ))}
         {pageNumbers[pageNumbers.length - 1] < totalPages && (
-          <span className="text-gray-700 font-semibold py-2 px-4">
+          <span className=" font-semibold py-2 px-4">
             <IconDots />
           </span>
         )}
@@ -102,7 +98,7 @@ export const CatPagination = ({
         <button
           aria-label="次に進む"
           onClick={goToNextPage}
-          className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+          className="btn font-semibold py-2 px-4  rounded shadow btn-outline"
         >
           <IconChevronRight />
         </button>
