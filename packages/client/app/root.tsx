@@ -1,5 +1,4 @@
 import type {
-  ErrorBoundaryComponent,
   LoaderArgs,
   MetaFunction,
 } from "@remix-run/node";
@@ -17,7 +16,7 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 import styles from "./assets/main.css";
-import { useModalState, useSessionState, useUserDevice } from "./states/common";
+import { useModalState, useSessionState } from "./states/common";
 import { ReportPriceModal } from "./components/modals/reportPrice";
 import { authenticator } from "./utils/auth.server";
 import { assertIsDefined } from "./utils/utils";
@@ -26,6 +25,7 @@ import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
 import { useKey } from "rooks";
 import { NotFoundError } from "./components/errors/notfoundError";
+import { prisma } from "./utils/prisma.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -41,17 +41,23 @@ export function links() {
 }
 
 export async function loader({ request }: LoaderArgs) {
-  const user = await authenticator.isAuthenticated(request);
+  let user = await authenticator.isAuthenticated(request);
+  if (user) {
+    
+    const userSettings = await prisma.userSettings.findFirst({where: {userId: user.id}})
+    user.settings = userSettings
+  }
   return json(user ? user : null);
 }
 
 export default function App() {
-  const currentUser = useLoaderData<typeof loader>();
-  useUserDevice.useTheme =
-    currentUser?.settings?.useDarkTheme || false ? "dark" : "light";
+  const currentUser = useLoaderData<typeof loader>();  
   if (currentUser) {
     assertIsDefined(currentUser);
-    useSessionState.user = currentUser;
+    useSessionState.user = currentUser; // TODO: createdAtをDateに変える
+    if (currentUser?.settings) {
+    useSessionState.settings = currentUser?.settings
+    }
   }
   const transition = useTransition();
   useKey(["n"], () => {
@@ -64,7 +70,7 @@ export default function App() {
     const warningMessage = () => {
       console.log("%cSTOP\n", "color:red;font-size:8em");
       console.log(
-        "%cここに何かを貼り付けろといわれているならそれは%c11/10%cあなたに損をもたらします。何をしているか理解している場合は一緒にこのプロジェクトを盛り上げませんか?\n%cGitLab:  https://discord.gg/CcT997U",
+        "%cここに何かを貼り付けろといわれているならそれは%c11/10%cあなたに損をもたらします。何をしているか理解している場合は一緒にこのプロジェクトを盛り上げませんか?\n%cDiscord:  https://discord.gg/CcT997U",
         "color: blue;font-size:2em;",
         "color:black;font-size:4em;",
         "color: blue;font-size:2em;",
@@ -74,7 +80,7 @@ export default function App() {
     warningMessage();
   }, []);
   return (
-    <html lang="ja" data-theme="winter">
+    <html lang="ja" data-theme={`${currentUser?.settings?.useTheme ? currentUser.settings.useTheme : "winter"}`}>
       <head>
         <Meta />
         <Links />
