@@ -27,7 +27,7 @@ let auth0Strategy = new Auth0Strategy(
       where: {
         auth0Id: profile.id,
       },
-      include: { settings: true },
+      include: { settings: true, role: true },
     });
     const username = profile._json?.nickname ? profile._json?.nickname : profile.displayName
     assertIsDefined(profile.photos);
