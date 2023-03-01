@@ -2,7 +2,6 @@ import type {
   LoaderArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -11,7 +10,6 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useLoaderData,
   useTransition,
 } from "@remix-run/react";
 import { useEffect } from "react";
@@ -25,9 +23,9 @@ import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
 import { useKey } from "rooks";
 import { NotFoundError } from "./components/errors/notfoundError";
-import { prisma } from "./utils/prisma.server";
 import { useHydrateAtoms } from "jotai/utils"
 import { useAtom } from "jotai";
+import { typedjson, useTypedLoaderData} from "remix-typedjson";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -45,13 +43,13 @@ export function links() {
 export async function loader({ request }: LoaderArgs) {
   let user = await authenticator.isAuthenticated(request);
 
-  return json(user ? user : null);
+  return typedjson(user ? user : null);
 }
 
 export default function App() {
   useHydrateAtoms([[useSessionState, undefined]])
   const [user, setUser] = useAtom(useSessionState)
-  const currentUser = useLoaderData<typeof loader>();  
+  const currentUser = useTypedLoaderData<typeof loader>();  
   const transition = useTransition();
   useKey(["n"], () => {
     if (currentUser) {
