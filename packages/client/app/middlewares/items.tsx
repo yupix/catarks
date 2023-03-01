@@ -2,19 +2,16 @@ import type { Users } from "@catarks/db";
 import { prisma } from "~/utils/prisma.server";
 import type { TItemQuery } from "~/validations/items/index.query";
 
-export const GetItemPriceById = async (priceId: string) => {
+export async function GetItemPriceById(priceId: string) {
   return await prisma.itemPrices.findFirst({
     where: {
       id: priceId,
     },
     include: { reporter: true },
   });
-};
+}
 
-export const DeleteItemPriceById = async (
-  priceId: string,
-  actionUser: Users
-) => {
+export async function DeleteItemPriceById(priceId: string, actionUser: Users) {
   const getItemPriceResult = await GetItemPriceById(priceId);
   if (getItemPriceResult?.reporter.id === actionUser.id) {
     return await prisma.itemPrices.delete({
@@ -23,9 +20,9 @@ export const DeleteItemPriceById = async (
       },
     });
   }
-};
+}
 
-export const getItems = async ({ limit, skip, type }: TItemQuery) => {
+export async function getItems({ limit, skip, type }: TItemQuery) {
   const maxCount = await prisma.items.count();
   const items = await prisma.items.findMany({
     where: {
@@ -56,9 +53,9 @@ export const getItems = async ({ limit, skip, type }: TItemQuery) => {
   });
 
   return { items, max: maxCount };
-};
+}
 
-export const getItemByID = async (itemId: string) => {
+export async function getItemByID(itemId: string) {
   return await prisma.items.findFirst({
     where: {
       id: itemId,
@@ -69,4 +66,4 @@ export const getItemByID = async (itemId: string) => {
       ability: { include: { effects: true } },
     },
   });
-};
+}

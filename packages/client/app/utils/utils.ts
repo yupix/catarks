@@ -2,42 +2,40 @@ import type { ItemTypes, Users } from "@catarks/db";
 import { TYPE_TO_CATEGORY } from "@catarks/utils";
 import { authenticator } from "~/utils/auth.server";
 
-export const getName = (user: Users) => {
-  return user.nickname ? user.nickname : user.username
+export function getName(user: Users) {
+  return user.nickname ? user.nickname : user.username;
 }
 export function isUUID(uuid?: string) {
-  if (!uuid) return false
-  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (!uuid) return false;
+  const uuidPattern =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   return uuidPattern.test(uuid);
 }
 
-export const getCDNUrl = (link: string, options: {format: 'webp', size: string}) => {
-  return `https://cdn.catarks.org/unsafe/${options.size}/filters:format(${options.format})/${link}`
+export function getCDNUrl(
+  link: string,
+  options: { format: "webp"; size: string }
+) {
+  return `https://cdn.catarks.org/unsafe/${options.size}/filters:format(${options.format})/${link}`;
 }
 
-export const NotNullableFormData = (formData: FormData) => {
+export function NotNullableFormData(formData: FormData) {
   const get = (key: string) => {
-    return formData.get(key) || undefined
-  }
-  return {get}
+    return formData.get(key) || undefined;
+  };
+  return { get };
 }
 
-export const searchParams = (request: Request) => {
+export function searchParams(request: Request) {
   const url = new URL(request.url);
   const get = (key: string) => {
-    return url.searchParams.get(key) || undefined
-  }
-  return {get}
+    return url.searchParams.get(key) || undefined;
+  };
+  return { get };
 }
 
 export const getCategoryName = (type: ItemTypes): string => {
   return TYPE_TO_CATEGORY[type];
-};
-
-export const createAuthHeaders = async (request: Request) => {
-  const user = await authenticator.isAuthenticated(request);
-  assertIsDefined(user);
-  return { Cookie: user.session };
 };
 
 export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {

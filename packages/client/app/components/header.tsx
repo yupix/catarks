@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { useSessionState } from "~/states/common";
 import { getCDNUrl } from "~/utils/utils";
 
-export const DefaultHeader = () => {
+export function DefaultHeader() {
   const [session] = useAtom(useSessionState);
   return (
     <>
@@ -60,7 +60,10 @@ export const DefaultHeader = () => {
                   className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <Link to={`/users/${session?.user.id}`} className="justify-between">
+                    <Link
+                      to={`/users/${session?.user.id}`}
+                      className="justify-between"
+                    >
                       プロフィール
                     </Link>
                   </li>
@@ -88,4 +91,4 @@ export const DefaultHeader = () => {
       </div>
     </>
   );
-};
+}

@@ -1,7 +1,7 @@
 import { IconPencil } from "@tabler/icons";
 import { useModalState } from "~/states/common";
 
-export const SpeedDial = () => {
+export function SpeedDial() {
   return (
     <div data-dial-init className="fixed right-6 bottom-6 group">
       <button

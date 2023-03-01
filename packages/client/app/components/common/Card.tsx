@@ -9,7 +9,7 @@ export type CardProps = {
   children?: React.ReactNode;
 };
 
-export const Card: FC<CardProps> = ({ classes,children }) => {
+export function Card({ classes,children }: CardProps) {
   const baseCardRootClass =
     "card bg-base-200 shadow-sm h-full";
   const baseCardBodyClass =

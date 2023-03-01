@@ -1,10 +1,9 @@
 import { SidebarBase } from "./base";
 
-
-export const CategorySidebar = () => {
-
+export function CategorySidebar() {
   return (
     <SidebarBase>
+      <></>
     </SidebarBase>
   );
-};
+}
