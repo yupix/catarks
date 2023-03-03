@@ -1,7 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import { Card } from "~/components/common/Card";
 import type { TUpdateUserSettingsAction } from "../api/users/$userId/settings";
-import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
 import { useAtom } from "jotai";
 

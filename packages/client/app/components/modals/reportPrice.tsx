@@ -1,6 +1,5 @@
 import { Modal } from "flowbite-react";
 import { memo, useEffect, useMemo, useState } from "react";
-import { useSnapshot } from "valtio";
 import { useModalState, useSessionState } from "~/states/common";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
 import type { TgetItemsLoader } from "~/routes/api/items";
@@ -41,7 +40,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
   useMount(() => {
     fetcher.submit(null, { action: "/api/items?index", method: "get" });
   });
-  const isOpen = useSnapshot(useModalState).isOpenedPriceRepost;
+  const [modalState, setModalState] = useAtom(useModalState);
   const fetcher = useFetcher<
     TgetItemsLoader | TCreateItemPriceAction | TGetItemByIdLoader
   >();
@@ -109,7 +108,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                     to={`/items/${data?.body?.item.id}`}
                     onClick={() => {
                       toast.dismiss(t.id);
-                      useModalState.isOpenedPriceRepost = false;
+                      setModalState({ isOpenedPriceRepost: false });
                     }}
                     className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
@@ -159,8 +158,8 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
   return (
     <Modal
       dismissible={true}
-      show={isOpen}
-      onClose={() => (useModalState.isOpenedPriceRepost = false)}
+      show={modalState.isOpenedPriceRepost}
+      onClose={() => setModalState({ isOpenedPriceRepost: true })}
     >
       <Modal.Header>
         <p>価格の報告</p>

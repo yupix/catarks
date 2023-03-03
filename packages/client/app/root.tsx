@@ -24,7 +24,7 @@ import { Toaster } from "react-hot-toast";
 import { useKey } from "rooks";
 import { NotFoundError } from "./components/errors/notfoundError";
 import { useHydrateAtoms } from "jotai/utils"
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { typedjson, useTypedLoaderData} from "remix-typedjson";
 
 export const meta: MetaFunction = () => ({
@@ -42,18 +42,18 @@ export function links() {
 
 export async function loader({ request }: LoaderArgs) {
   let user = await authenticator.isAuthenticated(request);
-
   return typedjson(user ? user : null);
 }
 
 export default function App() {
-  useHydrateAtoms([[useSessionState, undefined]])
-  const [user, setUser] = useAtom(useSessionState)
+  useHydrateAtoms([[useSessionState, undefined], [useModalState, {isOpenedPriceRepost: false}]])
+  const setUser = useSetAtom(useSessionState)
+  const setModalState = useSetAtom(useModalState)
   const currentUser = useTypedLoaderData<typeof loader>();  
   const transition = useTransition();
   useKey(["n"], () => {
     if (currentUser) {
-      useModalState.isOpenedPriceRepost = true;
+      setModalState({isOpenedPriceRepost: true});
     }
   });
 

@@ -1,5 +1,4 @@
 import { useFetcher } from "@remix-run/react";
-import { useSnapshot } from "valtio";
 import { useSessionState } from "~/states/common";
 import type { TUpdateUserAction } from "../api/users/$userId";
 import { TextInput } from "~/components/common/textInput";

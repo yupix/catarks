@@ -1,6 +1,5 @@
 import type { ItemTypes, Users } from "@catarks/db";
 import { TYPE_TO_CATEGORY } from "@catarks/utils";
-import { authenticator } from "~/utils/auth.server";
 
 export function getName(user: Users) {
   return user.nickname ? user.nickname : user.username;
@@ -64,8 +63,4 @@ export const getPaginationPageNumber = (options: {
   return options.page === "0" || options.page === "1"
     ? 0
     : options.limit * (Number(options.page) - 1);
-};
-
-export const invariant = (status: boolean, message: string) => {
-  if (status === false) throw new Error(message);
 };

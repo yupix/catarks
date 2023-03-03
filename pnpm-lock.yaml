@@ -78,7 +78,6 @@ importers:
       tailwindcss: ^3.2.7
       typedoc-theme-hierarchy: ^3.0.2
       typescript: ^4.9.5
-      valtio: ^1.10.3
       webpack: ^5.75.0
       zod: ^3.20.6
     dependencies:
@@ -133,7 +132,6 @@ importers:
       styled-components: 5.3.8_7i5myeigehqah43i5u7wbekgba
       tailwind-merge: 1.10.0
       tailwindcss: 3.2.7_postcss@8.4.21
-      valtio: 1.10.3_react@18.2.0
       zod: 3.20.6
     devDependencies:
       '@remix-run/dev': 1.14.0_@remix-run+serve@1.14.0
@@ -10752,10 +10750,6 @@ packages:
       - supports-color
     dev: true
 
-  /proxy-compare/2.5.0:
-    resolution: {integrity: sha512-f1us0OsVAJ3tdIMXGQx2lmseYS4YXe4W+sKF5g5ww/jV+5ogMadPt+sIZ+88Ga9kvMJsrRNWzCrKPpr6pMWYbA==}
-    dev: false
-
   /proxy-from-env/1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
     dev: true
@@ -13178,20 +13172,6 @@ packages:
   /v8-compile-cache-lib/3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
     dev: true
-
-  /valtio/1.10.3_react@18.2.0:
-    resolution: {integrity: sha512-t3Ez/+baJ+Z5tIyeaI6nCAbW/hrmcq2jditwg/X++o5IvCdiGirQKTOv1kJq0glgUo13v5oABCVGcinggBfiKw==}
-    engines: {node: '>=12.20.0'}
-    peerDependencies:
-      react: '>=16.8'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      proxy-compare: 2.5.0
-      react: 18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
-    dev: false
 
   /vary/1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}

@@ -13,7 +13,6 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import type { TCreateItemPriceAction } from "../api/items/price";
 import { useSessionState } from "~/states/common";
-import { useSnapshot } from "valtio";
 import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
 import { getCDNUrl, getName } from "~/utils/utils";
