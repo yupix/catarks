@@ -30,7 +30,7 @@ const uploadStreamToS3 = async (
   const url = (await objectStorage.upload(params).promise()).Location;
   await prisma.files.create({
     data: {
-      UUIDFilename: key,
+      id: key,
       filename,
       url,
       hash,
