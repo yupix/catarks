@@ -64,13 +64,13 @@ model DefaultAvatars {
 }
 
 model Files {
-  hash         String    @id
-  filename     String    @unique
-  UUIDFilename String    @unique
-  url          String
-  author       Users     @relation(fields: [userId], references: [id])
-  userId       String
-  Diaries      Diaries[]
+  id       String    @id @default(uuid())
+  hash     String    @unique
+  filename String    @unique
+  url      String
+  author   Users     @relation(fields: [userId], references: [id])
+  userId   String
+  Diaries  Diaries[]
 }
 
 model Users {
@@ -119,11 +119,11 @@ model UserSettings {
 }
 
 model Diaries {
-  id        String @id @default(uuid())
-  authorId  String
-  filesHash String
-  author    Users  @relation(fields: [authorId], references: [id])
-  file      Files  @relation(fields: [filesHash], references: [hash])
+  id       String @id @default(uuid())
+  authorId String
+  fileId   String
+  author   Users  @relation(fields: [authorId], references: [id])
+  file     Files  @relation(fields: [fileId], references: [id])
 }
 
 enum Themes {
