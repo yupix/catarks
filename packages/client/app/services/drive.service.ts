@@ -17,14 +17,12 @@ export class DriveService {
       where: { id: fileId },
     });
 
-    objectStorage
+    await objectStorage
       .deleteObject({
         Bucket: "catarks",
         Key: `${config.objectStorage.uploadPath}/${file.id}.${file.contentType}`,
       })
-      .promise().then((res) => {
-        console.log(res, `${config.objectStorage.uploadPath}/${file.id}.${file.contentType}`)
-      });
+      .promise()
     return file;
   }
 }
