@@ -1,7 +1,4 @@
-import type {
-  LoaderArgs,
-  MetaFunction,
-} from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -23,9 +20,10 @@ import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
 import { useKey } from "rooks";
 import { NotFoundError } from "./components/errors/notfoundError";
-import { useHydrateAtoms } from "jotai/utils"
+import { useHydrateAtoms } from "jotai/utils";
 import { useSetAtom } from "jotai";
-import { typedjson, useTypedLoaderData} from "remix-typedjson";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { ContextMenuProvider } from "./components/contextMenu";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -46,21 +44,24 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function App() {
-  useHydrateAtoms([[useSessionState, undefined], [useModalState, {isOpenedPriceRepost: false}]])
-  const setUser = useSetAtom(useSessionState)
-  const setModalState = useSetAtom(useModalState)
-  const currentUser = useTypedLoaderData<typeof loader>();  
+  useHydrateAtoms([
+    [useSessionState, undefined],
+    [useModalState, { isOpenedPriceRepost: false }],
+  ]);
+  const setUser = useSetAtom(useSessionState);
+  const setModalState = useSetAtom(useModalState);
+  const currentUser = useTypedLoaderData<typeof loader>();
   const transition = useTransition();
   useKey(["n"], () => {
     if (currentUser) {
-      setModalState({isOpenedPriceRepost: true});
+      setModalState({ isOpenedPriceRepost: true });
     }
   });
 
   useEffect(() => {
     if (currentUser) {
       assertIsDefined(currentUser);
-      setUser({user: currentUser}); // TODO: createdAtをDateに変える
+      setUser({ user: currentUser }); // TODO: createdAtをDateに変える
     }
     const warningMessage = () => {
       console.log("%cSTOP\n", "color:red;font-size:8em");
@@ -73,36 +74,45 @@ export default function App() {
       );
     };
     warningMessage();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
   return (
-    <html lang="ja" data-theme={`${currentUser?.settings?.useTheme ? currentUser.settings.useTheme : "winter"}`}>
+    <html
+      lang="ja"
+      data-theme={`${
+        currentUser?.settings?.useTheme
+          ? currentUser.settings.useTheme
+          : "winter"
+      }`}
+    >
       <head>
         <Meta />
         <Links />
       </head>
       <body>
-        <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
-        <Outlet />
-        <Toaster />
-        {transition.state === "submitting" && (
-          <div
-            style={{
-              position: "fixed",
-              display: "flex",
-              zIndex: 300,
-              top: 14,
-              right: 20,
-            }}
-          >
-            {/* <Loader /> */}
-          </div>
-        )}
-        {/* {transition.state === "loading" && <ProgressBar />} */}
+        <ContextMenuProvider>
+          <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
+          <Outlet />
+          <Toaster />
+          {transition.state === "submitting" && (
+            <div
+              style={{
+                position: "fixed",
+                display: "flex",
+                zIndex: 300,
+                top: 14,
+                right: 20,
+              }}
+            >
+              {/* <Loader /> */}
+            </div>
+          )}
+          {/* {transition.state === "loading" && <ProgressBar />} */}
 
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </ContextMenuProvider>
       </body>
     </html>
   );
