@@ -4,25 +4,25 @@ import type { UploadHandler } from "@remix-run/node";
 import type { Users } from "@catarks/db";
 import { prisma } from "./prisma.server";
 import { config } from "@catarks/shared";
+import {fromBuffer} from "file-type"
 
 const crypto = require("crypto");
 const mime = require("mime-types");
 const uploadStreamToS3 = async (
-  data: AsyncIterable<Uint8Array>,
+  file: Buffer,
   filename: string,
   contentType: string,
   author: Users
 ) => {
   const BUCKET_NAME = "catarks";
   const key = crypto.randomUUID();
-  const file = await convertToBuffer(data)
   if (!filename) return undefined
   const hash = crypto.createHash('md5').update(file.toString()).digest('hex')
   const hitFile = await prisma.files.findFirst({where: {hash}})
   if (hitFile) return hitFile.url;
   const params: S3.PutObjectRequest = {
     Bucket: BUCKET_NAME,
-    Key: `${config.objectStorage.uploadPath}/${key}.${mime.extension(contentType)}`,
+    Key: `${config.objectStorage.uploadPath}/${key}.${contentType}`,
     Body: file,
     ContentType: contentType,
   };
@@ -34,6 +34,7 @@ const uploadStreamToS3 = async (
       filename,
       url,
       hash,
+      contentType,
       author: {connect: {id: author.id}},
     }
   })
@@ -53,18 +54,21 @@ export const UploaderHandler = (author: Users, allowedContentTypes?: string[]) =
   const s3UploaderHandler: UploadHandler = async ({
     data,
     filename,
-    contentType,
   }) => {
     if (!filename) return undefined
+    const file = await convertToBuffer(data)
+    const _contentType = await fromBuffer(file)
+    if (_contentType === undefined) {
+      throw new Error('Thinking Content-Type')
+    }
     if (allowedContentTypes) {
       let canUpload = false
       for (const allowedContentType of allowedContentTypes) {
-        const _contentType =  mime.lookup(allowedContentType)
-        if (_contentType === contentType) canUpload = true
+        if (_contentType?.ext === allowedContentType) canUpload = true
       }
       if (!canUpload) throw Error('Not allowed Content-Type')
     }
-    return await uploadStreamToS3(data, filename!, contentType, author);
+    return await uploadStreamToS3(file, filename!, _contentType.ext, author);
   };
   return { s3UploaderHandler };
 };
