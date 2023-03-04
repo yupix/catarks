@@ -64,13 +64,15 @@ model DefaultAvatars {
 }
 
 model Files {
-  id       String    @id @default(uuid())
-  hash     String    @unique
-  filename String    @unique
-  url      String
-  author   Users     @relation(fields: [userId], references: [id])
-  userId   String
-  Diaries  Diaries[]
+  id          String    @id @default(uuid())
+  hash        String    @unique
+  filename    String    @unique
+  url         String
+  author      Users     @relation(fields: [userId], references: [id])
+  userId      String
+  Diaries     Diaries[]
+  contentType String?
+  createdAt   DateTime  @default(now())
 }
 
 model Users {
