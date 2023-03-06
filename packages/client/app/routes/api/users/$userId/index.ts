@@ -59,7 +59,6 @@ export async function action({
         request.headers.get("cookie")
       );
       session.set(authenticator.sessionKey, updatedUser);
-      console.log(session.data, updatedUser, body.nickname);
       return redirect("/settings", {
         headers: { "Set-Cookie": await commitSession(session) },
       });
