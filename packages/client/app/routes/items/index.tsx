@@ -24,16 +24,19 @@ export async function loader({ request }: LoaderArgs) {
     if (query.ship) where["ship"] = query.ship;
     if (query.type) where["item"] = { type: query.type };
 
-
     const items = await prisma.itemPriceAverage.findMany({
       distinct: "itemsId",
       where,
-      orderBy: {createdAt: "desc"},
-      include: {item: true}
+      orderBy: { createdAt: "desc" },
+      include: { item: true },
     });
 
-    
-    const newItems = items.sort((a, b) => a.price - b.price).reverse().map((v) => {return {...v.item, price: v.price}})
+    const newItems = items
+      .sort((a, b) => a.price - b.price)
+      .reverse()
+      .map((v) => {
+        return { ...v.item, price: v.price };
+      });
     return json({ newItems, query });
   } catch (err) {
     throw Error("Invalidate Query");
@@ -49,83 +52,97 @@ export default function ItemsIndex() {
   const Search = () => {
     return (
       <div>
-        <div
-          className="border border-base-300 bg-base-100 rounded-box"
-        >
-            <select
-              className="select select-bordered w-full max-w-xs"
-              onChange={(v) =>
-                dispatch({ type: "UPDATE_TYPE", payload: v.target.value })
+        <div className="border border-base-300 bg-base-100 rounded-box">
+          <select
+            className="select select-bordered w-full max-w-xs"
+            onChange={(v) =>
+              dispatch({ type: "UPDATE_TYPE", payload: v.target.value })
+            }
+          >
+            <option disabled selected={query.type ? false : true}>
+              カテゴリ
+            </option>
+            {ITEM_TYPES.map((type) => {
+              return (
+                <option
+                  key={type}
+                  selected={
+                    !queryState.type && query.type === type
+                      ? true
+                      : false || queryState.type === type
+                  }
+                  value={type}
+                >
+                  {getCategoryName(type)}
+                </option>
+              );
+            })}
+          </select>
+          <select
+            className="ml-2 select select-bordered w-full max-w-xs"
+            onChange={(v) =>
+              dispatch({ type: "UPDATE_SORT", payload: v.target.value })
+            }
+          >
+            <option disabled selected={query.type ? false : true}>
+              表示順序
+            </option>
+            <option
+              selected={
+                !queryState.sort && query.sort === "asc"
+                  ? true
+                  : false || queryState.sort === "asc"
               }
+              value={"asc"}
             >
-              <option disabled selected={query.type ? false : true}>
-                カテゴリ
-              </option>
-              {ITEM_TYPES.map((type) => {
-                return (
-                  <option
-                    key={type}
-                    selected={!queryState.type && query.type === type ? true : false || queryState.type === type}
-                    value={type}
-                  >
-                    {getCategoryName(type)}
-                  </option>
-                );
-              })}
-            </select>
-            <select
-              className="ml-2 select select-bordered w-full max-w-xs"
-              onChange={(v) =>
-                dispatch({ type: "UPDATE_SORT", payload: v.target.value })
+              昇順
+            </option>
+            ;
+            <option
+              selected={
+                !queryState.sort && query.sort === "desc"
+                  ? true
+                  : false || queryState.sort === "desc"
               }
+              value={"desc"}
             >
-              <option disabled selected={query.type ? false : true}>
-                表示順序
-              </option>
-              <option
-                selected={!queryState.sort &&  query.sort === "asc" ? true : false || queryState.sort === 'asc'}
-                value={"asc"}
-              >
-                昇順
-              </option>
-              ;
-              <option
-                selected={!queryState.sort && query.sort === "desc" ? true : false || queryState.sort === 'desc'}
-                value={"desc"}
-              >
-                降順
-              </option>
-              ;
-            </select>
-            <select
-              className="ml-2 select select-bordered w-full max-w-xs"
-              onChange={(v) =>
-                dispatch({ type: "UPDATE_SHIP", payload: v.target.value })
-              }
-            >
-              <option disabled selected={query.type ? false : true}>
-                ship
-              </option>
-              <For v={[0, (i) => i < 11, (i) => i + 1]}>
-                {(i) => (
-                  <option
-                    key={i}
-                    selected={!queryState.ship && query.ship === i ? true : false || queryState.ship === i.toString()}
-                    value={i}
-                  >
-                    {i === 0 ? "全て" : i}
-                  </option>
-                )}
-              </For>
-            </select>
-            <button
-              className="ml-2 btn btn-primary"
-              onClick={() => setSearchParams(queryState)}
-            >
-              検索
-            </button>
-          </div>
+              降順
+            </option>
+            ;
+          </select>
+          <select
+            className="ml-2 select select-bordered w-full max-w-xs"
+            onChange={(v) =>
+              dispatch({ type: "UPDATE_SHIP", payload: v.target.value })
+            }
+          >
+            <option disabled selected={query.type ? false : true}>
+              ship
+            </option>
+            <For v={[0, (i) => i < 11, (i) => i + 1]}>
+              {(i) => (
+                <option
+                  key={i}
+                  selected={
+                    !queryState.ship && query.ship === i
+                      ? true
+                      : false || queryState.ship === i.toString()
+                  }
+                  value={i}
+                >
+                  {i === 0 ? "全て" : i}
+                </option>
+              )}
+            </For>
+          </select>
+          <button
+            className="ml-2 btn btn-primary"
+            onClick={() => setSearchParams(queryState)}
+          >
+            検索
+          </button>
         </div>
+      </div>
     );
   };
 
@@ -150,7 +167,19 @@ export default function ItemsIndex() {
                 {i + 1}位: {item.name}
               </h5>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 flex">
-                <img src="https://s3.akarinext.org/assets/*/pso2/n.webp" />{" "}
+                売値{" "}
+                <img
+                  src="https://s3.akarinext.org/assets/*/pso2/n.webp"
+                  alt="n meseta"
+                />{" "}
+                {item.price / (1 - 0.1)}
+              </p>
+              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 flex">
+                純売上
+                <img
+                  src="https://s3.akarinext.org/assets/*/pso2/n.webp"
+                  alt="n meseta"
+                />{" "}
                 {item.price}
               </p>
             </div>
