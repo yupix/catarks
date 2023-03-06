@@ -17,6 +17,7 @@ export default function DriveIndex() {
   const { files } = useTypedLoaderData<typeof loader>();
   return (
     <div className="grid grid-cols-6">
+      {files.length === 0 && <>まだファイルが無いようです</>}
       {files.map((file) => (
         <File file={file} key={file.id} />
       ))}
