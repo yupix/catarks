@@ -47,13 +47,13 @@ export const CatPagination = ({
   };
 
   return (
-    <div className="flex items-center justify-center space-x-4">
+    <div className="flex items-center justify-center space-x-2">
       {currentPage > 1 && (
         <button
           aria-label="前に戻る"
           // to={linkGenerator(currentPage - 1)}
           onClick={goToPreviousPage}
-          className="btn btn-outline font-semibold py-2 px-4  rounded shadow"
+          className="btn btn-outline font-semibold py-2   rounded shadow"
         >
           <IconChevronLeft />
         </button>
@@ -64,11 +64,11 @@ export const CatPagination = ({
           <>
             <button
               onClick={() => onChange(1)}
-              className={`btn btn-outline font-semibold py-2 px-4  rounded shadow`}
+              className={`btn btn-outline font-semibold py-2   rounded shadow`}
             >
               {1}
             </button>
-            <span className=" font-semibold py-2 px-4">
+            <span className=" font-semibold py-2 ">
               <IconDots />
             </span>
           </>
@@ -82,13 +82,13 @@ export const CatPagination = ({
               pageNumber === currentPage
                 ? "btn-active"
                 : " btn-outline"
-            } btn font-semibold py-2 px-4   rounded shadow`}
+            } btn font-semibold py-2    rounded shadow`}
           >
             {pageNumber}
           </button>
         ))}
         {pageNumbers[pageNumbers.length - 1] < totalPages && (
-          <span className=" font-semibold py-2 px-4">
+          <span className=" font-semibold py-2 ">
             <IconDots />
           </span>
         )}
@@ -98,7 +98,7 @@ export const CatPagination = ({
         <button
           aria-label="次に進む"
           onClick={goToNextPage}
-          className="btn font-semibold py-2 px-4  rounded shadow btn-outline"
+          className="btn font-semibold py-2  rounded shadow btn-outline"
         >
           <IconChevronRight />
         </button>
