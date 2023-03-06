@@ -5,7 +5,8 @@ import { IconTrash } from "@tabler/icons";
 import type { TDriveAction } from "~/routes/api/drive";
 import { useTypedFetcher } from "remix-typedjson";
 import { toast } from "react-hot-toast";
-import { ContextMenuTrigger } from "../contextMenu";
+import type { TriggerEvent } from "react-contexify";
+import { Menu, Item, useContextMenu } from "react-contexify";
 
 type FileProps = { file: Files };
 
@@ -22,6 +23,18 @@ export const File = memo(function File({ file }: FileProps) {
     }
   }, [fetcher?.data]);
 
+  const MENU_ID = `context-file-${file.id}`;
+
+  const { show } = useContextMenu({
+    id: MENU_ID,
+  });
+
+  function handleContextMenu(event: TriggerEvent) {
+    show({
+      event,
+    });
+  }
+
   function ShowImage() {
     return (
       <img src={file.url} alt={file.filename} className="rounded-md w-28" />
@@ -29,32 +42,25 @@ export const File = memo(function File({ file }: FileProps) {
   }
   return (
     <>
-      <ContextMenuTrigger
-        menu={
-          <ul className="menu bg-base-100 w-56 p-2 rounded-box">
-            <li
-              onClick={() =>
-                fetcher.submit(
-                  { fileId: file.id },
-                  { method: "delete", action: "/api/drive?index" }
-                )
-              }
-            >
-              <span>
-                <IconTrash /> 削除
-              </span>
-            </li>
-          </ul>
-        }
-      >
-        <div className="card items-center ">
-          {ALLOWED_IMAGE_TYPES.filter((type) => type === file.contentType)
-            .length > 0 && <ShowImage />}
-          <div className="card-body">
-            <h2 className="card-title">{file.filename}</h2>
-          </div>
+      <Menu id={MENU_ID}>
+        <Item
+          onClick={() =>
+            fetcher.submit(
+              { fileId: file.id },
+              { method: "delete", action: "/api/drive?index" }
+            )
+          }
+        >
+          <IconTrash /> 削除
+        </Item>
+      </Menu>
+      <div className="card items-center " onContextMenu={handleContextMenu}>
+        {ALLOWED_IMAGE_TYPES.filter((type) => type === file.contentType)
+          .length > 0 && <ShowImage />}
+        <div className="card-body">
+          <h2 className="card-title">{file.filename}</h2>
         </div>
-      </ContextMenuTrigger>
+      </div>
     </>
   );
 });

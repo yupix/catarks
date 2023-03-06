@@ -59,6 +59,7 @@ importers:
       prosemirror-model: ^1.19.0
       react: ^18.2.0
       react-chartjs-2: ^5.2.0
+      react-contexify: ^6.0.0
       react-dom: ^18.2.0
       react-hook-form: ^7.43.3
       react-hot-toast: ^2.4.0
@@ -115,6 +116,7 @@ importers:
       prosemirror-model: 1.19.0
       react: 18.2.0
       react-chartjs-2: 5.2.0_t5yjg6ab35jnsudnh2qdighszm
+      react-contexify: 6.0.0_biqbaboplfbrettd7655fr4n2y
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.43.3_react@18.2.0
       react-hot-toast: 2.4.0_owo25xnefcwdq3zjgtohz6dbju
@@ -10866,6 +10868,17 @@ packages:
     dependencies:
       chart.js: 4.2.1
       react: 18.2.0
+    dev: false
+
+  /react-contexify/6.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-jMhz6yZI81Jv3UDj7TXqCkhdkCFEEmvwGCPXsQuA2ZUC8EbCuVQ6Cy8FzKMXa0y454XTDClBN2YFvvmoFlrFkg==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-devtools-core/4.27.2:

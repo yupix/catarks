@@ -23,7 +23,7 @@ import { NotFoundError } from "./components/errors/notfoundError";
 import { useHydrateAtoms } from "jotai/utils";
 import { useSetAtom } from "jotai";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { ContextMenuProvider } from "./components/contextMenu";
+import contextStyle from 'react-contexify/ReactContexify.css';
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -35,6 +35,7 @@ export function links() {
   return [
     { rel: "stylesheet", href: styles },
     { rel: "stylesheet", href: CSS },
+    { rel: "stylesheet", href: contextStyle },
   ];
 }
 
@@ -90,7 +91,6 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <ContextMenuProvider>
           <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
           <Outlet />
           <Toaster />
@@ -112,7 +112,6 @@ export default function App() {
           <ScrollRestoration />
           <Scripts />
           <LiveReload />
-        </ContextMenuProvider>
       </body>
     </html>
   );
