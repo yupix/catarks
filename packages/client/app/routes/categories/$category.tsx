@@ -1,13 +1,13 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
+import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { getPaginationPageNumber, searchParams } from "~/utils/utils";
 import { IconSearch, IconX } from "@tabler/icons";
 import { SearchItemByQuery } from "~/middlewares/search";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@reactuses/core";
 import { ItemCard } from "~/components/item/ItemCard";
-import {CatPagination} from "~/components/common/CatPagination";
+import { CatPagination } from "~/components/common/CatPagination";
 import type { ItemTypes } from "@catarks/db";
 
 export async function loader({ params, request }: LoaderArgs) {
@@ -26,14 +26,14 @@ export default function Category() {
   const { body, page, category, q } = useLoaderData<typeof loader>();
   const [query, setQuery] = useState<string | undefined>(q);
   const debouncedValue = useDebounce(query, 500);
-  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (debouncedValue) {
-        setSearchParams({q: debouncedValue, page: page.toString()})
-    } else {
-      navigate(`/categories/${category}`);
+      setSearchParams({ q: debouncedValue, page: page.toString() });
+    } else if (page) {
+      setSearchParams({ page: page.toString() });
     }
   }, [debouncedValue]);
 
@@ -72,19 +72,17 @@ export default function Category() {
       </div>
       <div className="flex justify-center">
         <CatPagination
-                  totalPages={Math.ceil(body.estimatedTotalHits / 20)}
-                  currentPage={page}
-                  pageRangeDisplayed={3}
-                  onChange={(page) => {
-                    if (debouncedValue) {
-                    setSearchParams({page: page.toString(), q: debouncedValue})
-                  } else {
-                    
-                    setSearchParams({page: page.toString()})
-                  }
-                  }}
+          totalPages={Math.ceil(body.estimatedTotalHits / 20)}
+          currentPage={page}
+          pageRangeDisplayed={3}
+          onChange={(page) => {
+            if (debouncedValue) {
+              setSearchParams({ page: page.toString(), q: debouncedValue });
+            } else {
+              setSearchParams({ page: page.toString() });
+            }
+          }}
         ></CatPagination>
-
       </div>
     </div>
   );
