@@ -69,7 +69,12 @@ export function DefaultHeader() {
                   </li>
                   <li>
                     <Link to="/settings" className="justify-between">
-                      設定<span className="badge">New</span>
+                      設定
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/my/drive" className="justify-between">
+                      ドライブ<span className="badge">New</span>
                     </Link>
                   </li>
                   <li>
