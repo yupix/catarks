@@ -80,6 +80,9 @@ export const DefaultLayout: FC<{
                 <Link to="/items">
                   <span className="menu-title">ITEMS</span>
                 </Link>
+                <Link to="/items/ranking">
+                  ランキング
+                </Link>
               </li>
             </ul>
           </aside>
