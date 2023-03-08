@@ -29,6 +29,7 @@ export async function action({
         "jpeg",
         "svg",
         "webp",
+        "jpg"
       ]);
       const formData = NotNullableFormData(
         await unstable_parseMultipartFormData(
