@@ -30,22 +30,27 @@ export async function loader({ request }: LoaderArgs) {
       orderBy: { createdAt: "desc" },
       include: { item: true },
     });
-
-    const newItems = items
+    const sortableItems = items
       .sort((a, b) => a.price - b.price)
-      .reverse()
+    if (query.sort === 'asc') {
+      sortableItems.map((v) => {
+        return { ...v.item, price: v.price };
+      })
+    } else {
+      sortableItems.reverse()
       .map((v) => {
         return { ...v.item, price: v.price };
       });
-    return json({ newItems, query });
+    }
+
+    return json({ items: sortableItems, query });
   } catch (err) {
     throw Error("Invalidate Query");
   }
 }
 
 export default function ItemsIndex() {
-  const { newItems, query } = useLoaderData<typeof loader>();
-
+  const { items, query } = useLoaderData<typeof loader>();
   const [queryState, dispatch] = useReducer(queryReducer, {});
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -151,7 +156,7 @@ export default function ItemsIndex() {
       <Search />
       <div className="h-5" />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {newItems.map((item, i) => (
+        {items.map((item, i) => (
           <Link
             key={item.id}
             to={`/items/${item.id}`}
@@ -159,12 +164,12 @@ export default function ItemsIndex() {
           >
             <img
               className="w-32 h-32 rounded-lg"
-              src={item.iconUrl}
-              alt={`${item.name} Icon`}
+              src={item.item.iconUrl}
+              alt={`${item.item.name} Icon`}
             />
             <div className="flex flex-col justify-between p-4 leading-normal">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {i + 1}位: {item.name}
+                {i + 1}位: {item.item.name}
               </h5>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 flex">
                 売値{" "}
@@ -183,9 +188,11 @@ export default function ItemsIndex() {
                 {item.price}
               </p>
             </div>
+            
           </Link>
         ))}
       </div>
+      
     </div>
   );
 }
