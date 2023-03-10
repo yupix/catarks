@@ -2,6 +2,7 @@ import type { Items } from "@catarks/db";
 import type { FC } from "react";
 import { getCategoryName } from "~/utils/utils";
 import { Card } from "../common/Card";
+import { ItemPrice } from "./ItemPrice";
 
 type ItemCardProps = {
   classes?: {
@@ -9,22 +10,29 @@ type ItemCardProps = {
     input: string;
   };
   item: Items;
+  price?: number;
 };
 
-export const ItemCard: FC<ItemCardProps> = ({ classes, item }) => {
+export const ItemCard: FC<ItemCardProps> = ({ classes, item, price }) => {
   return (
-    <Card classes={{ root: "@container" , body: "bg-base-100"}}>
-      <div className="flex items-center flex-col sm:flex-row @xs:flex-col gap-4">
-        <div className="avatar">
-          <div className="w-24 sm:w-16 rounded-2xl">
-            <img src={item.iconUrl} alt={`${item.name} icon`} loading="lazy" />
-          </div>
+    <Card classes={{ root: "@container", body: "bg-base-100" }}>
+      <div className="cat-item-card">
+        <div>
+          <img
+            className="cat-item-icon"
+            src={item.iconUrl}
+            alt={`${item.name} icon`}
+            loading="lazy"
+          />
         </div>
         <div>
-          <p className=" font-bold text-xs">
-            {getCategoryName(item.type)}
-          </p>
-          <p className="font-bold ">{item.name}</p>
+          <div>
+            <p className=" font-bold text-xs">{getCategoryName(item.type)}</p>
+            <p className="font-bold">{item.name}</p>
+          </div>
+          <div>
+            {price !== undefined && <ItemPrice price={price}/>}
+          </div>
         </div>
       </div>
     </Card>
