@@ -5,7 +5,7 @@ export function ItemPrice({price}: {price: number}) {
       売値{" "}
       <img
       
-        src="https:s3.akarinext.org/assets/*/pso2/n.webp"
+        src="https://s3.akarinext.org/assets/*/pso2/n.webp"
         alt="n meseta"
       />{" "}
       {price / (1 - 0.1)}
@@ -13,7 +13,7 @@ export function ItemPrice({price}: {price: number}) {
     <p className="cat-item-price">
       純売上
       <img
-        src="https:s3.akarinext.org/assets/*/pso2/n.webp"
+        src="https://s3.akarinext.org/assets/*/pso2/n.webp"
         alt="n meseta"
       />{" "}
       {price}
