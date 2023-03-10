@@ -24,8 +24,6 @@ export async function getItemPriceChartById(itemId: string) {
   }
   return {
     body,
-    dates: Array.from<Date>(_test).sort((a, b) =>
-      a.getDate() > b.getDate() ? 1 : -1
-    ),
+    dates: Array.from<Date>(_test).sort((a, b) => a.getTime() - b.getTime())
   };
 }
