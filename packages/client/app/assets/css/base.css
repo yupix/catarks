@@ -1,0 +1,42 @@
+:root {
+  --radius: 14px;
+  --sub-text: 14px;
+  --space-top: 4px; 
+}
+
+.cat-item-card {
+  container-type: inline-size;
+}
+
+.cat-item-icon {
+  width: 100px;
+  border-radius: var(--radius);
+  padding-right: 4px;
+}
+
+.cat-item-price-root {
+  padding-top: var(--space-top);
+}
+
+.cat-item-price-root .cat-item-price {
+  display: flex;
+  font-size: var(--sub-text);
+}
+
+@container (min-width: 300px) {
+  .cat-item-card {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+}
+
+@container (max-width: 250px) {
+  .cat-item-card {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-items: center;
+    flex-shrink: 0;
+  }
+}
