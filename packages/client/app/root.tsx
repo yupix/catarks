@@ -23,7 +23,9 @@ import { NotFoundError } from "./components/errors/notfoundError";
 import { useHydrateAtoms } from "jotai/utils";
 import { useSetAtom } from "jotai";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import contextStyle from 'react-contexify/ReactContexify.css';
+import contextStyle from "react-contexify/ReactContexify.css";
+import baseStyle from "./assets/css/base.css";
+import { withSentry } from "@sentry/remix";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -36,6 +38,7 @@ export function links() {
     { rel: "stylesheet", href: styles },
     { rel: "stylesheet", href: CSS },
     { rel: "stylesheet", href: contextStyle },
+    { rel: "stylesheet", href: baseStyle },
   ];
 }
 
@@ -44,7 +47,7 @@ export async function loader({ request }: LoaderArgs) {
   return typedjson(user ? user : null);
 }
 
-export default function App() {
+function App() {
   useHydrateAtoms([
     [useSessionState, undefined],
     [useModalState, { isOpenedPriceRepost: false }],
@@ -91,31 +94,34 @@ export default function App() {
         <Links />
       </head>
       <body>
-          <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
-          <Outlet />
-          <Toaster />
-          {transition.state === "submitting" && (
-            <div
-              style={{
-                position: "fixed",
-                display: "flex",
-                zIndex: 300,
-                top: 14,
-                right: 20,
-              }}
-            >
-              {/* <Loader /> */}
-            </div>
-          )}
-          {/* {transition.state === "loading" && <ProgressBar />} */}
+        <ClientOnly>{() => <ReportPriceModal />}</ClientOnly>
+        <Outlet />
+        <Toaster />
 
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
+        {transition.state === "submitting" && (
+          <div
+            style={{
+              position: "fixed",
+              display: "flex",
+              zIndex: 300,
+              top: 14,
+              right: 20,
+            }}
+          >
+            {/* <Loader /> */}
+          </div>
+        )}
+        {/* {transition.state === "loading" && <ProgressBar />} */}
+
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
 }
+
+export default withSentry(App, { wrapWithErrorBoundary: true });
 
 export function CatchBoundary() {
   const caught = useCatch();
