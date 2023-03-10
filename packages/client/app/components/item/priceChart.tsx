@@ -12,25 +12,27 @@ import {
   Title,
   Tooltip,
   Legend,
+  TimeScale,
 } from 'chart.js';
 import type { ArrayElement } from "@catarks/utils";
 import type { getItemPriceChartById } from "~/middlewares/charts";
+import 'chartjs-adapter-moment';
 
 ChartJS.register(
   CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 
 export const PriceChart: FC<{
   chartData: Awaited<ReturnType<typeof getItemPriceChartById>>;
 }> = ({ chartData }) => {
-  const currentDate = new Date();
   const colors: { [key in ArrayElement<typeof SHIPS>]: {
     backgroundColor: string
   } } = {
@@ -49,9 +51,10 @@ export const PriceChart: FC<{
   let datasets = [];
   for (const ship of SHIPS) {
     const targetShipPrices = chartData.body[ship]
-    let datas: ItemPriceAverage[] | null = []
+    let datas: ({x: Date, y: number} | null)[] = []
     for (const date of chartData.dates) {
-      datas.push(targetShipPrices.find((price: ItemPriceAverage) => price.createdAt === date)?.price || null);
+      const hitItem = targetShipPrices.find((price: ItemPriceAverage) => price.createdAt.getTime() === date.getTime())
+      datas.push(hitItem?.price ? {x: hitItem?.createdAt, y: hitItem?.price} : null);
     }
     if (datas.length > 0) {
       datasets.push({
@@ -64,13 +67,22 @@ export const PriceChart: FC<{
 
   }
   const data = {
-    labels: chartData.dates,
     datasets,
   };
   return (
     <Line
       options={{
-
+        scales: {
+          xAxes: {
+            type: "time",
+            time: {
+              unit: "day",
+              displayFormats: {
+                day: 'MM/DD'
+              }
+            }, 
+          }
+        },
         responsive: true,
         interaction: {
           mode: "index" as const,
