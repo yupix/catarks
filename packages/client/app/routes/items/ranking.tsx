@@ -3,11 +3,12 @@ import { ITEM_TYPES } from "@catarks/utils";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { For } from "~/components/for";
+import { ItemCard } from "~/components/item/ItemCard";
 import { queryReducer } from "~/reducer/itemRanking";
 import { prisma } from "~/utils/prisma.server";
-import { assertIsDefined, getCategoryName, searchParams } from "~/utils/utils";
+import { getCategoryName, searchParams } from "~/utils/utils";
 import { validateItemRankingQuery } from "~/validations/items/index.query";
 
 export async function loader({ request }: LoaderArgs) {
@@ -30,15 +31,13 @@ export async function loader({ request }: LoaderArgs) {
       orderBy: { createdAt: "desc" },
       include: { item: true },
     });
-    const sortableItems = items
-      .sort((a, b) => a.price - b.price)
-    if (query.sort === 'asc') {
+    const sortableItems = items.sort((a, b) => a.price - b.price);
+    if (query.sort === "asc") {
       sortableItems.map((v) => {
         return { ...v.item, price: v.price };
-      })
+      });
     } else {
-      sortableItems.reverse()
-      .map((v) => {
+      sortableItems.reverse().map((v) => {
         return { ...v.item, price: v.price };
       });
     }
@@ -156,43 +155,12 @@ export default function ItemsIndex() {
       <Search />
       <div className="h-5" />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {items.map((item, i) => (
-          <Link
-            key={item.id}
-            to={`/items/${item.item.id}`}
-            className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-          >
-            <img
-              className="w-32 h-32 rounded-lg"
-              src={item.item.iconUrl}
-              alt={`${item.item.name} Icon`}
-            />
-            <div className="flex flex-col justify-between p-4 leading-normal">
-              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {i + 1}位: {item.item.name}
-              </h5>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 flex">
-                売値{" "}
-                <img
-                  src="https://s3.akarinext.org/assets/*/pso2/n.webp"
-                  alt="n meseta"
-                />{" "}
-                {item.price / (1 - 0.1)}
-              </p>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 flex">
-                純売上
-                <img
-                  src="https://s3.akarinext.org/assets/*/pso2/n.webp"
-                  alt="n meseta"
-                />{" "}
-                {item.price}
-              </p>
-            </div>
-            
+        {items.map((item) => (
+          <Link key={item.id} to={`/items/${item.item.id}`}>
+            <ItemCard item={item.item} price={item.price} />
           </Link>
         ))}
       </div>
-      
     </div>
   );
 }
