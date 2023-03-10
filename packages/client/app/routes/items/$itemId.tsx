@@ -1,6 +1,5 @@
 import { Tabs } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { SITE_META_PREFIX } from "~/const";
 import { getItemByID } from "~/middlewares/items";
@@ -17,6 +16,7 @@ import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
 import { getCDNUrl, getName } from "~/utils/utils";
 import { useAtom } from "jotai";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -26,7 +26,7 @@ export async function loader({ params }: LoaderArgs) {
   const charts = await getItemPriceChartById(itemId);
   if (!item) throw Error("Item Not Found");
   const ogpImage = await generateSvg({ title: item.name });
-  return json({ item, ogpImage, charts });
+  return typedjson({ item, ogpImage, charts });
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
@@ -40,7 +40,7 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 };
 
 export default function Item() {
-  const { item, charts } = useLoaderData<typeof loader>();
+  const { item, charts } = useTypedLoaderData<typeof loader>();
   const fetcher = useFetcher<TCreateItemPriceAction>();
   const [session] = useAtom(useSessionState);
 
@@ -67,8 +67,8 @@ export default function Item() {
   );
   const priceRow = item.prices
     .sort((a, b) => {
-      const dateA = new Date(a.createdAt).valueOf();
-      const dateB = new Date(b.createdAt).valueOf();
+      const dateA = a.createdAt.valueOf();
+      const dateB = b.createdAt.valueOf();
       return dateA - dateB;
     })
     .reverse()
