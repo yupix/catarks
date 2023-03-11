@@ -159,7 +159,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
     <Modal
       dismissible={true}
       show={modalState.isOpenedPriceRepost}
-      onClose={() => setModalState({ isOpenedPriceRepost: true })}
+      onClose={() => setModalState({ isOpenedPriceRepost: false })}
     >
       <Modal.Header>
         <p>価格の報告</p>
