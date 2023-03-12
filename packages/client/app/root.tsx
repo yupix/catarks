@@ -25,7 +25,6 @@ import { useSetAtom } from "jotai";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import contextStyle from "react-contexify/ReactContexify.css";
 import baseStyle from "./assets/css/base.css";
-import { withSentry } from "@sentry/remix";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -47,7 +46,7 @@ export async function loader({ request }: LoaderArgs) {
   return typedjson(user ? user : null);
 }
 
-function App() {
+export default function App() {
   useHydrateAtoms([
     [useSessionState, undefined],
     [useModalState, { isOpenedPriceRepost: false }],
@@ -65,6 +64,7 @@ function App() {
   useEffect(() => {
     if (currentUser) {
       assertIsDefined(currentUser);
+      console.log(currentUser, 'ユーザー')
       setUser({ user: currentUser }); // TODO: createdAtをDateに変える
     }
     const warningMessage = () => {
@@ -121,7 +121,6 @@ function App() {
   );
 }
 
-export default withSentry(App, { wrapWithErrorBoundary: true });
 
 export function CatchBoundary() {
   const caught = useCatch();
