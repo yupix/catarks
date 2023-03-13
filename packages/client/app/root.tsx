@@ -64,7 +64,6 @@ export default function App() {
   useEffect(() => {
     if (currentUser) {
       assertIsDefined(currentUser);
-      console.log(currentUser, 'ユーザー')
       setUser({ user: currentUser }); // TODO: createdAtをDateに変える
     }
     const warningMessage = () => {
