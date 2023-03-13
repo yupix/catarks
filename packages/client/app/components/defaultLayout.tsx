@@ -2,7 +2,7 @@ import type { FC } from "react";
 import React from "react";
 import { Footer } from "./Footer";
 import { DefaultHeader } from "./header";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { CATEGORIES } from "~/const";
 import { IconHome } from "@tabler/icons";
 import { Container } from "./common/container";
@@ -18,6 +18,7 @@ export const DefaultLayout: FC<{
     | React.ReactElement<any, string | React.JSXElementConstructor<any>>
     | undefined;
 }> = ({ children, navbar }) => {
+  const location = useLocation();
   return (
     <>
       <div className="drawer drawer-mobile">
@@ -64,7 +65,7 @@ export const DefaultLayout: FC<{
               {CATEGORIES.map((category) => {
                 return (
                   <li key={category.value}>
-                    <Link to={`/categories/${category.value}`}>
+                    <Link to={`/categories/${category.value}`} className={location.pathname === `/categories/${category.value}` ? 'active' : ''}>
                       {category.title}
                       {category.value === "material" && (
                         <span className="badge">New</span>
@@ -80,7 +81,7 @@ export const DefaultLayout: FC<{
                 <Link to="/items">
                   <span className="menu-title">ITEMS</span>
                 </Link>
-                <Link to="/items/ranking">
+                <Link to="/items/ranking" className={location.pathname === '/items/ranking' ? 'active' : ''}>
                   ランキング
                 </Link>
               </li>
