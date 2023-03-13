@@ -1,6 +1,6 @@
 import { Tabs } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { SITE_META_PREFIX } from "~/const";
 import { getItemByID } from "~/middlewares/items";
 import { generateSvg } from "~/utils/og.server";
@@ -16,7 +16,7 @@ import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
 import { getCDNUrl, getName } from "~/utils/utils";
 import { useAtom } from "jotai";
-import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { typedjson, useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 
 export async function loader({ params }: LoaderArgs) {
   const itemId = params.itemId;
@@ -41,7 +41,7 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 
 export default function Item() {
   const { item, charts } = useTypedLoaderData<typeof loader>();
-  const fetcher = useFetcher<TCreateItemPriceAction>();
+  const fetcher = useTypedFetcher<TCreateItemPriceAction>();
   const [session] = useAtom(useSessionState);
 
   useEffect(() => {

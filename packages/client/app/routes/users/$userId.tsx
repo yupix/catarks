@@ -1,9 +1,8 @@
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 
 import { getUserFromId } from "~/middlewares/users";
 import { UserCard } from "~/components/user/userCard";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 export async function loader({ params }: LoaderArgs) {
   const userId = params.userId;
@@ -11,15 +10,14 @@ export async function loader({ params }: LoaderArgs) {
   const user = await getUserFromId(userId);
   if (!user) throw new Error("User Not Found");
 
-  return json(user);
+  return typedjson(user);
 }
 
 export default function UserCardImage() {
-  const user = useLoaderData<typeof loader>();
-  const radius = 14;
+  const user = useTypedLoaderData<typeof loader>();
   return (
-    <div className="container p-10" style={{ borderRadius: radius }}>
-      <UserCard user={user!} />
+    <div>
+      <UserCard user={user!} classes={{ card: { classes: { body: "p-0" } } }} />
 
       <p className="text-center"></p>
     </div>

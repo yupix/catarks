@@ -1,13 +1,13 @@
 import type { Prisma } from "@catarks/db";
 import { ITEM_TYPES } from "@catarks/utils";
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
-import { useReducer, useState } from "react";
+import { Link, useSearchParams } from "@remix-run/react";
+import { useReducer } from "react";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { For } from "~/components/for";
 import { queryReducer } from "~/reducer/itemRanking";
 import { prisma } from "~/utils/prisma.server";
-import { assertIsDefined, getCategoryName, searchParams } from "~/utils/utils";
+import { getCategoryName, searchParams } from "~/utils/utils";
 import { validateItemRankingQuery } from "~/validations/items/index.query";
 
 export async function loader({ request }: LoaderArgs) {
@@ -43,14 +43,14 @@ export async function loader({ request }: LoaderArgs) {
       });
     }
 
-    return json({ items: sortableItems, query });
+    return typedjson({ items: sortableItems, query });
   } catch (err) {
     throw Error("Invalidate Query");
   }
 }
 
 export default function ItemsIndex() {
-  const { items, query } = useLoaderData<typeof loader>();
+  const { items, query } = useTypedLoaderData<typeof loader>();
   const [queryState, dispatch] = useReducer(queryReducer, {});
   const [searchParams, setSearchParams] = useSearchParams();
 

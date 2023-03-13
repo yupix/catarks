@@ -1,15 +1,18 @@
-import { useFetcher } from "@remix-run/react";
 import { Card } from "~/components/common/Card";
 import type { TUpdateUserSettingsAction } from "../api/users/$userId/settings";
 import { useSessionState } from "~/states/common";
 import { useAtom } from "jotai";
+import { useTypedFetcher } from "remix-typedjson";
 
 export default function SettingsCommonPage() {
   const [session] = useAtom(useSessionState);
-  const fetcher = useFetcher<TUpdateUserSettingsAction>();
+  const fetcher = useTypedFetcher<TUpdateUserSettingsAction>();
   return (
     <Card>
-      <fetcher.Form action={`/api/users/${session?.user.id}/settings`} method="put">
+      <fetcher.Form
+        action={`/api/users/${session?.user.id}/settings`}
+        method="put"
+      >
         <div className="form-control">
           <label className="label cursor-pointer">
             <span className="label-text">

@@ -1,6 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Link, useLoaderData, useSearchParams } from "@remix-run/react";
+import { Link, useSearchParams } from "@remix-run/react";
 import { getPaginationPageNumber, searchParams } from "~/utils/utils";
 import { IconSearch, IconX } from "@tabler/icons";
 import { SearchItemByQuery } from "~/middlewares/search";
@@ -9,6 +8,7 @@ import { useDebounce } from "@reactuses/core";
 import { ItemCard } from "~/components/item/ItemCard";
 import { CatPagination } from "~/components/common/CatPagination";
 import type { ItemTypes } from "@catarks/db";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = searchParams(request);
@@ -19,11 +19,11 @@ export async function loader({ params, request }: LoaderArgs) {
   const category = params.category as ItemTypes | undefined;
   if (!category) throw new Error();
   const res = await SearchItemByQuery({ q, limit, skip, category });
-  return json({ body: res, category: params.category, page: Number(page), q });
+  return typedjson({ body: res, category: params.category, page: Number(page), q });
 }
 
 export default function Category() {
-  const { body, page, category, q } = useLoaderData<typeof loader>();
+  const { body, page, category, q } = useTypedLoaderData<typeof loader>();
   const [query, setQuery] = useState<string | undefined>(q);
   const debouncedValue = useDebounce(query, 500);
 

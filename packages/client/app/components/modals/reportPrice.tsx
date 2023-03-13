@@ -1,7 +1,7 @@
 import { Modal } from "flowbite-react";
 import { memo, useEffect, useMemo, useState } from "react";
 import { useModalState, useSessionState } from "~/states/common";
-import { Link, useFetcher, useLocation } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import type { TgetItemsLoader } from "~/routes/api/items";
 import { assertIsDefined, isUUID } from "~/utils/utils";
 import type { TCreateItemPriceAction } from "~/routes/api/items/price";
@@ -14,6 +14,7 @@ import { useMount } from "@reactuses/core";
 import { useForm } from "react-hook-form";
 import { NumberInput } from "../common/numberInput";
 import { useAtom } from "jotai";
+import { useTypedFetcher } from "remix-typedjson";
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
@@ -41,7 +42,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
     fetcher.submit(null, { action: "/api/items?index", method: "get" });
   });
   const [modalState, setModalState] = useAtom(useModalState);
-  const fetcher = useFetcher<
+  const fetcher = useTypedFetcher<
     TgetItemsLoader | TCreateItemPriceAction | TGetItemByIdLoader
   >();
   const [selectedItem, setSelectedItem] = useState<undefined | Items>(
