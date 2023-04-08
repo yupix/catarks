@@ -7,6 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model UserShortCuts {
+  id      String @id @default(uuid())
+  name    String
+  user    Users  @relation(fields: [usersId], references: [id])
+  usersId String
+  item    Items  @relation(fields: [itemsId], references: [id])
+  itemsId String
+
+  @@unique([usersId, itemsId])
+}
+
 model AbilityEffects {
   name      String      @id
   percent   Boolean
@@ -45,6 +56,7 @@ model Items {
   prices           ItemPrices[]
   droparias        DropArias[]
   ItemPriceAverage ItemPriceAverage[]
+  UserShortCut     UserShortCuts[]
 }
 
 model ItemPrices {
@@ -76,23 +88,24 @@ model Files {
 }
 
 model Users {
-  id          String        @id @default(uuid())
-  auth0Id     String
-  username    String        @unique
-  nickname    String?
-  description String?
-  avatarUrl   String?
-  ItemPrices  ItemPrices[]
-  discordId   String?
-  ship        Int           @default(8)
-  bannerUrl   String?
-  settings    UserSettings?
-  createdAt   DateTime      @default(now())
-  Files       Files[]
-  Diaries     Diaries[]
-  role        UserRoles[]
-  Teams       Teams[]
-  leader      Teams[]       @relation("team_leader")
+  id           String         @id @default(uuid())
+  auth0Id      String
+  username     String         @unique
+  nickname     String?
+  description  String?
+  avatarUrl    String?
+  ItemPrices   ItemPrices[]
+  discordId    String?
+  ship         Int            @default(8)
+  bannerUrl    String?
+  settings     UserSettings?
+  createdAt    DateTime       @default(now())
+  Files        Files[]
+  Diaries      Diaries[]
+  role         UserRoles[]
+  Teams        Teams[]
+  leader       Teams[]        @relation("team_leader")
+  UserShortCut UserShortCuts[]
 }
 
 model Teams {
