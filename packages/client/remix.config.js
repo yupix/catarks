@@ -5,6 +5,7 @@ module.exports = {
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
+  serverDependenciesToBundle: [/^swiper.*/, /^ssr-window.*/],
   future: {
     unstable_tailwind: true,
   },
