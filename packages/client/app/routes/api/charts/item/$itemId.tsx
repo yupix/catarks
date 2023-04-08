@@ -6,7 +6,6 @@ import { assertIsDefined } from "~/utils/utils";
 export type TGetItemPriceChart = typeof loader
 
 
-
 export async function loader({params}: LoaderArgs): Promise<TypedResponse<ActionResponse<'getItemPriceChart', Awaited<ReturnType<typeof getItemPriceChartById>>>>> {
   const itemId = params.itemId
   assertIsDefined(itemId)

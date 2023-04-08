@@ -25,7 +25,8 @@ const SettingBody = () => {
   }, [fetcher, isSubmitting])
 
   return (
-    <Card classes={{root: "@container"}}>
+    <>
+    {session && <Card classes={{root: "@container"}}>
       <div className="block @sm:flex justify-between flex-row-reverse">
       <img src={session?.user?.avatarUrl} className="avatar rounded-full h-32" />
       <div className="divider lg:divider-horizontal" />
@@ -53,7 +54,8 @@ const SettingBody = () => {
       </fetcher.Form>
 
       </div>
-    </Card>
+    </Card>}
+    </>
   );
 }
 

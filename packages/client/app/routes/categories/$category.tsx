@@ -61,7 +61,7 @@ export default function Category() {
           </button>
         </div>
       </form>
-      <div className="mt-5 grid justify-center grow grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-3">
+      <div className="mt-5 grid justify-center grow grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3">
         {body.hits.map((item) => (
           <div key={item.id}>
             <Link to={`/items/${item.id}`} style={{ textDecoration: "none" }}>
@@ -72,7 +72,7 @@ export default function Category() {
       </div>
       <div className="flex justify-center">
         <CatPagination
-          totalPages={Math.ceil(body.estimatedTotalHits / 20)}
+          totalPages={Math.ceil(body.estimatedTotalHits! / 20)}
           currentPage={page}
           pageRangeDisplayed={3}
           onChange={(page) => {
