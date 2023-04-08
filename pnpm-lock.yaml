@@ -31,7 +31,6 @@ importers:
       '@sentry/remix': ^7.47.0
       '@sentry/tracing': ^7.47.0
       '@tabler/icons': ^1.119.0
-      '@tailwindcss/container-queries': ^0.1.1
       '@tiptap/extension-link': 2.0.0-beta.204
       '@tiptap/react': 2.0.0-beta.204
       '@tiptap/starter-kit': 2.0.0-beta.204
@@ -100,7 +99,6 @@ importers:
       '@sentry/remix': 7.47.0_3jeblurgf54sp7ixdlsqt3kp4y
       '@sentry/tracing': 7.47.0
       '@tabler/icons': 1.119.0_biqbaboplfbrettd7655fr4n2y
-      '@tailwindcss/container-queries': 0.1.1_tailwindcss@3.3.1
       '@tiptap/extension-link': 2.0.0-beta.204_@tiptap+core@2.0.2
       '@tiptap/react': 2.0.0-beta.204_5qsqxtgrvdydajrobuba465tkm
       '@tiptap/starter-kit': 2.0.0-beta.204_@tiptap+pm@2.0.2
@@ -3447,14 +3445,6 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@tailwindcss/container-queries/0.1.1_tailwindcss@3.3.1:
-    resolution: {integrity: sha512-p18dswChx6WnTSaJCSGx6lTmrGzNNvm2FtXmiO6AuA1V4U5REyoqwmT6kgAsIMdjo07QdAfYXHJ4hnMtfHzWgA==}
-    peerDependencies:
-      tailwindcss: '>=3.2.0'
-    dependencies:
-      tailwindcss: 3.3.1_postcss@8.4.21
     dev: false
 
   /@testing-library/dom/8.20.0:
