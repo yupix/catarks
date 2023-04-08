@@ -1,6 +1,15 @@
 import { Link } from "@remix-run/react";
-import { AUTHORS } from "~/assets/data/authors";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { Footer } from "~/components/Footer";
+import { ItemCard } from "~/components/item/ItemCard";
+import { getRecentItemPriceList } from "~/middlewares/items";
+import { Autoplay, Navigation } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import swiperStyle from "swiper/css";
+import swiperNavigationStyle from "swiper/css/navigation";
+import { getName } from "~/utils/utils";
+import { UserRepository } from "~/repository/user";
+import { PriceRepository } from "~/repository/price";
 
 export function links() {
   return [
@@ -14,26 +23,40 @@ export function links() {
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap",
     },
+    {
+      rel: "stylesheet",
+      href: swiperStyle,
+    },
+    {
+      rel: "stylesheet",
+      href: swiperNavigationStyle,
+    },
+
   ];
 }
 
+export async function loader() {
+  const priceList = await getRecentItemPriceList(30);
+  const userCount = await UserRepository.getUserCount()
+  const priceCount = await PriceRepository.getPriceCount()
+  return typedjson({ priceList, userCount, priceCount });
+}
+
 export default function Index() {
+  const { priceList, userCount, priceCount } = useTypedLoaderData<typeof loader>();
   return (
     <div>
       <section className="bg-white dark:bg-gray-900">
         <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
           <div className="mr-auto place-self-center lg:col-span-7">
             <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-              簡単な相場管理
+              CatArks
             </h1>
             <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
               CatArksはPhantasy Start Online 2 New
               Genesisの現役プレイヤーが開発しているマイショップの相場管理サイトです
             </p>
-            <Link
-              to="/categories"
-              className="btn"
-            >
+            <Link to="/categories" className="btn">
               始める
             </Link>
           </div>
@@ -44,55 +67,54 @@ export default function Index() {
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
           <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-              DEV TEAM
+              RECENT REPORT
             </h2>
-            <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
-              このサイトを作っているメンバーを紹介します
-            </p>
+            <span>
+            今までに {userCount} 人のアークスが合計 {priceCount} 個の報告をしました
+
+            </span>
           </div>
-          <div className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
-            {AUTHORS.map((author) => {
-              return (
-                <div
-                  className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700"
-                  key={author.name}
+          <Swiper
+            slidesPerView={1}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 40,
+              },
+              1024: {
+                slidesPerView: 4,
+                spaceBetween: 50,
+              },
+            }}
+            loop
+            autoplay
+            spaceBetween={10}
+
+            modules={[Navigation, Autoplay]}
+            className="mySwiper"
+            style={{padding: 10, cursor: "grabbing"}}
+          >
+            {priceList.map((price) => (
+              <SwiperSlide key={price.id}>
+                <div className="cat-effect-hover">
+                  <Link to={`/items/${price.itemId}`}>
+                <ItemCard
+                  item={price.item}
+                  price={price.price}
+                  reporter={price.reporter}
                 >
-                  <a href="#">
-                    <img
-                      className="min-w-full max-w-full rounded-lg sm:rounded-none sm:rounded-l-lg sm:max-w-small"
-                      src={author.avatarUrl}
-                      alt={`${author.name} Avatar`}
-                    />
-                  </a>
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      <a href="#">{author.name}</a>
-                    </h3>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      {author.role}
-                    </span>
-                    <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
-                      {author.description}
-                    </p>
-                    <ul className="flex space-x-4 sm:mt-0">
-                      {author.social.map((social) => {
-                        return (
-                          <li key={social.name}>
-                            <a
-                              href={social.link}
-                              className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                            >
-                              <social.icon />
-                            </a>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  <ItemCard.Reporter>報告者: {getName(price.reporter)}</ItemCard.Reporter>
+                  <ItemCard.ReportDate>報告日: {price.createdAt.toLocaleDateString()}</ItemCard.ReportDate>
+                  </ItemCard>
+                </Link>
+              </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </section>
       <div style={{ height: 400 }} />
