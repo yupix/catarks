@@ -1,22 +1,22 @@
-import type { Items } from "@catarks/db";
-import type { FC } from "react";
-import { getCategoryName } from "~/utils/utils";
+import type { Items, Users } from "@catarks/db";
+import type { FC, ReactNode } from "react";
+import { getCategoryName, getName } from "~/utils/utils";
 import { Card } from "../common/Card";
 import { ItemPrice } from "./ItemPrice";
 
 type ItemCardProps = {
   classes?: {
-    label: string;
+    root: string;
     input: string;
   };
   item: Items;
   price?: number;
+  reporter?: Users;
 };
 
-export const ItemCard: FC<ItemCardProps> = ({ classes, item, price }) => {
+export function ItemCard({ classes, item, price, children }: ItemCardProps &{ children?: ReactNode}) {
   return (
-    <Card classes={{ root: "@container", body: "bg-base-100" }}>
-      <div className="cat-item-card">
+      <div className="cat-item-card cat-shadow">
         <div>
           <img
             className="cat-item-icon"
@@ -25,16 +25,25 @@ export const ItemCard: FC<ItemCardProps> = ({ classes, item, price }) => {
             loading="lazy"
           />
         </div>
-        <div>
-          <div>
+        <div style={{width: "100%"}}>
+          <div style={{maxWidth: "calc(90%)"}}>
             <p className=" font-bold text-xs">{getCategoryName(item.type)}</p>
-            <p className="font-bold">{item.name}</p>
+            <p className="font-bold cat-item-card-title">{item.name}</p>
           </div>
           <div>
             {price !== undefined && <ItemPrice price={price}/>}
           </div>
+          {children}
         </div>
+        
       </div>
-    </Card>
   );
 };
+
+ItemCard.ReportDate = function ReportDate({children} : {children?: ReactNode}) {
+  return <span className="cat-price-report-data">{children}</span>
+}
+
+ItemCard.Reporter = function Reporter({children}: {children?: ReactNode}) {
+  return <div className="cat-price-reporter">{children}</div>
+}
