@@ -27,7 +27,7 @@ export const DefaultLayout: FC<{
           <DefaultHeader />
           <div className="mt-5">
             <article>
-              <Container classes={{root: "bg-base-200 shadow"}}>
+              <Container classes={{ root: "bg-base-200 shadow" }}>
                 {children}
               </Container>
             </article>
@@ -65,7 +65,14 @@ export const DefaultLayout: FC<{
               {CATEGORIES.map((category) => {
                 return (
                   <li key={category.value}>
-                    <Link to={`/categories/${category.value}`} className={location.pathname === `/categories/${category.value}` ? 'active' : ''}>
+                    <Link
+                      to={`/categories/${category.value}`}
+                      className={
+                        location.pathname === `/categories/${category.value}`
+                          ? "active"
+                          : ""
+                      }
+                    >
                       {category.title}
                       {category.value === "material" && (
                         <span className="badge">New</span>
@@ -78,10 +85,13 @@ export const DefaultLayout: FC<{
             <ul className="menu menu-compact flex flex-col p-0 px-4">
               <li></li>
               <li>
-                <Link to="/items">
-                  <span className="menu-title">ITEMS</span>
-                </Link>
-                <Link to="/items/ranking" className={location.pathname === '/items/ranking' ? 'active' : ''}>
+                <span className="menu-title">ITEMS</span>
+                <Link
+                  to="/items/ranking"
+                  className={
+                    location.pathname === "/items/ranking" ? "active" : ""
+                  }
+                >
                   ランキング
                 </Link>
               </li>
