@@ -220,9 +220,6 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
                 />
               </div>
               <div>
-                <label htmlFor="useTax" className="label">
-                  <span className="label-text">税込み</span>
-                </label>
                 <div className="form-control">
                   <label className="label cursor-pointer">
                     <span className="label-text">税込み</span>
