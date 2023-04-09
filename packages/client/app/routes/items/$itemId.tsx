@@ -161,7 +161,7 @@ export default function Item() {
           <h2 className="font-bold text-lg">入手方法</h2>
           <ul>
             {item.droparias.map((aria) => (
-              <li key={aria.name}>{aria.name}</li>
+              <li key={aria.name}><Link to={`/arias/${aria.name}`}>{aria.name}</Link></li>
             ))}
           </ul>
         </CustomCard>
