@@ -38,7 +38,7 @@ export class RegisterAbility implements BaseRegister {
 
   async getAriaNames(ariaData: IDropAria[]) {
     let ariaNames = [];
-    for (const aria of ariaData.sort()) {
+    for (const aria of ariaData.sort((a,b) => a.name.localeCompare(b.name, 'ja'))) {
       const quest_ranks = aria.quest_ranks;
       if (aria.emergency === true) {
         if (!quest_ranks) {
