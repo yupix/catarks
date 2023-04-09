@@ -12,10 +12,10 @@ export function ItemPrice({ price }: { price: number }) {
   return (
     <div className="cat-item-price-root">
       <p className="cat-item-price cat-text-ellipsis">
-        売値 <NIcon /> {price / (1 - 0.1)}
+        売値 <NIcon /> {(price / (1 - 0.1)).toLocaleString()}
       </p>
       <p className="cat-item-price cat-text-ellipsis">
-        純売上 <NIcon /> {price}
+        純売上 <NIcon /> {price.toLocaleString()}
       </p>
     </div>
   );
