@@ -9,7 +9,7 @@ import { Logger } from "@catarks/shared";
 import abilities from "../../assets/ops.json";
 import { BaseRegister } from "../../types/register";
 import { prisma } from "../../db/session";
-import { Indexer, registerDropAria } from "../shared";
+import { IDropAria, Indexer, registerDropAria } from "../shared";
 
 interface IEffect {
   name: string;
@@ -21,7 +21,7 @@ interface IEffect {
 const createDocument = (item: Items, ability: any) => {
   return {
     id: item.id,
-      name: item.name,
+    name: item.name,
     iconUrl: item.iconUrl,
     effects: ability.effects,
     droparias: ability.aria,
@@ -34,6 +34,42 @@ export class RegisterAbility implements BaseRegister {
   orm!: PrismaClient;
   constructor() {
     this.orm = prisma;
+  }
+
+  async getAriaNames(ariaData: IDropAria[]) {
+    let ariaNames = [];
+    for (const aria of ariaData) {
+      const quest_ranks = aria.quest_ranks;
+      if (aria.emergency === true) {
+        if (!quest_ranks) {
+          ariaNames.push(`緊急クエスト「${aria.name}」`);
+        } else {
+          for (const quest_rank of quest_ranks) {
+            ariaNames.push(`緊急クエスト「${aria.name} Rank.${quest_rank}」`);
+          }
+        }
+      }
+      if (aria.trigger === true) {
+        if (!quest_ranks) {
+          ariaNames.push(`Qトリガー「${aria.name}」`);
+        } else {
+          for (const quest_rank of quest_ranks) {
+            ariaNames.push(`Qトリガー「${aria.name} Rank.${quest_rank}」`);
+          }
+        }
+      }
+
+      if (aria.emergency === false && aria.trigger === false) {
+        if (quest_ranks) {
+          for (const quest_rank of quest_ranks) {
+            ariaNames.push(`${aria.name} （Rank.${quest_rank}）`)
+          }
+        } else {
+          ariaNames.push(aria.name)
+        }
+      }
+    }
+    return ariaNames;
   }
 
   async registerEffect(effects: IEffect[]) {
@@ -99,13 +135,15 @@ export class RegisterAbility implements BaseRegister {
 
   async run() {
     const index_body = [];
-    
+
     for (const ability of abilities) {
       const logger = Logger.getInstance;
       const existsItem = await this.orm.items.findFirst({
         where: { name: ability.name },
       });
-      const aria_ids = await registerDropAria(ability.aria);
+      const aria_ids = await registerDropAria(
+        await this.getAriaNames(ability.arias)
+      );
       const ability_ids = await this.registerAbility(
         ability.name,
         ability.effects
@@ -116,7 +154,7 @@ export class RegisterAbility implements BaseRegister {
         type: "ability" as ItemTypes,
         iconUrl: `https://s3.akarinext.org/catarks/*/items/abilities/${ability.image_type}.webp`,
         ability: { connect: ability_ids },
-        droparias: { connect: aria_ids },
+        droparias: { set: aria_ids },
       };
       if (existsItem) {
         logger.info(`${ability.name} is already exists. do update`);
@@ -136,6 +174,9 @@ export class RegisterAbility implements BaseRegister {
         logger.info(`successed register ${ability.name}.`);
       }
     }
-    await Indexer('index_ops', index_body, {FilterableAttributes: ["type"], sortableattributes: ["name"]})
+    await Indexer("index_ops", index_body, {
+      FilterableAttributes: ["type"],
+      sortableattributes: ["name"],
+    });
   }
 }

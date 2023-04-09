@@ -2,6 +2,8 @@ import { prisma } from "../db/session";
 import { config } from "@catarks/shared";
 import MeiliSearch from "meilisearch";
 
+export type IDropAria = { name: string; emergency: boolean; trigger: boolean, quest_ranks?: number[] };
+
 export const meilisearch = new MeiliSearch({
   host: config.meilisearch.host,
   apiKey: config.meilisearch.apikey,
@@ -41,9 +43,9 @@ export async function findItemByName(itemName: string) {
   });
 }
 
-export async function registerDropAria(aries: string[]) {
+export async function registerDropAria(arias: string[]) {
   let droparias = [];
-  for (const aria of aries) {
+  for (const aria of arias) {
     const hitAria = await prisma.dropArias.findFirst({
       where: {
         name: aria,
