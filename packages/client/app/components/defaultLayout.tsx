@@ -27,11 +27,12 @@ export const DefaultLayout: FC<{
           <DefaultHeader />
           <div className="mt-5">
             <article>
-              <Container classes={{ root: "bg-base-200 shadow" }}>
+              <Container classes={{ root: "bg-base-100" }}>
                 {children}
               </Container>
             </article>
             <div style={{ height: 50 }} />
+            <hr />
             <div>
               <Footer />
             </div>

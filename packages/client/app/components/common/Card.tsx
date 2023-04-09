@@ -9,9 +9,8 @@ export type CardProps = {
 };
 
 export function Card({ classes,children }: CardProps) {
-  const baseCardRootClass = "card bg-base-200 shadow-sm h-full";
-  const baseCardBodyClass =
-    "card-body bg-base-200";
+  const baseCardRootClass = "card bg-base-200 shadow-md h-full rounded-md";
+  const baseCardBodyClass = "card-body";
   const mergedRootClass = twMerge(baseCardRootClass, classes?.root);
   const mergedBodyClass = twMerge(baseCardBodyClass, classes?.body);
   return (

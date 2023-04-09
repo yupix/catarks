@@ -1,8 +1,8 @@
 import type { Items, Users } from "@catarks/db";
 import type { FC, ReactNode } from "react";
 import { getCategoryName, getName } from "~/utils/utils";
-import { Card } from "../common/Card";
 import { ItemPrice } from "./ItemPrice";
+import { Card } from "../common/Card";
 
 type ItemCardProps = {
   classes?: {
@@ -16,7 +16,8 @@ type ItemCardProps = {
 
 export function ItemCard({ classes, item, price, children }: ItemCardProps &{ children?: ReactNode}) {
   return (
-      <div className="cat-item-card cat-shadow">
+    <Card classes={{root: "@container"}}>
+      <div className="grid grid-cols-1 @sm:grid-cols-2 justify-items-center">
         <div>
           <img
             className="cat-item-icon"
@@ -37,6 +38,7 @@ export function ItemCard({ classes, item, price, children }: ItemCardProps &{ ch
         </div>
         
       </div>
+      </Card>
   );
 };
 

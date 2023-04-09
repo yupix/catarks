@@ -46,7 +46,7 @@ export default function Index() {
   const { priceList, userCount, priceCount } = useTypedLoaderData<typeof loader>();
   return (
     <div>
-      <section className="bg-white dark:bg-gray-900">
+      <section className="bg-base-100">
         <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
           <div className="mr-auto place-self-center lg:col-span-7">
             <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
@@ -63,10 +63,10 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="bg-gray-50 dark:bg-gray-900">
+      <section className="bg-base-300">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
           <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold ">
               RECENT REPORT
             </h2>
             <span>
@@ -108,7 +108,7 @@ export default function Index() {
                   reporter={price.reporter}
                 >
                   <ItemCard.Reporter>報告者: {getName(price.reporter)}</ItemCard.Reporter>
-                  <ItemCard.ReportDate>報告日: {price.createdAt.toLocaleDateString()}</ItemCard.ReportDate>
+                  <ItemCard.ReportDate>報告日: {price.createdAt.toDateString()}</ItemCard.ReportDate>
                   </ItemCard>
                 </Link>
               </div>
