@@ -93,7 +93,8 @@ export default function Index() {
             loop
             autoplay
             spaceBetween={10}
-
+            navigation
+            preventInteractionOnTransition={true}
             modules={[Navigation, Autoplay]}
             className="mySwiper"
             style={{padding: 10, cursor: "grabbing"}}
