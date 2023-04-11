@@ -1,6 +1,7 @@
 import type { ItemPrices } from "@catarks/db";
-import type { ActionArgs, TypedResponse } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
+import type { TypedJsonResponse } from "remix-typedjson";
+import { typedjson } from "remix-typedjson";
 import { ItemActions } from "~/middlewares/createItemPrice";
 import { DeleteItemPriceById } from "~/middlewares/items";
 import { authenticator } from "~/utils/auth.server";
@@ -14,7 +15,7 @@ export type TCreateItemPriceAction = typeof action;
 export async function action({
   request,
 }: ActionArgs): Promise<
-  TypedResponse<
+  TypedJsonResponse<
     | ActionResponse<
         "createPrice",
         AwaitedReturnType<typeof ItemActions.CreateItemPrice>,
@@ -47,7 +48,7 @@ export async function action({
           ? originalPrice - originalPrice * 0.1
           : originalPrice;
       if (price % 100 !== 0) {
-        return json({
+        return typedjson({
           intent: "createPrice",
           status: "failed",
           message: "INVALID_PRICE",
@@ -57,7 +58,7 @@ export async function action({
         (price < 900 && body.useTax === "on") ||
         (price < 900 && body.useTax !== "on")
       ) {
-        return json({
+        return typedjson({
           intent: "createPrice",
           status: "failed",
           message: "BELOW_THE_MINIMUM_PRICE",
@@ -69,7 +70,7 @@ export async function action({
         body.ship,
         user
       );
-      return json({
+      return typedjson({
         intent: "createPrice",
         status: "success",
         body: res,
@@ -81,14 +82,14 @@ export async function action({
       const body = validatePriceDelete.parse({
         priceId,
       });
-      return json({
+      return typedjson({
         intent: "deletePrice",
         status: "success",
         body: await DeleteItemPriceById(body.priceId, user),
       });
     }
   }
-  return json({ intent: "?", status: "failed" });
+  return typedjson({ intent: "?", status: "failed" });
 }
 
 export async function loader() {
