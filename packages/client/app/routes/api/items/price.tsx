@@ -4,48 +4,58 @@ import { json } from "@remix-run/node";
 import { ItemActions } from "~/middlewares/createItemPrice";
 import { DeleteItemPriceById } from "~/middlewares/items";
 import { authenticator } from "~/utils/auth.server";
-import { assertIsDefined } from "~/utils/utils";
+import {
+  validatePriceCreate,
+  validatePriceDelete,
+} from "~/validations/items/price";
 
 export type TCreateItemPriceAction = typeof action;
-
 
 export async function action({
   request,
 }: ActionArgs): Promise<
   TypedResponse<
-     ActionResponse<"createPrice", AwaitedReturnType<typeof ItemActions.CreateItemPrice>, "BELOW_THE_MINIMUM_PRICE" | "INVALID_PRICE"> |
-     ActionResponse<"deletePrice", ItemPrices> |
-     ActionResponse<"?", null>
+    | ActionResponse<
+        "createPrice",
+        AwaitedReturnType<typeof ItemActions.CreateItemPrice>,
+        "BELOW_THE_MINIMUM_PRICE" | "INVALID_PRICE"
+      >
+    | ActionResponse<"deletePrice", ItemPrices>
+    | ActionResponse<"?", null>
   >
 > {
   const user = await authenticator.authenticate("auth0", request);
   const formData = await request.clone().formData();
   switch (request.method) {
     case "POST": {
-      const itemId = formData.get("itemId");
-      const _price = formData.get("price");
-      const ship = formData.get("ship");
-      const useTax = formData.get("useTax");
-      const qty = formData.get("qty");
-      assertIsDefined(itemId);
-      assertIsDefined(_price);
-      assertIsDefined(ship);
-      assertIsDefined(qty);
-      const originalPrice = Number(_price.toString()) / Number(qty.toString());
+      const itemId = formData.get("itemId")?.toString();
+      const _price = formData.get("price")?.toString();
+      const ship = formData.get("ship")?.toString();
+      const useTax = formData.get("useTax")?.toString();
+      const qty = formData.get("qty")?.toString();
+      const body = validatePriceCreate.parse({
+        itemId,
+        price: _price,
+        ship,
+        useTax,
+        qty,
+      });
+      const originalPrice = body.price / body.qty;
+      console.log(body.useTax, "これがtax");
       const price =
-        useTax?.toString() === "on"
+        body.useTax === "on"
           ? originalPrice - originalPrice * 0.1
           : originalPrice;
       if (price % 100 !== 0) {
         return json({
-          intent: 'createPrice',
+          intent: "createPrice",
           status: "failed",
-          message: 'INVALID_PRICE'
-        })
+          message: "INVALID_PRICE",
+        });
       }
       if (
-        (price < 900 && useTax?.toString() === "on") ||
-        (price < 900 && useTax?.toString() !== "on")
+        (price < 900 && body.useTax === "on") ||
+        (price < 900 && body.useTax !== "on")
       ) {
         return json({
           intent: "createPrice",
@@ -54,9 +64,9 @@ export async function action({
         });
       }
       const res = await ItemActions.CreateItemPrice(
-        itemId.toString(),
+        body.itemId,
         price,
-        Number(ship.toString()),
+        body.ship,
         user
       );
       return json({
@@ -67,12 +77,14 @@ export async function action({
     }
 
     case "DELETE": {
-      const priceId = formData.get("priceId");
-      assertIsDefined(priceId);
+      const priceId = formData.get("priceId")?.toString();
+      const body = validatePriceDelete.parse({
+        priceId,
+      });
       return json({
         intent: "deletePrice",
         status: "success",
-        body: await DeleteItemPriceById(priceId, user),
+        body: await DeleteItemPriceById(body.priceId, user),
       });
     }
   }
