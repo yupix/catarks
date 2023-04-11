@@ -1,4 +1,3 @@
-import { Tabs } from "flowbite-react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { SITE_META_PREFIX } from "~/const";
@@ -14,19 +13,28 @@ import type { TCreateItemPriceAction } from "../api/items/price";
 import { useSessionState } from "~/states/common";
 import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
-import { getCDNUrl, getName } from "~/utils/utils";
+import { getCDNUrl, getName, searchParams } from "~/utils/utils";
 import { useAtom } from "jotai";
-import { typedjson, useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
+import {
+  typedjson,
+  useTypedFetcher,
+  useTypedLoaderData,
+} from "remix-typedjson";
+import { Card } from "~/components/common/Card";
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, request }: LoaderArgs) {
+  const rawQuery = searchParams(request);
   const itemId = params.itemId;
+
+  const tab = rawQuery.get("tab");
+  console.log(tab);
   if (typeof itemId !== "string")
     throw new Error("アイテムIdが指定されていません");
   const item = await getItemByID(itemId);
   const charts = await getItemPriceChartById(itemId);
   if (!item) throw Error("Item Not Found");
   const ogpImage = await generateSvg({ title: item.name });
-  return typedjson({ item, ogpImage, charts });
+  return typedjson({ item, ogpImage, charts, tab });
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
@@ -40,7 +48,7 @@ export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
 };
 
 export default function Item() {
-  const { item, charts } = useTypedLoaderData<typeof loader>();
+  const { item, charts, tab } = useTypedLoaderData<typeof loader>();
   const fetcher = useTypedFetcher<TCreateItemPriceAction>();
   const [session] = useAtom(useSessionState);
 
@@ -57,11 +65,11 @@ export default function Item() {
   const priceThs = (
     <thead>
       <tr>
-        <th>売値</th>
-        <th>純売上</th>
-        <th>ship</th>
-        <th>報告者</th>
-        <th></th>
+        <th className="bg-base-300">売値</th>
+        <th className="bg-base-300">純売上</th>
+        <th className="bg-base-300">ship</th>
+        <th className="bg-base-300">報告者</th>
+        <th className="bg-base-300"></th>
       </tr>
     </thead>
   );
@@ -144,6 +152,18 @@ export default function Item() {
       </tr>
     ));
 
+  const ItemPricies = () =>
+    item.prices.length > 0 ? (
+      <div className="overflow-x-auto overflow-y-hidden">
+        <table className="table w-full">
+          {priceThs}
+          <tbody>{priceRow}</tbody>
+        </table>
+      </div>
+    ) : (
+      <p>まだ報告が存在しないようです</p>
+    );
+
   const CustomCard = ({ children }: { children: ReactNode }) => {
     return (
       <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
@@ -161,7 +181,9 @@ export default function Item() {
           <h2 className="font-bold text-lg">入手方法</h2>
           <ul>
             {item.droparias.map((aria) => (
-              <li key={aria.name}><Link to={`/arias/${aria.name}`}>{aria.name}</Link></li>
+              <li key={aria.name}>
+                <Link to={`/arias/${aria.name}`}>{aria.name}</Link>
+              </li>
             ))}
           </ul>
         </CustomCard>
@@ -175,31 +197,38 @@ export default function Item() {
         )}
       </div>
       <div className="h-5" />
-      <div className="flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col">
-        <Tabs.Group defaultValue="prices">
-          <Tabs.Item title="価格">
-            {item.prices.length > 0 ? (
-              <div className="overflow-x-auto overflow-y-hidden">
-                <table className="table w-full">
-                  {priceThs}
-                  <tbody>{priceRow}</tbody>
-                </table>
-              </div>
-            ) : (
-              <p>まだ報告が存在しないようです</p>
+      <Card
+        headerChildren={
+          <div className="tabs bg-base-300 rounded-t-md">
+            <Link
+              to={`/items/${item.id}`}
+              className={"tab tab-bordered " + (!tab && "tab-active")}
+            >
+              価格
+            </Link>
+            <Link
+              to={`/items/${item.id}?tab=chart`}
+              className={
+                "tab tab-bordered " + (tab === "chart" && "tab-active")
+              }
+            >
+              チャート
+            </Link>
+          </div>
+        }
+      >
+        {tab == undefined ? (
+          <ItemPricies />
+        ) : (
+          <ClientOnly fallback={<></>}>
+            {() => (
+              <>
+                <PriceChart chartData={charts} />
+              </>
             )}
-          </Tabs.Item>
-          <Tabs.Item title="チャート">
-            <ClientOnly fallback={<></>}>
-              {() => (
-                <>
-                  <PriceChart chartData={charts} />
-                </>
-              )}
-            </ClientOnly>
-          </Tabs.Item>
-        </Tabs.Group>
-      </div>
+          </ClientOnly>
+        )}
+      </Card>
     </div>
   );
 }
