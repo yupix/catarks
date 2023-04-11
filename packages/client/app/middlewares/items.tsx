@@ -49,7 +49,7 @@ export async function getItems({
     },
     ability: { include: { effects: true } },
   },
-}: TItemQuery & { select: PickType<Prisma.ItemsFindManyArgs, "select"> }) {
+}: TItemQuery & { select?: PickType<Prisma.ItemsFindManyArgs, "select"> }) {
   const maxCount = await prisma.items.count();
   const items = await prisma.items.findMany({
     select,
