@@ -1,4 +1,3 @@
-import { Modal } from "flowbite-react";
 import { memo, useEffect, useMemo, useState } from "react";
 import { useModalState, useSessionState } from "~/states/common";
 import { Link, useLocation } from "@remix-run/react";
@@ -18,6 +17,8 @@ import { useTypedFetcher } from "remix-typedjson";
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
+  const [modalState, setModalState] = useAtom(useModalState);
+
   const [session] = useAtom(useSessionState);
   const location = useLocation();
   const [option, setOption] = useState<AutocompleteInputOption | undefined>(
@@ -41,7 +42,6 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
   useMount(() => {
     fetcher.submit(null, { action: "/api/items?index", method: "get" });
   });
-  const [modalState, setModalState] = useAtom(useModalState);
   const fetcher = useTypedFetcher<
     TgetItemsLoader | TCreateItemPriceAction | TGetItemByIdLoader
   >();
@@ -157,105 +157,128 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
     ? { backgroundImage: `url(${selectedItem.iconUrl})` }
     : {};
   return (
-    <Modal
-      dismissible={true}
-      show={modalState.isOpenedPriceRepost}
-      onClose={() => setModalState({ isOpenedPriceRepost: false })}
-    >
-      <Modal.Header>
-        <p>価格の報告</p>
-      </Modal.Header>
-      <Modal.Body style={{ padding: 0 }}>
-        <div className="block sm:flex bg-base-100">
-          <div className="flex-0 bg-base-200 flex justify-center items-center p-5 rounded-r-lg">
-            <div
-              className="rounded-full h-24 w-24 bg-cover bg-center bg-white border-solid border-gray-600 border-4 shadow-lg"
-              style={itemIcon}
-            />
-          </div>
-          <div className="flex-1 p-6">
-            <fetcher.Form
-              action="/api/items/price"
-              method="post"
-              className="form-control w-full max-w-xs"
+    <>
+      <input
+        type="checkbox"
+        id="my-modal-3"
+        className="modal-toggle"
+        checked={modalState.isOpenedPriceRepost}
+      />
+      <div className="modal">
+        <div className="modal-box relative p-0">
+          <div className="p-4 border-b border-base-200">
+            <label
+              htmlFor="my-modal-3"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+              onClick={() => setModalState({ isOpenedPriceRepost: false })}
             >
-              <AutocompleteInput
-                defaultValue={option}
-                name="itemId"
-                options={items}
-                label="アイテム名"
-                onSelected={(option) => handleSelectChange(option.value)}
+              ✕
+            </label>
+            <h3 className="text-lg font-bold">価格の報告</h3>
+          </div>
+          <div className="block sm:flex bg-base-100">
+            <div className="flex-0 bg-base-200 flex justify-center items-center p-5 rounded-r-lg">
+              <div
+                className="rounded-full h-24 w-24 bg-cover bg-center bg-white border-solid border-gray-600 border-4 shadow-lg"
+                style={itemIcon}
               />
-              <div>
-                <NumberInput
-                  id="price"
-                  label="値段"
-                  required
-                  step={100}
-                  min={900}
-                  max={99999999999}
-                  {...register("price")}
+            </div>
+            <div className="flex-1 p-6">
+              <fetcher.Form
+                action="/api/items/price"
+                method="post"
+                className="form-control w-full max-w-xs"
+              >
+                <AutocompleteInput
+                  defaultValue={option}
+                  name="itemId"
+                  options={items}
+                  label="アイテム名"
+                  onSelected={(option) => handleSelectChange(option.value)}
                 />
-              </div>
-              <div>
-                <NumberInput
-                  label="個数"
-                  id="qty"
-                  step={1}
-                  defaultValue={1}
-                  min={1}
-                  max={999}
-                  {...register("qty")}
-                />
-              </div>
-              <div>
-                <NumberInput
-                  label="シップ番号"
-                  id="ship"
-                  step={1}
-                  defaultValue={session?.user?.ship || 8}
-                  min={1}
-                  max={10}
-                  {...register("ship")}
-                />
-              </div>
-              <div>
-                <div className="form-control">
-                  <label className="label cursor-pointer">
-                    <span className="label-text">税込み</span>
-                    <input
-                      id="useTax"
-                      type="checkbox"
-                      className="checkbox"
-                      {...register("useTax")}
-                    />
-                  </label>
+                <div>
+                  <NumberInput
+                    id="price"
+                    label="値段"
+                    required
+                    step={100}
+                    min={900}
+                    max={99999999999}
+                    {...register("price")}
+                  />
                 </div>
-              </div>
-              <div>
-                {useTax ? (
-                  <>
-                    <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
-                    <p>売値: {price.toLocaleString()}</p>
-                  </>
-                ) : (
-                  <>
-                    <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
-                    <p>売値: {Number(price).toLocaleString()}</p>
-                  </>
-                )}
-                <p>一つあたりの価格: {proceeds}</p>
-              </div>
-              <div className="card-actions justify-end">
-                <button type="submit" className="btn btn-primary">
-                  送信
-                </button>
-              </div>
-            </fetcher.Form>
+                <div>
+                  <NumberInput
+                    label="個数"
+                    id="qty"
+                    step={1}
+                    defaultValue={1}
+                    min={1}
+                    max={999}
+                    {...register("qty")}
+                  />
+                </div>
+                <div>
+                  <NumberInput
+                    label="シップ番号"
+                    id="ship"
+                    step={1}
+                    defaultValue={session?.user?.ship || 8}
+                    min={1}
+                    max={10}
+                    {...register("ship")}
+                  />
+                </div>
+                <div>
+                  <div className="form-control">
+                    <label className="label cursor-pointer">
+                      <span className="label-text">税込み</span>
+                      <input
+                        id="useTax"
+                        type="checkbox"
+                        className="checkbox"
+                        {...register("useTax")}
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  {useTax ? (
+                    <>
+                      <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+                      <p>売値: {price.toLocaleString()}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+                      <p>売値: {Number(price).toLocaleString()}</p>
+                    </>
+                  )}
+                  <p>一つあたりの価格: {proceeds}</p>
+                </div>
+                <div className="card-actions justify-end">
+                  <button type="submit" className="btn btn-primary">
+                    送信
+                  </button>
+                </div>
+              </fetcher.Form>
+            </div>
           </div>
         </div>
-      </Modal.Body>
-      <Modal.Footer></Modal.Footer>
-    </Modal>
+      </div>
+    </>
+    // <Modal
+    //   dismissible={true}
+    //   show={modalState.isOpenedPriceRepost}
+    //   onClose={() => setModalState({ isOpenedPriceRepost: false })}
+    // >
+    //   <Modal.Header>
+    //     <p>価格の報告</p>
+    //   </Modal.Header>
+    //   <Modal.Body style={{ padding: 0 }}>
+
+    //   </Modal.Body>
+    //   <Modal.Footer></Modal.Footer>
+    // </Modal>
   );
 });
