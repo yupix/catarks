@@ -120,7 +120,6 @@ export default function App() {
   );
 }
 
-
 export function CatchBoundary() {
   const caught = useCatch();
   return (

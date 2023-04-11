@@ -1,6 +1,6 @@
 import type { Items, Users } from "@catarks/db";
-import type { FC, ReactNode } from "react";
-import { getCategoryName, getName } from "~/utils/utils";
+import { type ReactNode } from "react";
+import { getCategoryName } from "~/utils/utils";
 import { ItemPrice } from "./ItemPrice";
 import { Card } from "../common/Card";
 

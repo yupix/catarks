@@ -1,5 +1,4 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { Modal } from "flowbite-react";
 import { useState } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import { ClientOnly } from "remix-utils";
@@ -17,23 +16,24 @@ export default function TeamsIndex() {
 
   function CreateTeamModal() {
     return (
-      <Modal
-        dismissible={true}
-        show={isOpenCreateTeam}
-        onClose={() => setIsOpenCreateTeam(false)}
-      >
-        <Modal.Header>
-          <p>チームの新規作成</p>
-        </Modal.Header>
-        <Modal.Body>
-          <TextInput id="teamName" name="teamName" label="チーム名" />
-          <div className="card-actions justify-end">
-            <button type="submit" className="btn btn-primary">
-              送信
-            </button>
-          </div>
-        </Modal.Body>
-      </Modal>
+      <></>
+      // <Modal
+      //   dismissible={true}
+      //   show={isOpenCreateTeam}
+      //   onClose={() => setIsOpenCreateTeam(false)}
+      // >
+      //   <Modal.Header>
+      //     <p>チームの新規作成</p>
+      //   </Modal.Header>
+      //   <Modal.Body>
+      //     <TextInput id="teamName" name="teamName" label="チーム名" />
+      //     <div className="card-actions justify-end">
+      //       <button type="submit" className="btn btn-primary">
+      //         送信
+      //       </button>
+      //     </div>
+      //   </Modal.Body>
+      // </Modal>
     );
   }
 
