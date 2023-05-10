@@ -1,4 +1,4 @@
-import { RegisterAbility } from "./app/ability/ability";
+import { RegisterAbility } from "./app/ability";
 import { RegisterMaterials } from "./app/material";
 const registers = [RegisterAbility, RegisterMaterials];
 

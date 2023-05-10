@@ -6,10 +6,11 @@ import {
   PrismaClient,
 } from "@catarks/db";
 import { Logger } from "@catarks/shared";
-import abilities from "../../assets/ops.json";
-import { BaseRegister } from "../../types/register";
-import { prisma } from "../../db/session";
-import { IDropAria, Indexer, registerDropAria } from "../shared";
+
+import abilities from "../assets/ops.json";
+import { BaseRegister } from "../types/register";
+import { prisma } from "../db/session";
+import { IDropAria, SearchService, registerDropAria } from "./shared";
 
 interface IEffect {
   name: string;
@@ -32,8 +33,11 @@ const createDocument = (item: Items, ability: any) => {
 
 export class RegisterAbility implements BaseRegister {
   orm!: PrismaClient;
+  logger!: typeof Logger.getInstance
   constructor() {
     this.orm = prisma;
+    this.logger = Logger.getInstance;
+
   }
 
   async getAriaNames(ariaData: IDropAria[]) {
@@ -133,14 +137,49 @@ export class RegisterAbility implements BaseRegister {
     return { name: ability.name };
   }
 
+  async registerOrUpdateItem(ability: TAbility, data: {
+    name: string;
+    rarity: number;
+    type: ItemTypes;
+    iconUrl: string;
+    ability: {
+        connect: {
+          name: string;
+      }
+    };
+    droparias: {
+      connect:  {
+          name: string;
+      }[];
+    };
+}) {
+  const existsItem = await this.orm.items.findFirst({
+    where: { name: ability.name },
+  });
+  if (existsItem) {
+    const item = await this.orm.items.update({
+      where: {
+        name: ability.name,
+      },
+      data,
+    });
+    this.logger.info(`${ability.name} is already exists. do update`);
+    return item
+  } else {
+    // 特殊能力が存在しない
+    const item = await this.orm.items.create({
+      data,
+    });
+    this.logger.info(`successed register ${ability.name}.`);
+    return item
+  }
+  }
+
   async run() {
     const index_body = [];
 
     for (const ability of abilities) {
-      const logger = Logger.getInstance;
-      const existsItem = await this.orm.items.findFirst({
-        where: { name: ability.name },
-      });
+
       const aria_ids = await registerDropAria(
         await this.getAriaNames(ability.arias)
       );
@@ -154,29 +193,16 @@ export class RegisterAbility implements BaseRegister {
         type: "ability" as ItemTypes,
         iconUrl: `https://s3.akarinext.org/catarks/*/items/abilities/${ability.image_type}.webp`,
         ability: { connect: ability_ids },
-        droparias: { set: aria_ids },
+        droparias: { connect: aria_ids },
       };
-      if (existsItem) {
-        logger.info(`${ability.name} is already exists. do update`);
-        const item = await this.orm.items.update({
-          where: {
-            name: ability.name,
-          },
-          data,
-        });
-        index_body.push(createDocument(item, ability));
-      } else {
-        // 特殊能力が存在しない
-        const item = await this.orm.items.create({
-          data,
-        });
-        index_body.push(createDocument(item, ability));
-        logger.info(`successed register ${ability.name}.`);
-      }
+      const item = await this.registerOrUpdateItem(ability, data)
+      index_body.push(createDocument(item, ability));
     }
-    await Indexer("index_ops", index_body, {
+    const abilityIndex = new SearchService("index_ops", {
+      SearchableAttributes: ["name"],
       FilterableAttributes: ["type"],
-      sortableattributes: ["name"],
+      sortableattributes: ["name", "createdAt"],
     });
+    await abilityIndex.addDocument(index_body)
   }
 }

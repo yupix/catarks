@@ -1,7 +1,11 @@
 import { BaseRegister } from "@/types/register";
 import items from "../assets/materials.json";
 import { prisma } from "../db/session";
-import { Indexer, findItemByName, registerDropAria } from "./shared";
+import {
+  SearchService,
+  findItemByName,
+  registerDropAria,
+} from "./shared";
 import { DropArias, ItemTypes, Items } from "@catarks/db";
 
 type TItemBase = {
@@ -12,7 +16,7 @@ type TItemBase = {
 
 type TItem = TItemBase & {
   droparias: { name: string }[];
-  image_type?: string
+  image_type?: string;
 };
 
 export class RegisterMaterials implements BaseRegister {
@@ -28,7 +32,9 @@ export class RegisterMaterials implements BaseRegister {
       rarity: item.rarity,
       type: "material",
       droparias: { connect: item.droparias },
-      iconUrl: `https://s3.akarinext.org/catarks/*/items/materials/${item.image_type ?  item.image_type : item.name}.webp`,
+      iconUrl: `https://s3.akarinext.org/catarks/*/items/materials/${
+        item.image_type ? item.image_type : item.name
+      }.webp`,
     };
   }
 
@@ -78,10 +84,12 @@ export class RegisterMaterials implements BaseRegister {
         const _item = await this.registerItems({ ...item, droparias });
         index_body.push(this.createDocument(_item));
       }
-      await Indexer("index_materials", index_body, {
+      const materialsIndex = new SearchService("index_materials", {
+        SearchableAttributes: ["name"],
         FilterableAttributes: ["type"],
-        sortableattributes: ["name"],
+        sortableattributes: ["name", "createdAt"],
       });
+      await materialsIndex.addDocument(index_body);
     }
   }
 }
