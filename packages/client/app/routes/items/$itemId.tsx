@@ -20,7 +20,7 @@ import {
   useTypedFetcher,
   useTypedLoaderData,
 } from "remix-typedjson";
-import { Card } from "~/components/common/Card";
+import { Card } from "~/components/Card/Card";
 
 export async function loader({ params, request }: LoaderArgs) {
   const rawQuery = searchParams(request);

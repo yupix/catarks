@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { useSessionState } from "~/states/common";
 import { getCDNUrl } from "~/utils/utils";
 
-export function DefaultHeader() {
+export function Header() {
   const [session] = useAtom(useSessionState);
   return (
     <>

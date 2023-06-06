@@ -1,4 +1,4 @@
-import { Card } from "~/components/common/Card";
+import { Card } from "~/components/Card/Card";
 import type { TUpdateUserSettingsAction } from "../api/users/$userId/settings";
 import { useSessionState } from "~/states/common";
 import { useAtom } from "jotai";

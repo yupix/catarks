@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
-import { Footer } from "~/components/Footer";
+import { Footer } from "~/components/Footer/Footer";
 import { ItemCard } from "~/components/item/ItemCard";
 import { getRecentItemPriceList } from "~/middlewares/items";
 import { Autoplay, Navigation } from "swiper";

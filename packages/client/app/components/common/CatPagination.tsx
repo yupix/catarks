@@ -48,16 +48,14 @@ export const CatPagination = ({
 
   return (
     <div className="flex items-center justify-center space-x-2">
-      {currentPage > 1 && (
         <button
           aria-label="前に戻る"
           // to={linkGenerator(currentPage - 1)}
           onClick={goToPreviousPage}
-          className="btn btn-outline font-semibold py-2   rounded shadow"
+          className={"btn btn-outline font-semibold py-2   rounded shadow " + `${(currentPage <= 1 ? 'btn-disabled': '')}`}
         >
           <IconChevronLeft />
         </button>
-      )}
 
       <div className="flex items-center space-x-2">
         {pageNumbers[0] > 1 && (
@@ -68,11 +66,11 @@ export const CatPagination = ({
             >
               {1}
             </button>
-            <span className=" font-semibold py-2 ">
-              <IconDots />
-            </span>
           </>
         )}
+                    <span className=" font-semibold py-2 ">
+              <IconDots />
+            </span>
         {pageNumbers.map((pageNumber, index) => (
           <button
             key={index}

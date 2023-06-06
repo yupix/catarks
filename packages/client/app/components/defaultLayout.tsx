@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import React from "react";
-import { Footer } from "./Footer";
-import { DefaultHeader } from "./header";
+import { Footer } from "./Footer/Footer";
+import { Header } from "./Header/Header";
 import { Link, useLocation } from "@remix-run/react";
 import { CATEGORIES } from "~/const";
 import { IconHome } from "@tabler/icons";
@@ -24,7 +24,7 @@ export const DefaultLayout: FC<{
       <div className="drawer drawer-mobile">
         <input id="drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
-          <DefaultHeader />
+          <Header />
           <div className="mt-5">
             <article>
               <Container classes={{ root: "bg-base-100" }}>

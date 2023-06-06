@@ -2,7 +2,7 @@ import type { Items, Users } from "@catarks/db";
 import { type ReactNode } from "react";
 import { getCategoryName } from "~/utils/utils";
 import { ItemPrice } from "./ItemPrice";
-import { Card } from "../common/Card";
+import { Card } from "../Card/Card";
 
 type ItemCardProps = {
   classes?: {

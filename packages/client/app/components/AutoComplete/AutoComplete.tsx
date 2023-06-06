@@ -3,7 +3,7 @@ import {
   hiraganaToKatagana,
   replaceNumbersWithRoman,
 } from "~/utils/utils.client";
-import { TextInput } from "./common/textInput";
+import { TextInput } from "~/components/common/textInput";
 
 export type AutocompleteInputOption = {
   label: string;

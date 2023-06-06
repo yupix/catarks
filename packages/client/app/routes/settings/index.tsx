@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import type { ErrorBoundaryComponent } from "@remix-run/node";
 import { useMount } from "@reactuses/core";
-import { Card } from "~/components/common/Card";
+import { Card } from "~/components/Card/Card";
 import { useAtom } from "jotai";
 import { useTypedFetcher } from "remix-typedjson";
 

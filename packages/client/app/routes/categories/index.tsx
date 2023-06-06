@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { Card } from "~/components/common/Card";
+import { Card } from "~/components/Card/Card";
 import { CATEGORIES } from "~/const";
 
 export default function FeaturesCards() {

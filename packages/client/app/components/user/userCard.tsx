@@ -1,6 +1,6 @@
 import type { FC} from "react";
-import type { CardProps } from "../common/Card";
-import { Card } from "../common/Card";
+import type { CardProps } from "~/components/Card/Card";
+import { Card } from "~/components/Card/Card";
 import type { UserRoles, Users } from "@catarks/db";
 import { getName } from "~/utils/utils";
 
