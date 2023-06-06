@@ -18,7 +18,7 @@ export async function loader({ params, request }: LoaderArgs) {
   const skip = getPaginationPageNumber({ limit, page });
   const category = params.category as ItemTypes | undefined;
   if (!category) throw new Error();
-  const res = await SearchItemByQuery({ q, limit, skip, category });
+  const res = await SearchItemByQuery({ q, limit, skip, category, include_price_average: true });
   return typedjson({ body: res, category: params.category, page: Number(page), q });
 }
 
@@ -65,7 +65,7 @@ export default function Category() {
         {body.hits.map((item) => (
           <div key={item.id}>
             <Link to={`/items/${item.id}`} style={{ textDecoration: "none" }}>
-              <ItemCard item={item} />
+              <ItemCard item={item} price={item?.priceAverage}/>
             </Link>
           </div>
         ))}
