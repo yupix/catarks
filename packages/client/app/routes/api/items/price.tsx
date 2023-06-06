@@ -2,8 +2,8 @@ import type { ItemPrices } from "@catarks/db";
 import type { ActionArgs } from "@remix-run/node";
 import type { TypedJsonResponse } from "remix-typedjson";
 import { typedjson } from "remix-typedjson";
-import { ItemActions } from "~/middlewares/createItemPrice";
 import { DeleteItemPriceById } from "~/middlewares/items";
+import { PriceRepository } from "~/repository/price";
 import { authenticator } from "~/utils/auth.server";
 import {
   validatePriceCreate,
@@ -17,10 +17,10 @@ export async function action({
 }: ActionArgs): Promise<
   TypedJsonResponse<
     | ActionResponse<
-        "createPrice",
-        AwaitedReturnType<typeof ItemActions.CreateItemPrice>,
-        "BELOW_THE_MINIMUM_PRICE" | "INVALID_PRICE"
-      >
+      "createPrice",
+      AwaitedReturnType<typeof PriceRepository.createItemPrice>,
+      "BELOW_THE_MINIMUM_PRICE" | "INVALID_PRICE"
+    >
     | ActionResponse<"deletePrice", ItemPrices>
     | ActionResponse<"?", null>
   >
@@ -64,7 +64,7 @@ export async function action({
           message: "BELOW_THE_MINIMUM_PRICE",
         });
       }
-      const res = await ItemActions.CreateItemPrice(
+      const res = await PriceRepository.createItemPrice(
         body.itemId,
         price,
         body.ship,

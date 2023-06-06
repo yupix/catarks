@@ -3,7 +3,7 @@ import { config } from "@catarks/shared";
 import { objectStorage } from "~/utils/aws.server";
 import { prisma } from "~/utils/prisma.server";
 
-export class DriveService {
+export class DriveRepository {
   static async deleteFileById(fileId: string, performer: Users) {
     const searchedFile = await prisma.files.findFirst({
       where: { id: fileId },

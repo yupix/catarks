@@ -1,4 +1,4 @@
-import { Items, Prisma, ItemPriceAverage  } from "@catarks/db";
+import { Prisma } from "@catarks/db";
 import { PickType } from "@catarks/utils";
 import { prisma } from "~/utils/prisma.server";
 

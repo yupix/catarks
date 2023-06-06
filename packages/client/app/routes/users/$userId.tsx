@@ -1,13 +1,13 @@
 import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/node";
 
-import { getUserFromId } from "~/middlewares/users";
 import { UserCard } from "~/components/user/userCard";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { UserRepository } from "~/repository/user";
 
 export async function loader({ params }: LoaderArgs) {
   const userId = params.userId;
   if (!userId) throw new Error("");
-  const user = await getUserFromId(userId);
+  const user = await UserRepository.getById(userId);
   if (!user) throw new Error("User Not Found");
 
   return typedjson(user);
