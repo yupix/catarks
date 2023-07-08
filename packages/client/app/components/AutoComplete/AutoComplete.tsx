@@ -83,7 +83,7 @@ const AutocompleteInput: React.FC<
         required={required}
       />
       {isOptionsVisible && filteredOptions.length > 0 && (
-        <ul className="absolute bg-white z-10 h-36 overflow-y-scroll shadow-md rounded-md p-3">
+        <ul className="absolute bg-white z-10 h-36 overflow-y-scroll shadow-md rounded-md p-3" style={{zIndex: 100}}>
           {filteredOptions.map((option) => (
             <li className="normal-case" key={option.value}>
               <button tabIndex={0} onClick={() => handleOptionClick(option)}>
