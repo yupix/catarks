@@ -163,6 +163,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
         id="my-modal-3"
         className="modal-toggle"
         checked={modalState.isOpenedPriceRepost}
+        readOnly
       />
       <div className="modal">
         <div className="modal-box relative p-0">
