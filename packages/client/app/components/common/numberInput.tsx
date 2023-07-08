@@ -13,7 +13,7 @@ type TextInputProps = {
 
 export const NumberInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ loading, children, classes, label, ...props }, ref): JSX.Element => {
-    const baseInputClass = "input input-primary w-full";
+    const baseInputClass = "input input-bordered w-full";
     const baseLabelClass = "label";
     const mergedInputClass = twMerge(baseInputClass, classes?.input);
     const mergedLabelClass = twMerge(baseLabelClass, classes?.label);

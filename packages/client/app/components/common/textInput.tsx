@@ -14,7 +14,7 @@ type TextInputProps = {
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ loading, children, classes, label, ...props }, ref): JSX.Element => {
     const baseInputClass =
-      "input input-primary w-full";
+      "input input-bordered w-full";
     const baseLabelClass =
       "label";
     const mergedInputClass = twMerge(baseInputClass, classes?.input);

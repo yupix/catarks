@@ -25,9 +25,9 @@ export const DefaultLayout: FC<{
         <input id="drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           <Header />
-          <div className="mt-5">
-            <article>
-              <Container classes={{ root: "bg-base-100" }}>
+          <div className="bg-base-200">
+            <article style={{ minHeight: "100vh" }}>
+              <Container classes={{ root: "bg-base-200" }}>
                 {children}
               </Container>
             </article>
@@ -40,8 +40,8 @@ export const DefaultLayout: FC<{
         </div>
         <div className="drawer-side">
           <label htmlFor="drawer" className="drawer-overlay"></label>
-          <aside className="bg-base-200 w-80">
-            <div className="z-20 bg-base-200 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm">
+          <aside className="w-80">
+            <div className="z-20 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm">
               <Link to="/" className="btn btn-ghost normal-case text-xl">
                 Cat Arks
               </Link>
@@ -75,9 +75,6 @@ export const DefaultLayout: FC<{
                       }
                     >
                       {category.title}
-                      {category.value === "material" && (
-                        <span className="badge">New</span>
-                      )}
                     </Link>
                   </li>
                 );
@@ -94,6 +91,22 @@ export const DefaultLayout: FC<{
                   }
                 >
                   ランキング
+                </Link>
+              </li>
+            </ul>
+            <ul className="menu menu-compact flex flex-col p-0 px-4">
+              <li></li>
+              <li>
+                <span className="menu-title">UTILS</span>
+                <Link
+                  to="/utils/calc_item_price"
+                  className={
+                    location.pathname === "/utils/calc_item_price"
+                      ? "active"
+                      : ""
+                  }
+                >
+                  トレード価格計算機 <span className="badge">New</span>
                 </Link>
               </li>
             </ul>
