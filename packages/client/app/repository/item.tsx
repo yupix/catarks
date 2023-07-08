@@ -11,7 +11,6 @@ export class ItemRepository {
     if (item === null) return null
     if (options?.includePriceAverage) {
       const priceAverage = await prisma.itemPriceAverage.findFirst({distinct: 'itemsId', where: {itemsId: id}, orderBy: {createdAt: 'desc'}})
-      console.log(priceAverage)
       return {...item, priceAverage: priceAverage ? priceAverage.price : undefined}
     }
     return {...item, priceAverage: undefined}

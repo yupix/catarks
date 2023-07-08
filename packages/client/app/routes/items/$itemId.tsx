@@ -27,7 +27,6 @@ export async function loader({ params, request }: LoaderArgs) {
   const itemId = params.itemId;
 
   const tab = rawQuery.get("tab");
-  console.log(tab);
   if (typeof itemId !== "string")
     throw new Error("アイテムIdが指定されていません");
   const item = await getItemByID(itemId);
