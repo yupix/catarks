@@ -157,6 +157,7 @@ export default function ItemsIndex() {
       <Search />
       <div className="h-5" />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {items.length === 0 && <>ランキングは現在集計中です</>}
         {items.map((item) => (
           <Link key={item.id} to={`/items/${item.item.id}`}>
             <ItemCard item={item.item} price={item.price} />
