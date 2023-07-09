@@ -1,4 +1,4 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,7 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useTransition,
+  useNavigation
 } from "@remix-run/react";
 import { useEffect } from "react";
 import styles from "./assets/main.css";
@@ -26,11 +26,13 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import contextStyle from "react-contexify/ReactContexify.css";
 import baseStyle from "./assets/css/base.css";
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Cat Arks",
-  viewport: "width=device-width,initial-scale=1",
-});
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { charset: "utf-8" },
+    { title: "Cat Arks" },
+    { viewport: "width=device-width,initial-scale=1" }]
+};
 
 export function links() {
   return [
@@ -54,7 +56,7 @@ export default function App() {
   const setUser = useSetAtom(useSessionState);
   const setModalState = useSetAtom(useModalState);
   const currentUser = useTypedLoaderData<typeof loader>();
-  const transition = useTransition();
+  const navigation = useNavigation();
   useKey(["n"], () => {
     if (currentUser) {
       setModalState({ isOpenedPriceRepost: true });
@@ -82,11 +84,10 @@ export default function App() {
   return (
     <html
       lang="ja"
-      data-theme={`${
-        currentUser?.settings?.useTheme
+      data-theme={`${currentUser?.settings?.useTheme
           ? currentUser.settings.useTheme
           : "winter"
-      }`}
+        }`}
     >
       <head>
         <Meta />
@@ -97,7 +98,7 @@ export default function App() {
         <Outlet />
         <Toaster />
 
-        {transition.state === "submitting" && (
+        {navigation.state === "submitting" && (
           <div
             style={{
               position: "fixed",
