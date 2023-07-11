@@ -18,8 +18,8 @@ export async function action({
   const user = await authenticator.isAuthenticated(request);
   if (!user) throw new Error("403 Forbidden");
   const formData = NotNullableFormData(await request.clone().formData());
-  switch (request.method.toLowerCase()) {
-    case "delete": {
+  switch (request.method) {
+    case "DELETE": {
       // TODO: validationを追加
       const fileId = formData.get("fileId");
       const deletedFile = await DriveRepository.deleteFileById(fileId!.toString(), user)
