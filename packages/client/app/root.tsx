@@ -10,7 +10,6 @@ import {
   useNavigation
 } from "@remix-run/react";
 import { useEffect } from "react";
-import styles from "./assets/main.css";
 import { useModalState, useSessionState } from "./states/common.js";
 import { ReportPriceModal } from "./components/modals/reportPrice.js";
 import { authenticator } from "./utils/auth.server.js";
@@ -25,6 +24,8 @@ import { useSetAtom } from "jotai";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import contextStyle from "react-contexify/ReactContexify.css";
 import baseStyle from "./assets/css/base.css";
+import { cssBundleHref } from "@remix-run/css-bundle";
+import styles from "./tailwind.css";
 
 
 export const meta: V2_MetaFunction = () => {
@@ -36,6 +37,7 @@ export const meta: V2_MetaFunction = () => {
 
 export function links() {
   return [
+    ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
     { rel: "stylesheet", href: styles },
     { rel: "stylesheet", href: CSS },
     { rel: "stylesheet", href: contextStyle },

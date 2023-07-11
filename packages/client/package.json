@@ -15,6 +15,7 @@
     "@faker-js/faker": "^8.0.2",
     "@meilisearch/instant-meilisearch": "^0.10.1",
     "@reactuses/core": "^1.1.5",
+    "@remix-run/css-bundle": "^1.18.1",
     "@remix-run/node": "^1.18.1",
     "@remix-run/react": "^1.18.1",
     "@remix-run/serve": "^1.18.1",
