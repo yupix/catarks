@@ -2,7 +2,7 @@ import type { Files } from "@catarks/db";
 import { memo, useEffect } from "react";
 import { ALLOWED_IMAGE_TYPES } from "~/const";
 import { IconTrash } from "@tabler/icons";
-import type { TDriveAction } from "~/routes/api/drive";
+import type { TDriveAction } from "~/routes/api.drive._index";
 import { useTypedFetcher } from "remix-typedjson";
 import { toast } from "react-hot-toast";
 import type { TriggerEvent } from "react-contexify";

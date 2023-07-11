@@ -11,6 +11,8 @@ module.exports = {
     // unstable_tailwind: true, TODO: 記事で書く
     v2_meta: true,
     v2_errorBoundary: true,
-    v2_dev: true
+    v2_dev: true,
+    v2_normalizeFormMethod: true,
+    v2_routeConvention: true
   },
 };

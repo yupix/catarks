@@ -1,13 +1,13 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useModalState, useSessionState } from "~/states/common";
 import { Link, useLocation } from "@remix-run/react";
-import type { TgetItemsLoader } from "~/routes/api/items";
+import type { TgetItemsLoader } from "~/routes/api.items._index";
 import { assertIsDefined, isUUID } from "~/utils/utils";
-import type { TCreateItemPriceAction } from "~/routes/api/items/price";
+import type { TCreateItemPriceAction } from "~/routes/api.items.price";
 import { toast } from "react-hot-toast";
 import type { AutocompleteInputOption } from "~/components/AutoComplete/AutoComplete";
 import AutocompleteInput from "~/components/AutoComplete/AutoComplete";
-import type { TGetItemByIdLoader } from "~/routes/api/items/$itemId";
+import type { TGetItemByIdLoader } from "~/routes/api.items.$itemId";
 import type { Items } from "@catarks/db";
 import { useMount } from "@reactuses/core";
 import { useForm } from "react-hook-form";

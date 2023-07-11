@@ -1,5 +1,5 @@
 import { useSessionState } from "~/states/common";
-import type { TUpdateUserAction } from "../api/users/$userId";
+import type { TUpdateUserAction } from "./api.users.$userId.index";
 import { TextInput } from "~/components/common/textInput";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";

@@ -9,7 +9,7 @@ import { PriceChart } from "~/components/item/priceChart";
 import { IconDots, IconStar } from "@tabler/icons";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
-import type { TCreateItemPriceAction } from "../api/items/price";
+import type { TCreateItemPriceAction } from "../api.items.price";
 import { useSessionState } from "~/states/common";
 import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
