@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/react";
 import { unstable_createRemixStub } from '@remix-run/testing';
-import '../public/build/_assets/tailwind-6P27NRL3.css';
+import '../css/app.css';
 
 
 const preview: Preview = {
