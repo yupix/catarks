@@ -39,10 +39,10 @@ export async function loader({ params, request }: LoaderArgs) {
 export const meta: V2_MetaFunction<typeof loader> = ({ data, location }) => {
   return [
     { title: `${data.item.name} - ${SITE_META_PREFIX}` },
-    { charset: "utf-8" },
-    { "og:title": `${data.item.name} - ${SITE_META_PREFIX}` },
-    { "og:url": `https://catarks.org/items/${data.item.id}` },
-    { "og:image": data.ogpImage },
+    { charSet: "utf-8" },
+    {  property: "og:title", content: `${data.item.name} - ${SITE_META_PREFIX}` },
+    { property: "og:url", content: `https://catarks.org/items/${data.item.id}` },
+    { property: "og:image" , content: data.ogpImage },
   ];
 };
 
