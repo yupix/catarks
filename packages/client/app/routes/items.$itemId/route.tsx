@@ -172,7 +172,7 @@ export default function Item() {
   };
   return (
     <div style={{ margin: "8px" }}>
-      <ItemCard item={item} />
+      <ItemCard item={item} enableCopyButton/>
 
       <div className="h-5" />
       <div className="grid grid-cols-2 gap-4">
