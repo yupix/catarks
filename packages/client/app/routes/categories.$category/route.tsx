@@ -38,7 +38,7 @@ export default function Category() {
   }, [debouncedValue]);
 
   return (
-    <div className="">
+    <>
       <form className="flex items-center" onSubmit={(e) => e.preventDefault()}>
         <div className="relative w-full">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -84,6 +84,6 @@ export default function Category() {
           }}
         ></CatPagination>
       </div>
-    </div>
+    </>
   );
 }

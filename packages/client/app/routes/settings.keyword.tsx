@@ -1,5 +1,5 @@
 import { Card } from "~/components/Card/Card";
-import type { TUpdateUserSettingsAction } from "../api/users/$userId/settings";
+import type { TUpdateUserSettingsAction } from "~/routes/api.users.$userId.settings";
 import { useSessionState } from "~/states/common";
 import { useAtom } from "jotai";
 import { useTypedFetcher } from "remix-typedjson";
