@@ -30,9 +30,10 @@ import styles from "./tailwind.css";
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { charset: "utf-8" },
+    { charSet: "utf-8" },
     { title: "Cat Arks" },
-    { viewport: "width=device-width,initial-scale=1" }]
+    { name: "viewport", content: "width=device-width,initial-scale=1" },
+  ]
 };
 
 export function links() {
