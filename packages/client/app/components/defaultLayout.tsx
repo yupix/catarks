@@ -21,7 +21,7 @@ export const DefaultLayout: FC<{
   const location = useLocation();
   return (
     <>
-      <div className="drawer drawer-mobile">
+      <div className="drawer lg:drawer-open">
         <input id="drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           <Header />
@@ -58,9 +58,9 @@ export const DefaultLayout: FC<{
             </ul>
             <ul className="menu menu-compact flex flex-col p-0 px-4">
               <li></li>
-              <li>
+              <li className="menu-title">
                 <Link to="/categories">
-                  <span className="menu-title">CATEGORIES</span>
+                  <span className="">CATEGORIES</span>
                 </Link>
               </li>
               {CATEGORIES.map((category) => {
@@ -81,9 +81,10 @@ export const DefaultLayout: FC<{
               })}
             </ul>
             <ul className="menu menu-compact flex flex-col p-0 px-4">
-              <li></li>
-              <li>
-                <span className="menu-title">ITEMS</span>
+              <li className="menu-title">
+                <span>ITEMS</span>
+                </li>
+                <li>
                 <Link
                   to="/items/ranking"
                   className={
@@ -95,9 +96,10 @@ export const DefaultLayout: FC<{
               </li>
             </ul>
             <ul className="menu menu-compact flex flex-col p-0 px-4">
-              <li></li>
+              <li className="menu-title">
+              <span>UTILS</span>
+              </li>
               <li>
-                <span className="menu-title">UTILS</span>
                 <Link
                   to="/utils/calc_item_price"
                   className={
