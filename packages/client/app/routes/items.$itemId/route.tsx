@@ -32,7 +32,7 @@ export async function loader({ params, request }: LoaderArgs) {
   const item = await getItemByID(itemId);
   const charts = await getItemPriceChartById(itemId);
   if (!item) throw Error("Item Not Found");
-  const ogpImage = await generateSvg({ title: item.name });
+  const ogpImage = await generateSvg({ title: item.name, image: item.iconUrl });
   return typedjson({ item, ogpImage, charts, tab });
 }
 
