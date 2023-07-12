@@ -81,6 +81,7 @@ export const DefaultLayout: FC<{
               })}
             </ul>
             <ul className="menu menu-compact flex flex-col p-0 px-4">
+              <li></li>
               <li className="menu-title">
                 <span>ITEMS</span>
                 </li>
@@ -96,6 +97,7 @@ export const DefaultLayout: FC<{
               </li>
             </ul>
             <ul className="menu menu-compact flex flex-col p-0 px-4">
+              <li></li>
               <li className="menu-title">
               <span>UTILS</span>
               </li>
