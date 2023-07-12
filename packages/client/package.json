@@ -33,7 +33,7 @@
     "chartjs-adapter-moment": "^1.0.1",
     "concurrently": "^7.6.0",
     "core-js": "^3.31.1",
-    "daisyui": "^2.52.0",
+    "daisyui": "^3.2.1",
     "dayjs": "^1.11.9",
     "embla-carousel-react": "^7.1.0",
     "file-type": "^16.5.4",
