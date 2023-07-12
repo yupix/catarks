@@ -2,23 +2,23 @@ import type { FC } from "react";
 import React from "react";
 import { Footer } from "./Footer/Footer";
 import { Header } from "./Header/Header";
-import { Link, useLocation } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { CATEGORIES } from "~/const";
 import { IconHome } from "@tabler/icons";
 import { Container } from "./common/container";
+import { Menu } from "./Menu/Menu";
 
 export const DefaultLayout: FC<{
   children?: React.ReactNode;
   currentUser?: TUserSession | null;
   navbar?: React.ReactNode | undefined;
   header?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
+  | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+  | undefined;
   footer?:
-    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-    | undefined;
+  | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+  | undefined;
 }> = ({ children, navbar }) => {
-  const location = useLocation();
   return (
     <>
       <div className="drawer lg:drawer-open">
@@ -55,64 +55,17 @@ export const DefaultLayout: FC<{
                   <span className="flex-1">TOP</span>
                 </Link>
               </li>
-            </ul>
-            <ul className="menu menu-compact flex flex-col p-0 px-4">
-              <li></li>
-              <li className="menu-title">
-                <Link to="/categories">
-                  <span className="">CATEGORIES</span>
-                </Link>
-              </li>
-              {CATEGORIES.map((category) => {
-                return (
-                  <li key={category.value}>
-                    <Link
-                      to={`/categories/${category.value}`}
-                      className={
-                        location.pathname === `/categories/${category.value}`
-                          ? "active"
-                          : ""
-                      }
-                    >
-                      {category.title}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-            <ul className="menu menu-compact flex flex-col p-0 px-4">
-              <li></li>
-              <li className="menu-title">
-                <span>ITEMS</span>
-                </li>
-                <li>
-                <Link
-                  to="/items/ranking"
-                  className={
-                    location.pathname === "/items/ranking" ? "active" : ""
-                  }
-                >
-                  ランキング
-                </Link>
-              </li>
-            </ul>
-            <ul className="menu menu-compact flex flex-col p-0 px-4">
-              <li></li>
-              <li className="menu-title">
-              <span>UTILS</span>
-              </li>
-              <li>
-                <Link
-                  to="/utils/calc_item_price"
-                  className={
-                    location.pathname === "/utils/calc_item_price"
-                      ? "active"
-                      : ""
-                  }
-                >
-                  トレード価格計算機 <span className="badge">New</span>
-                </Link>
-              </li>
+              <Menu sections={
+                [{
+                  title: "CATEGORIES", links: [...CATEGORIES.map((category) => {
+                    return { title: category.title, link: `/categories/${category.value}` }
+                  })], firstDivider: true
+                }, {
+                  title: "ITEMS", links: [{ title: 'ランキング', link: '/items/ranking' }]
+                }, {
+                  title: "UTILS", links: [{ title: "トレード価格計算機", link: "/utils/calc_item_price", label: 'New' }]
+                }]
+              } />
             </ul>
           </aside>
         </div>
