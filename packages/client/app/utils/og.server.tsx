@@ -1,18 +1,18 @@
 import sharp from 'sharp';
+import { getCDNUrl } from './utils';
 
 export const generateSvg = async ({
   title='',
+  image='',
   subtitle='',
 }) => {
-  const res = await fetch('https://codedgeekery.com/fonts/hack/woff/hack-regular.woff');
+  const res = await fetch('https://raw.githubusercontent.com/r-40021/noto-sans-jp/main/WOFF/NotoSansJP-Medium.woff');
   const font = await res.arrayBuffer();
 
   const {default: satori} = await import('satori');
   const svg = await satori(
       <div 
           style={{
-              fontSize: 128,
-              fontFamily: 'Hack',
               background: 'white',
               width: '100%',
               height: '100%',
@@ -22,15 +22,16 @@ export const generateSvg = async ({
               justifyContent: 'center',
           }}
       >
-          {title}
+          <img src={getCDNUrl(image, {format: 'png', size: '70x70'})} />
+          <p>{title}</p>
       </div>,
       {
         width: 1200,
         height: 600,
-        embedFont: false,
+        embedFont: true,
         fonts: [
           {
-              name: 'Hack',
+              name: 'NotoSansJapanese',
               data: font,
               weight: 400,
               style: 'normal',
