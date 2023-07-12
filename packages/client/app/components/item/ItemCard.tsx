@@ -20,7 +20,7 @@ export function ItemCard({ classes, item, price, children }: ItemCardProps &{ ch
       <div className="grid grid-cols-1 @sm:grid-cols-2 justify-items-center">
         <div>
           <img
-            className="cat-item-icon"
+            className="h-20 w-20 rounded-md"
             src={item.iconUrl}
             alt={`${item.name} icon`}
             loading="lazy"
