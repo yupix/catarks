@@ -24,7 +24,7 @@ const AutocompleteInput: React.FC<
   const [inputValue, setInputValue] = useState<string>("");
   const [filteredOptions, setFilteredOptions] = useState<
     AutocompleteInputOption[]
-  >([]);
+  >(options);
   const [isOptionsVisible, setIsOptionsVisible] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<{
     label: string;
@@ -81,6 +81,7 @@ const AutocompleteInput: React.FC<
         value={inputValue}
         onChange={handleInputChange}
         required={required}
+        onFocus={() => setIsOptionsVisible(true)}
       />
       {isOptionsVisible && filteredOptions.length > 0 && (
         <ul className="absolute bg-white z-10 h-36 overflow-y-scroll shadow-md rounded-md p-3" style={{zIndex: 100}}>
