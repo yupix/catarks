@@ -13,7 +13,7 @@ export function isUUID(uuid?: string) {
 
 export function getCDNUrl(
   link: string,
-  options: { format: "webp"; size: string }
+  options: { format: "webp" | 'png' | 'jpg'; size: string }
 ) {
   return `https://cdn.catarks.org/unsafe/${options.size}/filters:format(${options.format})/${link}`;
 }
