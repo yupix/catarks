@@ -11,8 +11,8 @@ const SETTINGS = [
 ];
 
 export async function loader({ request }: LoaderArgs) {
-  const user = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/signin",
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
   });
   return null;
 }
@@ -26,10 +26,10 @@ export default function Settings() {
         <ul className="menu bg-base-100 w-full sm:w-56 rounded-box">
           {SETTINGS.map((setting, i) => {
             return (
-              <div key={setting.title}>
-                <li>
+              <>
+                <li className="menu-title">
                   <Link to="">
-                    <span className="menu-title">{setting.title}</span>
+                    <span>{setting.title}</span>
                   </Link>
                 </li>
                 {setting.links.map((link) => {
@@ -42,7 +42,7 @@ export default function Settings() {
                   );
                 })}
                 {SETTINGS.length-1 !== i && <li></li>}
-              </div>
+              </>
             );
           })}
 
