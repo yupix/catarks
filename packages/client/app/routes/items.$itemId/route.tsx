@@ -1,4 +1,4 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import { SITE_META_PREFIX } from "~/const";
 import { getItemByID } from "~/middlewares/items";
@@ -9,7 +9,7 @@ import { PriceChart } from "~/components/item/priceChart";
 import { IconDots, IconStar } from "@tabler/icons";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
-import type { TCreateItemPriceAction } from "../api/items/price";
+import type { TCreateItemPriceAction } from "../api.items.price";
 import { useSessionState } from "~/states/common";
 import { toast } from "react-hot-toast";
 import { ItemCard } from "~/components/item/ItemCard";
@@ -36,14 +36,14 @@ export async function loader({ params, request }: LoaderArgs) {
   return typedjson({ item, ogpImage, charts, tab });
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data, location }) => {
-  return {
-    title: `${data.item.name} - ${SITE_META_PREFIX}`,
-    charset: "utf-8",
-    "og:title": `${data.item.name} - ${SITE_META_PREFIX}`,
-    "og:url": `https://catarks.org/items/${data.item.id}`,
-    "og:image": data.ogpImage,
-  };
+export const meta: V2_MetaFunction<typeof loader> = ({ data, location }) => {
+  return [
+    { title: `${data.item.name} - ${SITE_META_PREFIX}` },
+    { charset: "utf-8" },
+    { "og:title": `${data.item.name} - ${SITE_META_PREFIX}` },
+    { "og:url": `https://catarks.org/items/${data.item.id}` },
+    { "og:image": data.ogpImage },
+  ];
 };
 
 export default function Item() {

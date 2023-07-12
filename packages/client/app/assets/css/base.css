@@ -7,7 +7,9 @@
 
 
 
-
+a {
+  text-decoration: none !important;
+}
 
 .cat-text-ellipsis {
   overflow:hidden;
@@ -33,7 +35,7 @@
 .cat-item-icon {
   min-width: 74px;
   max-width: 74px;
-  height: 128;
+  height: 128px;
   border-radius: var(--radius);
   padding-right: 4px;
 }

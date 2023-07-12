@@ -1,6 +1,6 @@
 import type { Prisma } from "@catarks/db";
 import { ITEM_TYPES } from "@catarks/utils";
-import type { ErrorBoundaryComponent, LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { Link, useSearchParams } from "@remix-run/react";
 import { useReducer } from "react";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
@@ -168,11 +168,27 @@ export default function ItemsIndex() {
   );
 }
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
-  return (
-    <div className="flex items-center">
-      {error.message === "Invalidate Query" &&
-        "エラーが発生しました。存在しないカテゴリを使用した可能性があります"}
-    </div>
-  );
-};
+// export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+//   return (
+//     <div className="flex items-center">
+//       {error.message === "Invalidate Query" &&
+//         "エラーが発生しました。存在しないカテゴリを使用した可能性があります"}
+//     </div>
+//   );
+// };
+
+
+// export function ErrorBoundary() {
+//   const error = useRouteError();
+
+//   // when true, this is what used to go to `CatchBoundary`
+//   if (isRouteErrorResponse(error)) {
+//     return (
+//     <div className="flex items-center">
+//         <h1>Oops</h1>
+//         <p>Status: {error.status}</p>
+//         <p style={{fontSize: 500}}>{error.data.message === "Invalidate Query" && "エラーが発生しました。存在しないカテゴリを使用した可能性があります"}</p>
+//       </div>
+//     );
+//   }
+// }

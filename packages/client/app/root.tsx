@@ -1,4 +1,4 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,33 +7,37 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
-  useTransition,
+  useNavigation
 } from "@remix-run/react";
 import { useEffect } from "react";
-import styles from "./assets/main.css";
-import { useModalState, useSessionState } from "./states/common";
-import { ReportPriceModal } from "./components/modals/reportPrice";
-import { authenticator } from "./utils/auth.server";
-import { assertIsDefined } from "./utils/utils";
+import { useModalState, useSessionState } from "./states/common.js";
+import { ReportPriceModal } from "./components/modals/reportPrice.js";
+import { authenticator } from "./utils/auth.server.js";
+import { assertIsDefined } from "./utils/utils.js";
 import CSS from "./assets/css/tailwind.css";
 import { ClientOnly } from "remix-utils";
 import { Toaster } from "react-hot-toast";
 import { useKey } from "rooks";
-import { NotFoundError } from "./components/errors/notfoundError";
+import { NotFoundError } from "./components/errors/notfoundError.js";
 import { useHydrateAtoms } from "jotai/utils";
 import { useSetAtom } from "jotai";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
 import contextStyle from "react-contexify/ReactContexify.css";
 import baseStyle from "./assets/css/base.css";
+import { cssBundleHref } from "@remix-run/css-bundle";
+import styles from "./tailwind.css";
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Cat Arks",
-  viewport: "width=device-width,initial-scale=1",
-});
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { charset: "utf-8" },
+    { title: "Cat Arks" },
+    { viewport: "width=device-width,initial-scale=1" }]
+};
 
 export function links() {
   return [
+    ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
     { rel: "stylesheet", href: styles },
     { rel: "stylesheet", href: CSS },
     { rel: "stylesheet", href: contextStyle },
@@ -54,7 +58,7 @@ export default function App() {
   const setUser = useSetAtom(useSessionState);
   const setModalState = useSetAtom(useModalState);
   const currentUser = useTypedLoaderData<typeof loader>();
-  const transition = useTransition();
+  const navigation = useNavigation();
   useKey(["n"], () => {
     if (currentUser) {
       setModalState({ isOpenedPriceRepost: true });
@@ -82,11 +86,10 @@ export default function App() {
   return (
     <html
       lang="ja"
-      data-theme={`${
-        currentUser?.settings?.useTheme
+      data-theme={`${currentUser?.settings?.useTheme
           ? currentUser.settings.useTheme
           : "winter"
-      }`}
+        }`}
     >
       <head>
         <Meta />
@@ -97,7 +100,7 @@ export default function App() {
         <Outlet />
         <Toaster />
 
-        {transition.state === "submitting" && (
+        {navigation.state === "submitting" && (
           <div
             style={{
               position: "fixed",

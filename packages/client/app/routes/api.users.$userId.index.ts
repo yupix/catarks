@@ -21,8 +21,8 @@ export async function action({
     failureRedirect: "/",
   });
   const _formData = NotNullableFormData(await request.clone().formData());
-  switch (request.method.toLowerCase()) {
-    case "put": {
+  switch (request.method) {
+    case "PUT": {
       const uploader = UploaderHandler(user, [
         "png",
         "gif",

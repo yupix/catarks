@@ -19,8 +19,8 @@ export async function action({
     failureRedirect: "/",
   });
   const formData = NotNullableFormData(await request.clone().formData());
-  switch (request.method.toLowerCase()) {
-    case "put": {
+  switch (request.method) {
+    case "PUT": {
 
       const defaultUseTax = formData.get("defaultUseTax");
       const useTheme = formData.get("useTheme");

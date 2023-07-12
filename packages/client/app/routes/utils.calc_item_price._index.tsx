@@ -134,10 +134,9 @@ export default function createItemPricePage() {
               ))}
             </tbody>
           </table>
-
           <p>
             金額:{" "}
-            {Object.keys(prices).map((key) => {
+            {(Object.keys(prices).map((key) => {
               return prices[key]["price"] * prices[key]["number"];
             }).length > 0
               ? Object.keys(prices)
@@ -145,7 +144,7 @@ export default function createItemPricePage() {
                     return prices[key]["price"] * prices[key]["number"];
                   })
                   .reduce((a, b) => a + b) * createNumber
-              : 0}{" "}
+              : 0).toLocaleString()}
           </p>
         </Card>
       )}
