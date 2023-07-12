@@ -58,9 +58,9 @@ export default function ItemsIndex() {
   const Search = () => {
     return (
       <div>
-        <div className="border border-base-300 bg-base-100 rounded-box">
+        <div className="join">
           <select
-            className="select select-bordered w-full max-w-xs"
+            className="select select-bordered join-item"
             onChange={(v) =>
               dispatch({ type: "UPDATE_TYPE", payload: v.target.value })
             }
@@ -85,7 +85,7 @@ export default function ItemsIndex() {
             })}
           </select>
           <select
-            className="ml-2 select select-bordered w-full max-w-xs"
+            className="select select-bordered join-item"
             onChange={(v) =>
               dispatch({ type: "UPDATE_SORT", payload: v.target.value })
             }
@@ -117,7 +117,7 @@ export default function ItemsIndex() {
             ;
           </select>
           <select
-            className="ml-2 select select-bordered w-full max-w-xs"
+            className="select select-bordered join-item"
             onChange={(v) =>
               dispatch({ type: "UPDATE_SHIP", payload: v.target.value })
             }
@@ -142,13 +142,13 @@ export default function ItemsIndex() {
             </For>
           </select>
           <button
-            className="ml-2 btn btn-primary"
+            className="btn btn-primary join-item"
             onClick={() => setSearchParams(queryState)}
           >
             検索
           </button>
+          </div>
         </div>
-      </div>
     );
   };
 
