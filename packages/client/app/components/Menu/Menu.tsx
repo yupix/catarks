@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 
 interface IMenuProps {
     sections: {title: string;
@@ -6,13 +6,14 @@ interface IMenuProps {
 }
 
 export function Menu({sections}: IMenuProps) {
+    const location = useLocation()
     return (<>
 
           {sections.map((section, i) => {
             return (
               <>
-                {section.firstDivider && <li></li>}
-                <li className="menu-title">
+                {section.firstDivider && <li key={`${section.title}-${i}`}></li>}
+                <li className="menu-title" key={section.title}>
                   <Link to="">
                     <span>{section.title}</span>
                   </Link>
@@ -25,7 +26,7 @@ export function Menu({sections}: IMenuProps) {
                     </li>
                   ;
                 })}
-                {sections.length-1 !== i && <li></li>}
+                {sections.length-1 !== i && <li key={`${section.title}-${i}-last`}></li>}
                 
               </>
             );
