@@ -1,6 +1,6 @@
 import type { Items, Users } from "@catarks/db";
 import { type ReactNode } from "react";
-import { getCategoryName } from "~/utils/utils";
+import { getCDNUrl, getCategoryName } from "~/utils/utils";
 import { ItemPrice } from "./ItemPrice";
 import { Card } from "../Card/Card";
 import { IconCopy } from "@tabler/icons";
@@ -28,7 +28,7 @@ export function ItemCard({ classes, item, price, children, enableCopyButton }: I
         <div>
           <img
             className="h-20 w-20 rounded-md"
-            src={item.iconUrl}
+            src={getCDNUrl(item.iconUrl, {format: 'webp', size:'80x80'})}
             alt={`${item.name} icon`}
             loading="lazy"
           />
