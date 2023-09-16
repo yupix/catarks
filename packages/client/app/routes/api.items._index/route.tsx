@@ -1,9 +1,9 @@
 import type { LoaderArgs } from "@remix-run/node";
 import type { TypedJsonResponse } from "remix-typedjson";
 import { typedjson } from "remix-typedjson";
-import { getItems } from "~/middlewares/items";
 import { searchParams } from "~/utils/utils";
 import { validateItemQuery } from "~/validations/items/index.query";
+import { getItems } from "./getItems";
 
 
 export async function loader({

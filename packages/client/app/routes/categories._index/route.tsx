@@ -1,11 +1,12 @@
 import { Link } from "@remix-run/react";
-import { Card } from "~/components/Card/Card";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { CATEGORIES } from "~/const";
 
 export default function FeaturesCards() {
   const categories = CATEGORIES.map((category) => (
     <Link key={category.value} to={`/categories/${category.value}`}>
       <Card>
+        <CardHeader>
         <div className="flex flex-wrap flex-row items-center">
           <img
             src={category.icon}
@@ -16,6 +17,7 @@ export default function FeaturesCards() {
           />
           <p>{category.title}</p>
         </div>
+        </CardHeader>
       </Card>
     </Link>
   ));

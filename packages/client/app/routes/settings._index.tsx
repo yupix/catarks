@@ -8,10 +8,11 @@ import { useMount } from "@reactuses/core";
 import { Card } from "~/components/Card/Card";
 import { useAtom } from "jotai";
 import { useTypedFetcher } from "remix-typedjson";
+import { useOptionalUser, useUser } from "~/utils/utils";
 
 const SettingBody = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [session] = useAtom(useSessionState);
+  const session = useOptionalUser()
   const fetcher = useTypedFetcher<TUpdateUserAction>();
 
   useEffect(() => {

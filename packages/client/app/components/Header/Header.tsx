@@ -1,14 +1,143 @@
+
 import { Form, Link } from "@remix-run/react";
-import { IconMenu2 } from "@tabler/icons";
-import { useAtom } from "jotai";
-import { useSessionState } from "~/states/common";
-import { getCDNUrl } from "~/utils/utils";
+import { getCDNUrl, useOptionalUser } from "~/utils/utils";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
+import React from "react";
+import { cn } from "~/lib/utils";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+
+const ListItem = React.forwardRef<
+  React.ElementRef<typeof Link>,
+  React.ComponentPropsWithoutRef<typeof Link>
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <Link
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </Link>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
+
 
 export function Header() {
-  const [session] = useAtom(useSessionState);
+  const session = useOptionalUser();
   return (
-    <>
-      {process.env.NODE_ENV === "development" && (
+    <div className="border-b">
+      <div className="flex justify-between px-4 h-16">
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                <Link to="/">
+                  CatArks
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>CATEGORIES</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                  <li className="row-span-4">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                        to="/"
+                      >
+                        <>
+                          <div className="mb-2 mt-4 text-lg font-medium">
+                            Discord
+                          </div>
+                          <p className="text-sm leading-tight text-muted-foreground">
+                            公式Discordサーバーに参加して皆でNGSを盛り上げませんか?
+                          </p>
+                        </>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                  <ListItem to="/categories/ability" title="特殊能力" />
+                  <ListItem to="/categories/weapon" title="武器" />
+                  <ListItem to="/categories/armor" title="防具" />
+                  <ListItem to="/categories/material" title="素材" />
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem className="justify-between">
+              {session?.user ?
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Avatar>
+                      <AvatarImage
+                        src={getCDNUrl(session?.user.avatarUrl!, {
+                          format: "webp",
+                          size: "40x40",
+                        })}
+                        alt="Avatar"
+                      />
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>{session.user.username}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to={`/users/${session?.user.id}`}>
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/my/drive">
+                        Drive
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+
+                      <Form action="/auth/auth0/logout" method="post">
+                    <DropdownMenuItem asChild>
+
+                        <button type="submit">Log out</button>
+                    </DropdownMenuItem>
+                      </Form>
+                  </DropdownMenuContent>
+                </DropdownMenu> : <Form action="/auth/auth0" method="post">
+                  <Button type="submit">
+                    ログイン
+                  </Button>
+                </Form>}
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+
+      </div>
+      {/* {process.env.NODE_ENV === "development" && (
         <div className="alert bg-error text-neutral rounded-none">
           <div>
             <svg
@@ -93,7 +222,7 @@ export function Header() {
             </Form>
           )}
         </div>
-      </div>
-    </>
+      </div> */}
+    </div>
   );
 }

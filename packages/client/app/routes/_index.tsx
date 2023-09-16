@@ -5,11 +5,10 @@ import { ItemCard } from "~/components/item/ItemCard";
 import { getRecentItemPriceList } from "~/middlewares/items";
 import { Autoplay, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import swiperStyle from "swiper/css";
-import swiperNavigationStyle from "swiper/css/navigation";
 import { getName } from "~/utils/utils";
 import { UserRepository } from "~/repository/user";
 import { PriceRepository } from "~/repository/price";
+import { Button } from "~/components/ui/button";
 
 export function links() {
   return [
@@ -22,14 +21,6 @@ export function links() {
     {
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap",
-    },
-    {
-      rel: "stylesheet",
-      href: swiperStyle,
-    },
-    {
-      rel: "stylesheet",
-      href: swiperNavigationStyle,
     },
 
   ];
@@ -56,9 +47,11 @@ export default function Index() {
               CatArksはPhantasy Start Online 2 New
               Genesisの現役プレイヤーが開発しているマイショップの相場管理サイトです
             </p>
-            <Link to="/categories" className="btn">
+            <Button type="button" asChild>
+            <Link to="/categories">
               始める
             </Link>
+            </Button>
           </div>
         </div>
       </section>

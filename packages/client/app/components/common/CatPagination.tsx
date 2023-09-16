@@ -1,4 +1,5 @@
 import { IconChevronLeft, IconChevronRight, IconDots } from "@tabler/icons";
+import { Button } from "../ui/button";
 
 type PaginationProps = {
   totalPages: number;
@@ -48,59 +49,68 @@ export const CatPagination = ({
 
   return (
     <div className="flex items-center justify-center space-x-2">
-        <button
+        <Button
+        disabled={currentPage === 1}
           aria-label="前に戻る"
-          // to={linkGenerator(currentPage - 1)}
           onClick={goToPreviousPage}
-          className={"btn btn-outline font-semibold py-2   rounded shadow " + `${(currentPage <= 1 ? 'btn-disabled': '')}`}
+          variant="outline"
+          size="icon"
         >
           <IconChevronLeft />
-        </button>
+        </Button>
 
       <div className="flex items-center space-x-2">
         {pageNumbers[0] > 1 && (
           <>
-            <button
+            <Button
               onClick={() => onChange(1)}
-              className={`btn btn-outline font-semibold py-2   rounded shadow`}
-            >
+              variant="outline"
+              
+              >
               {1}
-            </button>
+            </Button>
           </>
         )}
                     <span className=" font-semibold py-2 ">
               <IconDots />
             </span>
         {pageNumbers.map((pageNumber, index) => (
-          <button
+          <Button
+          variant="outline"
             key={index}
             // to={linkGenerator(pageNumber)}
             onClick={() => onChange(pageNumber)}
-            className={`${
-              pageNumber === currentPage
-                ? "btn-active"
-                : " btn-outline"
-            } btn font-semibold py-2    rounded shadow`}
+            disabled={pageNumber === currentPage}
           >
             {pageNumber}
-          </button>
+          </Button>
         ))}
-        {pageNumbers[pageNumbers.length - 1] < totalPages && (
           <span className=" font-semibold py-2 ">
             <IconDots />
           </span>
-        )}
       </div>
-
-      {currentPage < totalPages && (
-        <button
+      <div className="flex items-center space-x-2">
+        {currentPage < totalPages - 1 && (
+          <>
+            <Button
+              onClick={() => onChange(totalPages)}
+              variant="outline"
+              
+              >
+              {totalPages}
+            </Button>
+          </>
+        )}
+        </div>
+        <Button
+        disabled={currentPage === totalPages}
+        variant="outline"
           aria-label="次に進む"
           onClick={goToNextPage}
-          className="btn font-semibold py-2  rounded shadow btn-outline"
+          size="icon"
         >
           <IconChevronRight />
-        </button>
-      )}
+        </Button>
     </div>
   );
 };

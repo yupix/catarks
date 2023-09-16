@@ -1,14 +1,16 @@
-import type { LoaderArgs } from "@remix-run/node";
-import { Link, useSearchParams } from "@remix-run/react";
+import { defer, type LoaderArgs } from "@remix-run/node";
+import { Await, Link, useLoaderData, useSearchParams } from "@remix-run/react";
 import { getPaginationPageNumber, searchParams } from "~/utils/utils";
 import { IconSearch, IconX } from "@tabler/icons";
 import { SearchItemByQuery } from "~/middlewares/search";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useDebounce } from "@reactuses/core";
 import { ItemCard } from "~/components/item/ItemCard";
 import { CatPagination } from "~/components/common/CatPagination";
 import type { ItemTypes } from "@catarks/db";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 
 export async function loader({ params, request }: LoaderArgs) {
   const url = searchParams(request);
@@ -18,8 +20,8 @@ export async function loader({ params, request }: LoaderArgs) {
   const skip = getPaginationPageNumber({ limit, page });
   const category = params.category as ItemTypes | undefined;
   if (!category) throw new Error();
-  const res = await SearchItemByQuery({ q, limit, skip, category, include_price_average: true });
-  return typedjson({ body: res, category: params.category, page: Number(page), q });
+  const items = await SearchItemByQuery({ q, limit, skip, category, include_price_average: true });
+  return typedjson({ body: items, category: params.category, page: Number(page), q });
 }
 
 export default function Category() {
@@ -41,10 +43,10 @@ export default function Category() {
     <>
       <form className="flex items-center" onSubmit={(e) => e.preventDefault()}>
         <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <IconSearch className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-          </div>
-          <input
+          {/* <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"> */}
+            {/* <IconSearch className="w-5 h-5 text-gray-500 dark:text-gray-400" /> */}
+          {/* </div> */}
+          <Input
             defaultValue={query}
             onChange={(e) => setQuery(e.target.value)}
             type="search"
@@ -61,7 +63,7 @@ export default function Category() {
           </button>
         </div>
       </form>
-      <div className="mt-5 grid justify-center grow grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-4">
         {body.hits.map((item) => (
           <div key={item.id}>
             <Link to={`/items/${item.id}`} style={{ textDecoration: "none" }}>

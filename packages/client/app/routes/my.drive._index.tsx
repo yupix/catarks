@@ -5,11 +5,10 @@ import { prisma } from "~/utils/prisma.server";
 import { File } from "~/components/common/File";
 
 export async function loader({ request }: LoaderArgs) {
-  const user = await authenticator.isAuthenticated(request, {
+  const session = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
-
-  const files = await prisma.files.findMany({ where: { userId: user.id } });
+  const files = await prisma.files.findMany({ where: { userId: session.user.id } });
   return typedjson({ files });
 }
 

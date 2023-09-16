@@ -4,6 +4,8 @@ import {
   replaceNumbersWithRoman,
 } from "~/utils/utils.client";
 import { TextInput } from "~/components/common/textInput";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 export type AutocompleteInputOption = {
   label: string;
@@ -76,8 +78,8 @@ const AutocompleteInput: React.FC<
       {selectedOption && (
         <input type="hidden" name={name} value={selectedOption.value} />
       )}
-      <TextInput
-      label={label}
+      <Label htmlFor={name}>{label}</Label>
+      <Input
         value={inputValue}
         onChange={handleInputChange}
         required={required}

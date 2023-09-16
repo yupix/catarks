@@ -1,19 +1,23 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useModalState, useSessionState } from "~/states/common";
 import { Link, useLocation } from "@remix-run/react";
-import type { TgetItemsLoader } from "~/routes/api.items._index";
+import type { TgetItemsLoader } from "~/routes/api.items._index/route";
 import { assertIsDefined, isUUID } from "~/utils/utils";
 import type { TCreateItemPriceAction } from "~/routes/api.items.price";
 import { toast } from "react-hot-toast";
 import type { AutocompleteInputOption } from "~/components/AutoComplete/AutoComplete";
-import AutocompleteInput from "~/components/AutoComplete/AutoComplete";
 import type { TGetItemByIdLoader } from "~/routes/api.items.$itemId";
 import type { Items } from "@catarks/db";
 import { useMount } from "@reactuses/core";
 import { useForm } from "react-hook-form";
-import { NumberInput } from "../common/numberInput";
 import { useAtom } from "jotai";
 import { useTypedFetcher } from "remix-typedjson";
+import { DialogContent, DialogDescription, DialogHeader, DialogOverlay, DialogTitle } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { NewAutoComplete } from "../AutoComplete/NewAutoComplete";
 
 export const ReportPriceModal = memo(function ReportPriceModal() {
   let [items, setItems] = useState<{ value: string; label: string }[]>([]);
@@ -55,7 +59,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
       if (fetcher.data.intent === "getItems") {
         assertIsDefined(fetcher.data.body);
         setItems(
-          fetcher.data.body.items.map((item) => {
+          fetcher.data.body.map((item) => {
             return { value: item.id, label: item.name };
           })
         );
@@ -81,9 +85,8 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
           toast.custom(
             (t) => (
               <div
-                className={`${
-                  t.visible ? "animate-enter" : "animate-leave"
-                } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+                className={`${t.visible ? "animate-enter" : "animate-leave"
+                  } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
               >
                 <div className="flex-1 w-0 p-4">
                   <div className="flex items-start">
@@ -127,6 +130,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
   const handleSelectChange = (itemId: string) => {
     fetcher.submit(null, { action: `/api/items/${itemId}`, method: "get" });
   };
+
   type FormData = {
     itemId: string;
     price: number;
@@ -134,7 +138,7 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
     ship: number;
     useTax: string;
   };
-  const { register, watch } = useForm<FormData>({
+  const { register, watch, setValue } = useForm<FormData>({
     criteriaMode: "all",
     defaultValues: {
       itemId: "",
@@ -152,134 +156,108 @@ export const ReportPriceModal = memo(function ReportPriceModal() {
     const _price = price / qty;
     return (useTax ? _price * (1 - 0.1) : _price / (1 - 0.1)).toLocaleString();
   }, [price, qty, useTax]);
-
   const itemIcon = selectedItem
     ? { backgroundImage: `url(${selectedItem.iconUrl})` }
     : {};
   return (
-    <>
-      <input
-        type="checkbox"
-        id="my-modal-3"
-        className="modal-toggle"
-        checked={modalState.isOpenedPriceRepost}
-        readOnly
-      />
-      <div className="modal">
-        <div className="modal-box relative p-0">
-          <div className="p-4 border-b border-base-200">
-            <label
-              htmlFor="my-modal-3"
-              className="btn btn-sm btn-circle absolute right-2 top-2"
-              onClick={() => setModalState({ isOpenedPriceRepost: false })}
-            >
-              ✕
-            </label>
-            <h3 className="text-lg font-bold">価格の報告</h3>
-          </div>
-          <div className="block sm:flex bg-base-100">
-            <div className="flex-0 bg-base-200 flex justify-center items-center p-5 rounded-r-lg">
-              <div
-                className="rounded-full h-24 w-24 bg-cover bg-center bg-white border-solid border-gray-600 border-4 shadow-lg"
-                style={itemIcon}
+
+    <DialogContent>
+        <DialogHeader>
+          <DialogTitle>値段の報告</DialogTitle>
+          <DialogDescription asChild>
+            
+
+      <div className="block sm:flex bg-base-100">
+        <div className="flex-0 bg-base-200 flex justify-center items-center p-5 rounded-r-lg">
+          <div
+            className="rounded-full h-24 w-24 bg-cover bg-center bg-white border-solid border-gray-600 border-4 shadow-lg"
+            style={itemIcon}
+          />
+        </div>
+        <div className="flex-1 p-6">
+          <fetcher.Form
+            action="/api/items/price"
+            method="post"
+            className="form-control w-full max-w-xs"
+          >
+            <NewAutoComplete
+              placeholder="アイテムを選択"
+              notfoundText="アイテムが見つかりませんでした"
+              searchWordPlaceholder="アイテムを検索"
+              // defaultValue={option}
+              // name="itemId"
+              options={items}
+              // label="アイテム名"
+              onSelected={(value) => {
+                handleSelectChange(value);
+                setValue("itemId", value);
+              }}
+            />
+            <div>
+              <Label htmlFor="price">値段</Label>
+              <Input
+                id="price"
+                required
+                type="number"
+                step={100}
+                min={900}
+                max={99999999999}
+                {...register("price")}
               />
             </div>
-            <div className="flex-1 p-6">
-              <fetcher.Form
-                action="/api/items/price"
-                method="post"
-                className="form-control w-full max-w-xs"
-              >
-                <AutocompleteInput
-                  defaultValue={option}
-                  name="itemId"
-                  options={items}
-                  label="アイテム名"
-                  onSelected={(option) => handleSelectChange(option.value)}
-                />
-                <div>
-                  <NumberInput
-                    id="price"
-                    label="値段"
-                    required
-                    step={100}
-                    min={900}
-                    max={99999999999}
-                    {...register("price")}
-                  />
-                </div>
-                <div>
-                  <NumberInput
-                    label="個数"
-                    id="qty"
-                    step={1}
-                    defaultValue={1}
-                    min={1}
-                    max={999}
-                    {...register("qty")}
-                  />
-                </div>
-                <div>
-                  <NumberInput
-                    label="シップ番号"
-                    id="ship"
-                    step={1}
-                    defaultValue={session?.user?.ship || 8}
-                    min={1}
-                    max={10}
-                    {...register("ship")}
-                  />
-                </div>
-                <div>
-                  <div className="form-control">
-                    <label className="label cursor-pointer">
-                      <span className="label-text">税込み</span>
-                      <input
-                        id="useTax"
-                        type="checkbox"
-                        className="checkbox"
-                        {...register("useTax")}
-                      />
-                    </label>
-                  </div>
-                </div>
-                <div>
-                  {useTax ? (
-                    <>
-                      <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
-                      <p>売値: {price.toLocaleString()}</p>
-                    </>
-                  ) : (
-                    <>
-                      <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
-                      <p>売値: {Number(price).toLocaleString()}</p>
-                    </>
-                  )}
-                  <p>一つあたりの価格: {proceeds}</p>
-                </div>
-                <div className="card-actions justify-end">
-                  <button type="submit" className="btn btn-primary">
-                    送信
-                  </button>
-                </div>
-              </fetcher.Form>
+            <div>
+              <Label htmlFor="qty">個数</Label>
+              <Input
+                id="qty"
+                step={1}
+                type="number"
+                defaultValue={1}
+                min={1}
+                max={999}
+                {...register("qty")}
+              />
             </div>
-          </div>
+            <div>
+              <Label htmlFor="ship">シップ番号</Label>
+              <Input
+                id="ship"
+                step={1}
+                type="number"
+                defaultValue={session?.user?.ship || 8}
+                min={1}
+                max={10}
+                {...register("ship")}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox {...register("useTax")} />
+              <label htmlFor="useTax" >税込み</label>
+            </div>
+            <div>
+              {useTax ? (
+                <>
+                  <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+                  <p>売値: {price.toLocaleString()}</p>
+                </>
+              ) : (
+                <>
+                  <p>純売上: {(price * (1 - 0.1)).toLocaleString()}</p>
+          
+                  <p>売値: {Number(price).toLocaleString()}</p>
+                </>
+              )}
+              <p>一つあたりの価格: {proceeds}</p>
+            </div>
+            <div className="card-actions justify-end">
+              <Button type="submit">
+                送信
+              </Button>
+            </div>
+          </fetcher.Form>
         </div>
       </div>
-    </>
-    // <Modal
-    //   dismissible={true}
-    //   show={modalState.isOpenedPriceRepost}
-    //   onClose={() => setModalState({ isOpenedPriceRepost: false })}
-    // >
-    //   <Modal.Header>
-    //     <p>価格の報告</p>
-    //   </Modal.Header>
-    //   <Modal.Body style={{ padding: 0 }}>
-
-    //   </Modal.Body>
-    //   <Modal.Footer></Modal.Footer>
-    // </Modal>
+      </DialogDescription>
+      </DialogHeader>
+    </DialogContent>
   );
 });

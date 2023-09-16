@@ -1,4 +1,4 @@
-import { LoaderArgs, json } from "@remix-run/node";
+import { ActionArgs, LoaderArgs, json } from "@remix-run/node";
 import AutocompleteInput, {
   AutocompleteInputOption,
 } from "~/components/AutoComplete/AutoComplete";
@@ -6,6 +6,9 @@ import ItemTrade from "~/assets/data/item_trade.json";
 import { useEffect, useReducer, useState } from "react";
 import { Card } from "~/components/Card/Card";
 import { NumberInput } from "~/components/common/numberInput";
+import { CopyButton } from "~/components/CopyButton";
+import { useFetcher } from "@remix-run/react";
+
 
 export async function loader({ request }: LoaderArgs) {
   return json({});
@@ -13,7 +16,7 @@ export async function loader({ request }: LoaderArgs) {
 
 // Stateの型定義
 type State = {
-  [key: number]: number;
+  [key: string]: { price: number; number: number };
 };
 
 // Actionの型定義
@@ -54,9 +57,10 @@ export default function createItemPricePage() {
     dispatch({ type: "RESET" });
   }, [selectedItem]);
 
+
   const updatePrice = (index: string, price: number, number: number) => {
-    dispatch({ type: "UPDATE_PRICE", index, price, number: number });
-  };
+    dispatch({ type: "UPDATE_PRICE", index, price, number: number });}
+
   return (
     <>
       <Card classes={{ root: "mb-5" }}>
@@ -81,7 +85,7 @@ export default function createItemPricePage() {
                 defaultValue={selectedRecipe}
                 onChange={(v) => setSelectedRecipe(Number(v.target.value))}
               >
-                {ItemTrade[selectedItem?.label].map((recipe, i) => (
+                {ItemTrade[selectedItem?.label as ItemTradeKeys].map((recipe, i) => (
                   <option key={i} value={i}>
                     レシピ {i + 1}
                   </option>
@@ -106,20 +110,22 @@ export default function createItemPricePage() {
               </tr>
             </thead>
             <tbody>
-              {ItemTrade[selectedItem?.label][selectedRecipe][
+              {ItemTrade[selectedItem?.label as ItemTradeKeys][selectedRecipe][
                 "requirements"
               ].map((recipe, i) => (
                 <tr key={i}>
                   <td>
                     <div className="flex items-center space-x-3">
-                      <div>{recipe.name}</div>
+                      <div className="flex justify-center">
+                        {recipe.name} <CopyButton  targetValue={recipe.name}/>
+                      </div>
                     </div>
                   </td>
                   <td>{recipe.amount}</td>
                   <td>
                     <NumberInput
                       label="値段"
-                      defaultValue={prices[recipe.name]}
+                      defaultValue={0}
                       onChange={(target) =>
                         updatePrice(
                           recipe.name,
@@ -135,19 +141,32 @@ export default function createItemPricePage() {
             </tbody>
           </table>
           <p>
-            金額:{" "}
+            合計金額:{" "}
             {(Object.keys(prices).map((key) => {
               return prices[key]["price"] * prices[key]["number"];
             }).length > 0
-              ? Object.keys(prices)
+              ?
+               Object.keys(prices)
                   .map((key) => {
                     return prices[key]["price"] * prices[key]["number"];
                   })
-                  .reduce((a, b) => a + b) * createNumber
-              : 0).toLocaleString()}
+                  .reduce((a, b) => a + b) * createNumber : 0).toLocaleString()}
+          </p>
+          <p>売却値:{" "}
+            {(Object.keys(prices).map((key) => {
+              return prices[key]["price"] * prices[key]["number"];
+            }).length > 0
+              ?
+               Object.keys(prices)
+                  .map((key) => {
+                    return prices[key]["price"] * prices[key]["number"];
+                  })
+                  .reduce((a, b) => a + b) * createNumber : 0).toLocaleString()}
+
+
           </p>
         </Card>
       )}
     </>
   );
-}
+                }

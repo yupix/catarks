@@ -1,5 +1,8 @@
 import type { ItemTypes, Users } from "@catarks/db";
 import { TYPE_TO_CATEGORY } from "@catarks/utils";
+import { useMatches } from "@remix-run/react";
+import { useMemo } from "react";
+import { TUserSession } from "~/const";
 
 export function getName(user: Users) {
   return user.nickname ? user.nickname : user.username;
@@ -64,3 +67,36 @@ export const getPaginationPageNumber = (options: {
     ? 0
     : options.limit * (Number(options.page) - 1);
 };
+
+export function useMatchesData(
+  id: string,
+): Record<string, unknown> | undefined {
+  const matchingRoutes = useMatches();
+  const route = useMemo(
+    () => matchingRoutes.find((route) => route.id === id),
+    [matchingRoutes, id],
+  );
+  return route?.data;
+}
+
+function isUser(user: any): user is TUserSession {
+  return user && typeof user === "object";
+}
+
+export function useOptionalUser(): TUserSession | undefined {
+  const data = useMatchesData("root");
+  if (!data || !isUser(data)) {
+    return undefined;
+  }
+  return data;
+}
+
+export function useUser(): TUserSession {
+  const maybeUser = useOptionalUser();
+  if (!maybeUser) {
+    throw new Error(
+      "No user found in root loader, but user is required by useUser. If user is optional, try useOptionalUser instead.",
+    );
+  }
+  return maybeUser;
+}

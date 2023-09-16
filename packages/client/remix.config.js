@@ -5,14 +5,19 @@ module.exports = {
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
+  serverModuleFormat: "cjs",
   serverDependenciesToBundle: [/^swiper.*/, /^ssr-window.*/],
   tailwind: true,
+  postcss: true,
+  
   future: {
     // unstable_tailwind: true, TODO: 記事で書く
+
     v2_meta: true,
     v2_errorBoundary: true,
     v2_dev: true,
     v2_normalizeFormMethod: true,
-    v2_routeConvention: true
+    v2_routeConvention: true,
+    
   },
 };
