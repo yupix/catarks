@@ -40,7 +40,7 @@ export const DefaultLayout: FC<{
         </div>
         <div className="drawer-side">
           <label htmlFor="drawer" className="drawer-overlay"></label>
-          <aside className="w-80">
+          <aside className="bg-base-100 w-80">
             <div className="z-20 bg-opacity-90 backdrop-blur sticky top-0 items-center gap-2 px-4 py-2 hidden lg:flex shadow-sm">
               <Link to="/" className="btn btn-ghost normal-case text-xl">
                 Cat Arks
