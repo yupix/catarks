@@ -30,6 +30,17 @@ CREATE TABLE "Ability" (
 );
 
 -- CreateTable
+CREATE TABLE "ItemPriceAverage" (
+    "id" TEXT NOT NULL,
+    "ship" INTEGER NOT NULL,
+    "price" INTEGER NOT NULL,
+    "itemId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ItemPriceAverage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "ItemPrice" (
     "id" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
@@ -52,12 +63,38 @@ CREATE TABLE "ItemDroparia" (
 CREATE TABLE "Item" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "fuzzyName" TEXT NOT NULL,
     "rarity" INTEGER NOT NULL,
     "type" "ItemTypes" NOT NULL,
     "abilityName" TEXT,
     "iconUrl" TEXT NOT NULL,
 
     CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Note" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "ownerId" TEXT NOT NULL,
+
+    CONSTRAINT "Note_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "NoteImage" (
+    "id" TEXT NOT NULL,
+    "altText" TEXT,
+    "contentType" TEXT NOT NULL,
+    "blob" BYTEA NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "noteId" TEXT NOT NULL,
+
+    CONSTRAINT "NoteImage_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -173,7 +210,22 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
+CREATE INDEX "ItemPriceAverage_itemId_idx" ON "ItemPriceAverage"("itemId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Item_name_key" ON "Item"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Item_fuzzyName_key" ON "Item"("fuzzyName");
+
+-- CreateIndex
+CREATE INDEX "Note_ownerId_idx" ON "Note"("ownerId");
+
+-- CreateIndex
+CREATE INDEX "Note_ownerId_updatedAt_idx" ON "Note"("ownerId", "updatedAt");
+
+-- CreateIndex
+CREATE INDEX "NoteImage_noteId_idx" ON "NoteImage"("noteId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "UserImage_userId_key" ON "UserImage"("userId");
@@ -221,6 +273,9 @@ CREATE UNIQUE INDEX "_RoleToUser_AB_unique" ON "_RoleToUser"("A", "B");
 CREATE INDEX "_RoleToUser_B_index" ON "_RoleToUser"("B");
 
 -- AddForeignKey
+ALTER TABLE "ItemPriceAverage" ADD CONSTRAINT "ItemPriceAverage_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ItemPrice" ADD CONSTRAINT "ItemPrice_reporterId_fkey" FOREIGN KEY ("reporterId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -228,6 +283,12 @@ ALTER TABLE "ItemPrice" ADD CONSTRAINT "ItemPrice_itemId_fkey" FOREIGN KEY ("ite
 
 -- AddForeignKey
 ALTER TABLE "Item" ADD CONSTRAINT "Item_abilityName_fkey" FOREIGN KEY ("abilityName") REFERENCES "Ability"("name") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Note" ADD CONSTRAINT "Note_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "NoteImage" ADD CONSTRAINT "NoteImage_noteId_fkey" FOREIGN KEY ("noteId") REFERENCES "Note"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserImage" ADD CONSTRAINT "UserImage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
