@@ -64,6 +64,10 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import React from 'react'
 import { ReportPriceDial } from './components/price-dialog.tsx'
 import { cache, cachified } from './utils/cache.server.ts'
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './components/ui/sheet.tsx'
+import { Label } from './components/ui/label.tsx'
+import { Input } from './components/ui/input.tsx'
+import { IconMenu2 } from '@tabler/icons-react'
 
 
 export const links: LinksFunction = () => {
@@ -289,6 +293,45 @@ const ListItem = React.forwardRef<
 })
 ListItem.displayName = "ListItem"
 
+function MobileMenu() {
+	const matches = useMatches()
+	const isOnSearchPage = matches.find(m => m.id === 'routes/users+/index')
+	const searchBar = isOnSearchPage ? null : <SearchBar status="idle" />
+	const user = useOptionalUser()
+
+	return (
+		<Sheet>
+			<SheetTrigger asChild>
+				<Button size="icon"><IconMenu2 /></Button>
+			</SheetTrigger>
+			<SheetContent side={"left"} className='flex flex-col h-screen'>
+				<SheetHeader>
+					<SheetTitle>CatArks</SheetTitle>
+					{/* <SheetDescription> */}
+						
+					{/* </SheetDescription> */}
+				</SheetHeader>
+				<div className="block w-full sm:hidden">{searchBar}</div>
+
+
+				<SheetFooter className='mt-auto w-full'>
+					<SheetClose asChild>
+						<div className="flex items-center gap-10">
+							{user ? (
+								<UserDropdown />
+							) : (
+								<Button asChild variant="default" size="sm">
+									<Link to="/login">Log In</Link>
+								</Button>
+							)}
+						</div>
+					</SheetClose>
+				</SheetFooter>
+			</SheetContent>
+		</Sheet>
+	)
+}
+
 function App() {
 	const fetcher = useFetcher();
 	const data = useLoaderData<typeof loader>()
@@ -351,7 +394,7 @@ function App() {
 							</NavigationMenuItem>
 						</NavigationMenuList>
 					</NavigationMenu>
-					<NavigationMenu>
+					<NavigationMenu className='sm:block hidden'>
 						<NavigationMenuList className="justify-between">
 							<NavigationMenuItem >
 								<div className="ml-auto hidden max-w-sm flex-1 sm:block">
@@ -374,6 +417,12 @@ function App() {
 								<div className="block w-full sm:hidden">{searchBar}</div>
 							</NavigationMenuItem>
 						</NavigationMenuList>
+					</NavigationMenu>
+					<NavigationMenu className='block sm:hidden'>
+						<NavigationMenuList>
+							<NavigationMenuItem><MobileMenu /></NavigationMenuItem>
+						</NavigationMenuList>
+
 					</NavigationMenu>
 
 				</header>
@@ -425,7 +474,7 @@ function UserDropdown() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button asChild variant="secondary">
+				<Button asChild variant="secondary" className='w-full'>
 					<Link
 						to={`/users/${user.username}`}
 						// this is for progressive enhancement

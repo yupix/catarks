@@ -9,7 +9,7 @@ interface Props {
 
 export function ItemCard({ item, nowPrice }: Props) {
   return (
-    <div className="grid grid-cols-4 border rounded-md p-2">
+    <div className="grid grid-cols-3 border rounded-md p-2 gap-4">
       <div>
         <img
           className="h-20 w-20 rounded-md"
@@ -18,7 +18,7 @@ export function ItemCard({ item, nowPrice }: Props) {
           loading="lazy"
         />
       </div>
-      <div style={{ width: "100%" }} className="col-span-3">
+      <div style={{ width: "100%" }} className="col-span-2">
         <div style={{ maxWidth: "calc(90%)" }}>
           <p className=" font-bold text-xs">{TYPE_TO_CATEGORY[item.type]}</p>
           <p className="font-bold cat-item-card-title flex items-center">{item.name}</p>
