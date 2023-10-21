@@ -21,7 +21,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 
     const type = CategoryValidation.parse(params.category)
-    console.log(q && replaceFuzzyWord(q))
     const items = await prisma.item.findMany({
         where: {
             type,

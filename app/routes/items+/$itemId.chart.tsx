@@ -45,7 +45,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     let dateList: number[] = [];
     // @ts-ignore
     let body: { [key in keyof typeof SHIPS_TYPE]: ItemPriceAverage[] } = {};
-    for (const ship of ShipTypes) {
+    for (const ship of ChartShipTypes) {
       ship as ShipType;
       const price = await prisma.itemPriceAverage.findMany({
         where: {

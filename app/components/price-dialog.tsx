@@ -220,7 +220,6 @@ const ReportPriceModal = memo(function ReportPriceModal() {
 
                                 className="form-control w-full max-w-xs"
                                 onSubmit={() => {
-                                    console.log(remixForm.getValues())
                                     createItemPriceFetcher.submit(remixForm.getValues(), {
                                         action: "/items/price",
                                         method: "POST",
