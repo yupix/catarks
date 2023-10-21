@@ -15,7 +15,7 @@ const limit = 24;
 export async function loader({ params, request }: LoaderFunctionArgs) {
     const url = new URL(request.url);
     const raw_p = url.searchParams.get("p");  // page
-    const p = raw_p ? parseInt(raw_p) : 0;
+    const p = raw_p ? parseInt(raw_p) : 1;
 
     const q = url.searchParams.get("q");  // query
 
@@ -28,7 +28,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
                 contains: replaceFuzzyWord(q),
             } : undefined
         },
-        skip: p * limit,
+        orderBy: {
+            name: 'asc'
+        },
+        skip: (p-1) * limit,
         take: limit
     })
 
@@ -41,7 +44,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
         },
     })
 
-    return json({ items, total, p })
+    return json({ items, total, p: p })
 }
 
 export default function Category() {
@@ -60,7 +63,7 @@ export default function Category() {
                 {
                     items.map((item) => {
                         return (
-                            <Link to={`/items/${item.id}/price`} key={item.id}>
+                            <Link to={`/items/${item.id}/price`} key={item.id} unstable_viewTransition >
                                 <ItemCard item={item} />
                             </Link>
                         )
@@ -68,6 +71,7 @@ export default function Category() {
                 }
                 {items.length === 0 && <div className="font-bold text-2xl">Coming Soon...</div>}
             </div>
+            {p}
             <Pagination totalPages={Math.floor(total / limit)} currentPage={p} pageRangeDisplayed={3} onChange={function (pageNumber: number): void {
                 setSearchQuery({ ...query, p: String(pageNumber) })
             }} />
