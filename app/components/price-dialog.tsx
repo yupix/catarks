@@ -322,7 +322,7 @@ const ReportPriceModal = memo(function ReportPriceModal() {
 
 export function ReportPriceDial() {
     return (
-        <div className="fixed right-20 bottom-6 group">
+        <div className="fixed right-6 bottom-6 group">
             <Dialog>
                 <DialogTrigger>
                     <Button variant="outline" size="icon" asChild>
