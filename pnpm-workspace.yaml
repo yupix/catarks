@@ -1,5 +1,0 @@
-packages:
-  # packagesディレクトリ配下はすべてを登録
-  - 'packages/**'
-  # どこのtestディレクトリ内ものpackageには含めない
-  - '!**/test/**'
