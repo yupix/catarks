@@ -397,9 +397,9 @@ function App() {
 						<NavigationMenuList>
 							<NavigationMenuItem>
 								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-									<a href="https://discord.gg/CcT997U">
+									<Link to="/">
 										<div className="font-bold">CatArks</div>
-									</a>
+									</Link>
 								</NavigationMenuLink>
 							</NavigationMenuItem>
 							<NavigationMenuItem className='sm:block hidden'>

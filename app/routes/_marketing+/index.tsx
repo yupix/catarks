@@ -4,6 +4,7 @@ import { Spacer } from '#app/components/spacer.tsx'
 import { Button } from '#app/components/ui/button.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '#app/components/ui/card.tsx'
 import { prisma } from '#app/utils/db.server.ts'
+import { Link } from '@remix-run/react'
 
 export const meta: MetaFunction = () => [{ title: 'CatArks' }]
 
@@ -23,7 +24,7 @@ export default function Index() {
 						<div className='w-full'>
 							<div className='text-white font-bold text-3xl'>CatAkrs</div>
 							<div className='text-white text-2xl'>アークスの為のサイト</div>
-							<Button variant="outline" size="lg" className='mt-6'>始める</Button>
+							<Link to="/categories/ability"><Button variant="outline" size="lg" className='mt-6'>始める</Button></Link>
 						</div>
 					</div>
 				</section>
