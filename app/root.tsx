@@ -21,10 +21,11 @@ import {
 	useFetchers,
 	useLoaderData,
 	useMatches,
+	useNavigation,
 	useSubmit,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
@@ -67,7 +68,10 @@ import { cache, cachified } from './utils/cache.server.ts'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './components/ui/sheet.tsx'
 import { Label } from './components/ui/label.tsx'
 import { Input } from './components/ui/input.tsx'
-import { IconMenu2 } from '@tabler/icons-react'
+import { IconBrandDiscord, IconMenu2 } from '@tabler/icons-react'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion.tsx'
+import { ITEM_TYPES, TYPE_TO_CATEGORY } from './utils/const.ts'
+import { Alert, AlertDescription, AlertTitle } from './components/ui/alert.tsx'
 
 
 export const links: LinksFunction = () => {
@@ -298,9 +302,17 @@ function MobileMenu() {
 	const isOnSearchPage = matches.find(m => m.id === 'routes/users+/index')
 	const searchBar = isOnSearchPage ? null : <SearchBar status="idle" />
 	const user = useOptionalUser()
+	const navigation = useNavigation()
+	const [isOpen, setIsOpen] = React.useState(false)
+
+	useEffect(() => {
+		if (navigation.state !== 'idle') {
+			setIsOpen(false)
+		}
+	}, [navigation])
 
 	return (
-		<Sheet>
+		<Sheet open={isOpen} onOpenChange={(v) => setIsOpen(v)}>
 			<SheetTrigger asChild>
 				<Button size="icon"><IconMenu2 /></Button>
 			</SheetTrigger>
@@ -308,23 +320,62 @@ function MobileMenu() {
 				<SheetHeader>
 					<SheetTitle>CatArks</SheetTitle>
 					{/* <SheetDescription> */}
-						
+
 					{/* </SheetDescription> */}
 				</SheetHeader>
 				<div className="block w-full sm:hidden">{searchBar}</div>
 
+				<Accordion type="single" collapsible>
+					<AccordionItem value="item-1">
+						<AccordionTrigger>CATEGORIES</AccordionTrigger>
+
+						<AccordionContent asChild>
+							<ul>
+								{ITEM_TYPES.map((itemType) => (
+									<ListItem to={`/categories/${itemType}`}>{TYPE_TO_CATEGORY[itemType]}</ListItem>
+								))}
+							</ul>
+						</AccordionContent>
+					</AccordionItem>
+					<AccordionItem value="item-2">
+						<AccordionTrigger>TOOLS</AccordionTrigger>
+
+						<AccordionContent asChild>
+							<ul>
+								<ListItem to={`/tools/calc/trade`}>トレード価格計算機</ListItem>
+							</ul>
+						</AccordionContent>
+					</AccordionItem>
+
+				</Accordion>
 
 				<SheetFooter className='mt-auto w-full'>
 					<SheetClose asChild>
 						<div className="flex items-center gap-10">
-							{user ? (
-								<UserDropdown />
-							) : (
-								<Button asChild variant="default" size="sm">
-									<Link to="/login">Log In</Link>
-								</Button>
-							)}
+							<div className='w-full'>
+								{/* <Alert className='mb-2'>
+									<IconBrandDiscord className="h-4 w-4" />
+									<AlertTitle>Discordに参加しませんか？</AlertTitle>
+									<AlertDescription>
+										一緒にNGSを盛り上げましょう！
+									</AlertDescription>
+									<AlertDescription>
+									<a href="https://discord.gg/CcT997U" className='flex justify-end'>
+											<Button>参加する</Button>
+										</a>
+									</AlertDescription>
+								</Alert> */}
+
+								{user ? (
+									<UserDropdown />
+								) : (
+									<Button asChild variant="default" size="sm" className='w-full'>
+										<Link to="/login">Log In</Link>
+									</Button>
+								)}
+							</div>
 						</div>
+
 					</SheetClose>
 				</SheetFooter>
 			</SheetContent>
@@ -351,12 +402,12 @@ function App() {
 						<NavigationMenuList>
 							<NavigationMenuItem>
 								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-									<Link to="/">
+									<Link to="https://discord.gg/CcT997U">
 										<div className="font-bold">CatArks</div>
 									</Link>
 								</NavigationMenuLink>
 							</NavigationMenuItem>
-							<NavigationMenuItem>
+							<NavigationMenuItem className='sm:block hidden'>
 								<NavigationMenuTrigger>CATEGORIES</NavigationMenuTrigger>
 								<NavigationMenuContent>
 									<ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -384,7 +435,7 @@ function App() {
 									</ul>
 								</NavigationMenuContent>
 							</NavigationMenuItem>
-							<NavigationMenuItem>
+							<NavigationMenuItem className='sm:block hidden'>
 								<NavigationMenuTrigger>TOOLS</NavigationMenuTrigger>
 								<NavigationMenuContent>
 									<ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
