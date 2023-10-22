@@ -1,12 +1,10 @@
-import { requireUserId } from "#app/utils/auth.server.ts";
-import { calcPrice } from "#app/utils/calc-price.server.ts";
-import { ShipTypes } from "#app/utils/const.ts";
-import { validateCSRF } from "#app/utils/csrf.server.ts";
-import { prisma } from "#app/utils/db.server.ts";
 import { parse } from "@conform-to/zod";
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/server-runtime";
+import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/server-runtime";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
+import { requireUserId } from "#app/utils/auth.server.ts";
+import { calcPrice } from "#app/utils/calc-price.server.ts";
+import { prisma } from "#app/utils/db.server.ts";
 
 
 export async function loader({ request }: LoaderFunctionArgs) {

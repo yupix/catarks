@@ -1,9 +1,9 @@
+import { type Item, type ItemDroparia, type ItemTypes } from "@prisma/client";
 import { prisma } from "#app/utils/db.server.ts";
 import { replaceFuzzyWord } from "#app/utils/text-convertor.ts";
-import { BaseRegister } from "#register/types/register.ts";
-import { findItemByName, registerDropAria } from "#register/types/shared.ts";
-import { Item, ItemDroparia, ItemTypes } from "@prisma/client";
 import materials from "#register/assets/materials.json"
+import { type BaseRegister } from "#register/types/register.ts";
+import { findItemByName, registerDropAria } from "#register/types/shared.ts";
 
 type TItemBase = {
   name: string;

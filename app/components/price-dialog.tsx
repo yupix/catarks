@@ -1,41 +1,21 @@
-import { IconPencil } from "@tabler/icons-react";
-import { Button } from "./ui/button.tsx";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog.tsx";
-import { Checkbox } from "./ui/checkbox.tsx";
-import { Label } from "./ui/label.tsx";
-import { Input } from "./ui/input.tsx";
-import { AutoComplete, AutoCompleteItem, AutoCompleteWithFormField } from "./auto-complete.tsx";
-import { memo, useEffect, useMemo, useReducer, useState } from "react";
 import { Form, useFetcher, useRouteLoaderData } from "@remix-run/react";
+import { IconPencil } from "@tabler/icons-react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useRemixForm } from "remix-hook-form";
-import type { loader as RootLoader } from "#app/root.tsx";
-import type { loader as ItemIconLoader } from "#app/routes/items+/icon+/$itemId.tsx";
 import { AuthenticityTokenInput } from "remix-utils/csrf/react";
-import { createItemPriceActionIntent, createItemPriceFormSchema } from "#app/routes/items+/price.tsx";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-type STORE = {
-    selectedItem: { id: string }
-}
-
-type ACTIONTYPE =
-    | { type: "SET_SELECTED_ITEM_ID", payload: { id: string } }
-
-const reducer = (state: STORE, action: ACTIONTYPE) => {
-    switch (action.type) {
-        case "SET_SELECTED_ITEM_ID": {
-            return {
-                ...state,
-                selectedItem: action.payload
-            }
-        }
-    }
-}
+import  { type loader as RootLoader } from "#app/root.tsx";
+import  { type loader as ItemIconLoader } from "#app/routes/items+/icon+/$itemId.tsx";
+import { createItemPriceActionIntent } from "#app/routes/items+/price.tsx";
+import { type AutoCompleteItem, AutoCompleteWithFormField } from "./auto-complete.tsx";
+import { Button } from "./ui/button.tsx";
+import { Checkbox } from "./ui/checkbox.tsx";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog.tsx";
+import { Input } from "./ui/input.tsx";
+import { Label } from "./ui/label.tsx";
 
 const ReportPriceModal = memo(function ReportPriceModal() {
 
     let [itemIcon, setItemIcon] = useState({});
-    const [state, dispatch] = useReducer(reducer, { selectedItem: { id: "" } });
     const data = useRouteLoaderData<typeof RootLoader>("root");  // アイテムの一覧を取得するために、rootのloaderを使う
 
     const selectedItemIconFetcher = useFetcher<typeof ItemIconLoader>();
@@ -166,7 +146,6 @@ const ReportPriceModal = memo(function ReportPriceModal() {
     };
 
 
-    const resolver = zodResolver(createItemPriceFormSchema)
 
     const remixForm = useRemixForm<FormData>({
         criteriaMode: "all",
@@ -189,8 +168,6 @@ const ReportPriceModal = memo(function ReportPriceModal() {
     const price = watch("price");
     const qty = watch("qty");
     const useTax = watch("useTax");
-    const itemId = watch('itemId')
-    const intent = watch('intent')
     const proceeds = useMemo(() => {
         const _price = price / qty;
         return (useTax ? _price * (1 - 0.1) : _price / (1 - 0.1)).toLocaleString();

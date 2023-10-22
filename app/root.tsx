@@ -25,16 +25,20 @@ import {
 	useSubmit,
 } from '@remix-run/react'
 import { withSentry } from '@sentry/remix'
-import { useEffect, useRef } from 'react'
+import { IconMenu2 } from '@tabler/icons-react'
+import React, { useEffect, useRef } from 'react'
+import rdtStylesheet from "remix-development-tools/index.css";
 import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
 import { Confetti } from './components/confetti.tsx'
 import { GeneralErrorBoundary } from './components/error-boundary.tsx'
 import { ErrorList } from './components/forms.tsx'
+import { ReportPriceDial } from './components/price-dialog.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
 import { SearchBar } from './components/search-bar.tsx'
 import { EpicToaster } from './components/toaster.tsx'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion.tsx'
 import { Button } from './components/ui/button.tsx'
 import {
 	DropdownMenu,
@@ -44,11 +48,15 @@ import {
 	DropdownMenuTrigger,
 } from './components/ui/dropdown-menu.tsx'
 import { Icon, href as iconsHref } from './components/ui/icon.tsx'
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from './components/ui/navigation-menu.tsx'
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './components/ui/sheet.tsx'
 import fontStyleSheetUrl from './styles/font.css'
 import tailwindStyleSheetUrl from './styles/tailwind.css'
 import { authenticator, getUserId } from './utils/auth.server.ts'
+import { cache, cachified } from './utils/cache.server.ts'
 import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
 import { getConfetti } from './utils/confetti.server.ts'
+import { ITEM_TYPES, TYPE_TO_CATEGORY } from './utils/const.ts'
 import { csrf } from './utils/csrf.server.ts'
 import { prisma } from './utils/db.server.ts'
 import { getEnv } from './utils/env.server.ts'
@@ -60,18 +68,6 @@ import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
 import { makeTimings, time } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
-import rdtStylesheet from "remix-development-tools/index.css";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from './components/ui/navigation-menu.tsx'
-import React from 'react'
-import { ReportPriceDial } from './components/price-dialog.tsx'
-import { cache, cachified } from './utils/cache.server.ts'
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './components/ui/sheet.tsx'
-import { Label } from './components/ui/label.tsx'
-import { Input } from './components/ui/input.tsx'
-import { IconBrandDiscord, IconMenu2 } from '@tabler/icons-react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion.tsx'
-import { ITEM_TYPES, TYPE_TO_CATEGORY } from './utils/const.ts'
-import { Alert, AlertDescription, AlertTitle } from './components/ui/alert.tsx'
 
 
 export const links: LinksFunction = () => {
@@ -332,7 +328,7 @@ function MobileMenu() {
 						<AccordionContent asChild>
 							<ul>
 								{ITEM_TYPES.map((itemType) => (
-									<ListItem to={`/categories/${itemType}`}>{TYPE_TO_CATEGORY[itemType]}</ListItem>
+									<ListItem key={itemType} to={`/categories/${itemType}`}>{TYPE_TO_CATEGORY[itemType]}</ListItem>
 								))}
 							</ul>
 						</AccordionContent>
@@ -384,7 +380,6 @@ function MobileMenu() {
 }
 
 function App() {
-	const fetcher = useFetcher();
 	const data = useLoaderData<typeof loader>()
 	const nonce = useNonce()
 	const user = useOptionalUser()
@@ -402,9 +397,9 @@ function App() {
 						<NavigationMenuList>
 							<NavigationMenuItem>
 								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-									<Link to="https://discord.gg/CcT997U">
+									<a href="https://discord.gg/CcT997U">
 										<div className="font-bold">CatArks</div>
-									</Link>
+									</a>
 								</NavigationMenuLink>
 							</NavigationMenuItem>
 							<NavigationMenuItem className='sm:block hidden'>

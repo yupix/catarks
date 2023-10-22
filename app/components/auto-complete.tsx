@@ -1,16 +1,16 @@
-import { hiraganaToKatagana, katakanaToHiragana, replaceNumbersWithRoman } from "#app/utils/text-convertor.ts"
 import { Check, ChevronsUpDown } from "lucide-react"
-
-
 import React, { useEffect } from "react"
-import { Button } from "./ui/button.tsx"
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover.tsx"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "./ui/command.tsx"
-import { ScrollArea } from "./ui/scroll-area.tsx"
+import { type FieldValues, type Path, type PathValue } from "react-hook-form"
+import { type useRemixForm } from "remix-hook-form"
 import { cn } from "#app/utils/misc.tsx"
-import { useRemixForm, useRemixFormContext } from "remix-hook-form"
-import { FieldValues, Path, PathValue } from "react-hook-form"
+import { hiraganaToKatagana, katakanaToHiragana, replaceNumbersWithRoman } from "#app/utils/text-convertor.ts"
+
+
+import { Button } from "./ui/button.tsx"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "./ui/command.tsx"
 import { FormField } from "./ui/form.tsx"
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover.tsx"
+import { ScrollArea } from "./ui/scroll-area.tsx"
 
 export type AutoCompleteItem = {
     label: string
@@ -87,7 +87,7 @@ export function AutoComplete({ id, options, placeholder, notfoundText, searchWor
                     .includes(replacedSearchWord)
         );
         setFilteredOptions(filteredOptions);
-    }, [searchWord])
+    }, [searchWord, options])
 
 
     return (

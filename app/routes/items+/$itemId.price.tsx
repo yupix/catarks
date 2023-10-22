@@ -1,3 +1,9 @@
+import { parse } from "@conform-to/zod";
+import { type LoaderFunctionArgs, json } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
+import { IconDots } from "@tabler/icons-react";
+import { z } from "zod";
+import { zfd } from "zod-form-data";
 import { Button } from "#app/components/ui/button.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card.tsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "#app/components/ui/dropdown-menu.tsx";
@@ -7,13 +13,6 @@ import { requireUserId } from "#app/utils/auth.server.ts";
 import { prisma } from "#app/utils/db.server.ts";
 import { userHasPermission } from "#app/utils/permissions.ts";
 import { useOptionalUser } from "#app/utils/user.ts";
-import { parse } from "@conform-to/zod";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
-import { IconDots } from "@tabler/icons-react";
-import { useTransition } from "react";
-import { z } from "zod";
-import { zfd } from "zod-form-data";
 
 export async function loader({ params }: LoaderFunctionArgs) {
     const itemId = params.itemId
@@ -43,11 +42,10 @@ export const deleteItemPriceFormSchema = zfd.formData({
 })
 
 
-export async function action({ request, params }: LoaderFunctionArgs) {
+export async function action({ request }: LoaderFunctionArgs) {
     const userId = await requireUserId(request);
     const formData = await request.formData();
     const intent = formData.get('intent')
-    const itemId = params.itemId
 
     switch (intent) {
         case deleteItemPriceActionIntent: {
@@ -59,7 +57,7 @@ export async function action({ request, params }: LoaderFunctionArgs) {
     }
 }
 
-export async function deleteItemPriceAction({ userId, formData, request }: ItemPriceActionArgs) {
+export async function deleteItemPriceAction({ userId, formData }: ItemPriceActionArgs) {
     const submission = await parse(formData, {
         async: true,
         schema: deleteItemPriceFormSchema.superRefine(async ({ priceId }, ctx) => {

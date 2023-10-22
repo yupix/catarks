@@ -1,11 +1,11 @@
 
   
-  import { Ability, AbilityEffect, Item, ItemTypes, PrismaClient } from "@prisma/client";
-import abilities from "../assets/ops.json";
-  import { BaseRegister } from "../types/register.ts";
-import { IDropAria, SearchService, TAbility, registerDropAria } from "#register/types/shared.ts";
+  import { type Ability, type AbilityEffect, type Item, type ItemTypes, type PrismaClient } from "@prisma/client";
 import { prisma } from "#app/utils/db.server.ts";
 import { replaceFuzzyWord } from "#app/utils/text-convertor.ts";
+import { type IDropAria, SearchService, type TAbility, registerDropAria } from "#register/types/shared.ts";
+import abilities from "../assets/ops.json";
+  import { type BaseRegister } from "../types/register.ts";
   
   interface IEffect {
     name: string;

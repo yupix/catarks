@@ -1,8 +1,8 @@
+import { useLoaderData } from "@remix-run/react";
+import { type LoaderFunctionArgs, json } from "@remix-run/server-runtime";
 import { Container } from "#app/components/container.tsx";
 import { ItemCard } from "#app/components/item.tsx";
 import { prisma } from "#app/utils/db.server.ts";
-import { useLoaderData } from "@remix-run/react";
-import { LoaderFunctionArgs, json } from "@remix-run/server-runtime";
 
 export async function loader({ params }: LoaderFunctionArgs) {
     const reports = await prisma.itemPrice.findMany({

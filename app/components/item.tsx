@@ -1,6 +1,6 @@
-import { Item } from "@prisma/client";
-import { NIcon } from "./n-icon.tsx";
+import { type Item } from "@prisma/client";
 import { TYPE_TO_CATEGORY } from "#app/utils/const.ts";
+import { NIcon } from "./n-icon.tsx";
 
 interface Props {
   item: Item

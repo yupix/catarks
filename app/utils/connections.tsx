@@ -1,9 +1,9 @@
 import { Form } from '@remix-run/react'
+import { IconBrandDiscord } from '@tabler/icons-react'
 import { z } from 'zod'
 import { Icon } from '#app/components/ui/icon.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { useIsPending } from './misc.tsx'
-import { IconBrandDiscord } from '@tabler/icons-react'
 
 export const GITHUB_PROVIDER_NAME = 'github'
 export const DISCORD_PROVIDER_NAME = 'discord'

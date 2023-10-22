@@ -1,8 +1,8 @@
 import closeWithGrace from 'close-with-grace'
 import { passthrough, http } from 'msw'
 import { setupServer } from 'msw/node'
-import { handlers as githubHandlers } from './github.ts'
 import { handlers as discordHandlers } from './discord.ts'
+import { handlers as githubHandlers } from './github.ts'
 import { handlers as resendHandlers } from './resend.ts'
 
 const miscHandlers = [

@@ -1,19 +1,18 @@
-import { Link, useFetcher } from "@remix-run/react";
-import { LoaderFunctionArgs, json } from "@remix-run/server-runtime";
+import * as numeral from "@elastic/numeral"
+import { type LoaderFunctionArgs, json } from "@remix-run/server-runtime";
 import { useEffect, useReducer, useState } from "react";
 import ItemTrade from "#app/assets/data/item_trade.json";
-import { AutoComplete, AutoCompleteItem } from "#app/components/auto-complete.tsx";
-import { Input } from "#app/components/ui/input.tsx";
+import { AutoComplete, type AutoCompleteItem } from "#app/components/auto-complete.tsx";
 import { Container } from "#app/components/container.tsx";
-import { Spacer } from "#app/components/spacer.tsx";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "#app/components/ui/select.tsx";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "#app/components/ui/table.tsx";
-import { Label } from "#app/components/ui/label.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card.tsx";
 import { NIcon } from "#app/components/n-icon.tsx";
-import { cn } from "#app/utils/misc.tsx";
-import * as numeral from "@elastic/numeral"
+import { Spacer } from "#app/components/spacer.tsx";
 import { TopSection } from "#app/components/top-section.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card.tsx";
+import { Input } from "#app/components/ui/input.tsx";
+import { Label } from "#app/components/ui/label.tsx";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "#app/components/ui/select.tsx";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#app/components/ui/table.tsx";
+import { cn } from "#app/utils/misc.tsx";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   return json({});
@@ -51,7 +50,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export default function createItemPricePage() {
+export default function CreateItemPricePage() {
   const keys = Object.keys(ItemTrade);
   const [selectedItem, setSelectedItem] = useState<AutoCompleteItem>();
   const [selectedRecipe, setSelectedRecipe] = useState<number>(0);

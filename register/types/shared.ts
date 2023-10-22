@@ -1,5 +1,5 @@
+import { type Index, MeiliSearch } from "meilisearch";
 import { prisma } from "#app/utils/db.server.ts";
-import { Index, MeiliSearch } from "meilisearch";
 
 export type IDropAria = {
   name: string;

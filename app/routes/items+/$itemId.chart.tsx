@@ -1,7 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "#app/components/ui/tabs.tsx";
-import { prisma } from "#app/utils/db.server.ts";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { type ItemPriceAverage } from "@prisma/client";
+import { type LoaderFunctionArgs } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import {
     Chart as ChartJS,
@@ -16,11 +14,13 @@ import {
 } from 'chart.js';
 import { Line } from "react-chartjs-2";
 import { typedjson, useTypedLoaderData } from "remix-typedjson";
+import { ClientOnly } from "remix-utils/client-only";
+import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card.tsx";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "#app/components/ui/tabs.tsx";
+import { ChartShipTypes, type ShipType, type ArrayElement } from "#app/utils/const.ts";
+import { prisma } from "#app/utils/db.server.ts";
 
 import 'chartjs-adapter-moment';
-import { ChartShipTypes, ShipTypes,ShipType, ArrayElement } from "#app/utils/const.ts";
-import { ItemPriceAverage } from "@prisma/client";
-import { ClientOnly } from "remix-utils/client-only";
 
 ChartJS.register(
     CategoryScale,

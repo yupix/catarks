@@ -1,19 +1,11 @@
-import { z } from "zod";
-import { AuthProvider, ProviderUser } from "./provider.ts";
-import { Strategy } from "remix-auth";
-import { Timings } from "../timing.server.ts";
-import { DiscordStrategy } from "remix-auth-discord";
-import { connectionSessionStorage } from "../connections.server.ts";
 import { createId as cuid } from '@paralleldrive/cuid2'
 import { redirect } from "@remix-run/node";
+import { type Strategy } from "remix-auth";
+import { DiscordStrategy } from "remix-auth-discord";
+import { z } from "zod";
+import { connectionSessionStorage } from "../connections.server.ts";
+import { type AuthProvider, type ProviderUser } from "./provider.ts";
 
-const DiscordUserSchema = z.object({ login: z.string() })
-const DiscordUserParseResult = z.object({
-    success: z.literal(true),
-    data: DiscordUserSchema
-}).or(z.object({
-    success: z.literal(false)
-}))
 
 const shouldMock = process.env.DISCORD_CLIENT_ID?.startsWith('MOCK_')
 
@@ -61,7 +53,7 @@ export class DiscordProvider implements AuthProvider {
             }
         })
     }
-    async resolveConnectionData(providerId: string, { timings }: { timings?: Timings }): Promise<{ displayName: string; link?: string | null | undefined; }> {
+    async resolveConnectionData(providerId: string): Promise<{ displayName: string; link?: string | null | undefined; }> {
         return { displayName: providerId, link: null } as const;
     }
 

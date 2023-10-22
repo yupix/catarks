@@ -1,12 +1,9 @@
-import { LoaderFunctionArgs, json, type MetaFunction } from '@remix-run/node'
-import { prisma } from '#app/utils/db.server.ts'
-import { useLoaderData } from '@remix-run/react'
-import { ItemCard } from '#app/components/item.tsx'
+import { type LoaderFunctionArgs, json, type MetaFunction } from '@remix-run/node'
 import { Container } from '#app/components/container.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
-import { Card, CardContent, CardHeader, CardTitle } from '#app/components/ui/card.tsx'
 import { Button } from '#app/components/ui/button.tsx'
-import { ClientOnly } from 'remix-utils/client-only'
+import { Card, CardContent, CardHeader, CardTitle } from '#app/components/ui/card.tsx'
+import { prisma } from '#app/utils/db.server.ts'
 
 export const meta: MetaFunction = () => [{ title: 'CatArks' }]
 
@@ -16,7 +13,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export default function Index() {
-	const data = useLoaderData<typeof loader>()
 
 	return (
 		<main className="">

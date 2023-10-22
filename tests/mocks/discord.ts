@@ -1,10 +1,8 @@
-import { HttpHandler, HttpResponse, http, passthrough } from "msw";
-import fsExtra from 'fs-extra'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { faker } from '@faker-js/faker'
-import { DiscordProfile } from "remix-auth-discord";
-import { ca } from "date-fns/locale";
+import fsExtra from 'fs-extra'
+import { type HttpHandler, HttpResponse, http, passthrough } from "msw";
 
 const { json } = HttpResponse
 
@@ -105,19 +103,19 @@ export async function insertDiscordUser(code?: string | null) {
 }
 
 async function getUser(request: Request) {
-	const accessToken = request.headers
-		.get('authorization')
-		?.slice('token '.length)
+    const accessToken = request.headers
+        .get('authorization')
+        ?.slice('token '.length)
 
-	if (!accessToken) {
-		return new Response('Unauthorized', { status: 401 })
-	}
-	const user = (await getDiscordUsers()).find(u => u.accessToken === accessToken)
+    if (!accessToken) {
+        return new Response('Unauthorized', { status: 401 })
+    }
+    const user = (await getDiscordUsers()).find(u => u.accessToken === accessToken)
 
-	if (!user) {
-		return new Response('Not Found', { status: 404 })
-	}
-	return user
+    if (!user) {
+        return new Response('Not Found', { status: 404 })
+    }
+    return user
 }
 
 export const handlers: Array<HttpHandler> = [
