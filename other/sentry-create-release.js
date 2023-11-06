@@ -1,8 +1,15 @@
+import fs from 'node:fs'
 import { createRelease } from '@sentry/remix/scripts/createRelease.js'
+import { glob } from 'glob'
 import 'dotenv/config'
 
 const DEFAULT_URL_PREFIX = '#build/'
 const DEFAULT_BUILD_PATH = 'public/build'
+
+const files = await glob(['./public/**/*.map', './build/**/*.map'])
+for (const file of files) {
+	// remove file
+	await fs.promises.unlink(file)}
 
 // exit with non-zero code if we have everything for Sentry
 if (

@@ -1,6 +1,5 @@
 import { RegisterAbility } from "./app/ability.ts";
 import { RegisterMaterials } from "./app/material.ts";
-// import { RegisterMaterials } from "./app/material";
 const registers = [RegisterAbility, RegisterMaterials];
 
 async function main() {

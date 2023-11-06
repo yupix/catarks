@@ -52,7 +52,7 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './components/ui/sheet.tsx'
 import fontStyleSheetUrl from './styles/font.css'
 import tailwindStyleSheetUrl from './styles/tailwind.css'
-import { authenticator, getUserId } from './utils/auth.server.ts'
+import { authenticator, getUserId, logout } from './utils/auth.server.ts'
 import { cache, cachified } from './utils/cache.server.ts'
 import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
 import { getConfetti } from './utils/confetti.server.ts'
@@ -143,7 +143,7 @@ export async function loader({ request }: DataFunctionArgs) {
 		console.info('something weird happened')
 		// something weird happened... The user is authenticated but we can't find
 		// them in the database. Maybe they were deleted? Let's log them out.
-		await authenticator.logout(request, { redirectTo: '/' })
+		await logout({ request, redirectTo: '/' })
 	}
 
 

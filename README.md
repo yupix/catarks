@@ -11,6 +11,8 @@
   </p>
 </div>
 
+メモ: https://github.com/epicweb-dev/epic-stack/commit/a55f6dc3185f6ed906ead257ba3e8a0b41855026 までの変更を適応済み
+
 ```sh
 npx create-remix@latest --install --init-script --git-init --template epicweb-dev/epic-stack
 ```
