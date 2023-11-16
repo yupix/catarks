@@ -9,7 +9,10 @@ export const GITHUB_PROVIDER_NAME = 'github'
 export const DISCORD_PROVIDER_NAME = 'discord'
 // to add another provider, set their name here and add it to the providerNames below
 
-export const providerNames = [GITHUB_PROVIDER_NAME, DISCORD_PROVIDER_NAME] as const
+export const providerNames = [
+	GITHUB_PROVIDER_NAME,
+	DISCORD_PROVIDER_NAME,
+] as const
 export const ProviderNameSchema = z.enum(providerNames)
 export type ProviderName = z.infer<typeof ProviderNameSchema>
 

@@ -1,37 +1,52 @@
-import { type LoaderFunctionArgs, json, type MetaFunction } from '@remix-run/node'
+import {
+	type LoaderFunctionArgs,
+	json,
+	type MetaFunction,
+} from '@remix-run/node'
+import { Link } from '@remix-run/react'
 import { Container } from '#app/components/container.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
 import { Button } from '#app/components/ui/button.tsx'
-import { Card, CardContent, CardHeader, CardTitle } from '#app/components/ui/card.tsx'
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from '#app/components/ui/card.tsx'
 import { prisma } from '#app/utils/db.server.ts'
-import { Link } from '@remix-run/react'
 
 export const meta: MetaFunction = () => [{ title: 'CatArks' }]
 
 export async function loader({ params }: LoaderFunctionArgs) {
-	const recentReports = await prisma.itemPrice.findMany({ take: 50, select: { item: true, id: true } })
+	const recentReports = await prisma.itemPrice.findMany({
+		take: 50,
+		select: { item: true, id: true },
+	})
 	return json(recentReports)
 }
 
 export default function Index() {
-
 	return (
 		<main className="">
-			<Spacer size='xs' />
+			<Spacer size="xs" />
 			<Container>
 				<section>
-					<div className='flex pl-4 items-center h-96 rounded-2xl bg-gradient-to-br from-green-300 to-purple-400 dark:from-gray-700 dark:via-gray-900 dark:to-black'>
-						<div className='w-full'>
-							<div className='text-white font-bold text-3xl'>CatAkrs</div>
-							<div className='text-white text-2xl'>アークスの為のサイト</div>
-							<Link to="/categories/ability"><Button variant="outline" size="lg" className='mt-6'>始める</Button></Link>
+					<div className="flex h-96 items-center rounded-2xl bg-gradient-to-br from-green-300 to-purple-400 pl-4 dark:from-gray-700 dark:via-gray-900 dark:to-black">
+						<div className="w-full">
+							<div className="text-3xl font-bold text-white">CatAkrs</div>
+							<div className="text-2xl text-white">アークスの為のサイト</div>
+							<Link to="/categories/ability">
+								<Button variant="outline" size="lg" className="mt-6">
+									始める
+								</Button>
+							</Link>
 						</div>
 					</div>
 				</section>
-				<Spacer size='xs' />
+				<Spacer size="xs" />
 
-				<section className='grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-1 gap-4  justify-center'>
-					<Card className='lg:col-span-2 md:col-span-2 sm:col-span-1'>
+				<section className="grid justify-center gap-4 sm:grid-cols-1 md:grid-cols-4  lg:grid-cols-6">
+					<Card className="sm:col-span-1 md:col-span-2 lg:col-span-2">
 						<CardHeader>
 							<CardTitle>相場の管理</CardTitle>
 						</CardHeader>
@@ -39,7 +54,7 @@ export default function Index() {
 							サイトの利用者同士で相場を報告し、管理することができます。
 						</CardContent>
 					</Card>
-					<Card className='lg:col-span-2 md:col-span-2 sm:col-span-1'>
+					<Card className="sm:col-span-1 md:col-span-2 lg:col-span-2">
 						<CardHeader>
 							<CardTitle>便利なツール</CardTitle>
 						</CardHeader>
@@ -47,13 +62,11 @@ export default function Index() {
 							アークス装備開発部員から交換で入手できるアイテムの価格を計算するツールなどを提供しています。
 						</CardContent>
 					</Card>
-					<Card className='lg:col-span-2 md:col-span-full sm:col-span-1'>
+					<Card className="sm:col-span-1 md:col-span-full lg:col-span-2">
 						<CardHeader>
 							<CardTitle>個人ブログ</CardTitle>
 						</CardHeader>
-						<CardContent>
-							ご自慢のSSを一言添えて自慢しましょう！
-						</CardContent>
+						<CardContent>ご自慢のSSを一言添えて自慢しましょう！</CardContent>
 					</Card>
 				</section>
 			</Container>

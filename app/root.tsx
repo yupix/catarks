@@ -27,7 +27,7 @@ import {
 import { withSentry } from '@sentry/remix'
 import { IconMenu2 } from '@tabler/icons-react'
 import React, { useEffect, useRef } from 'react'
-import rdtStylesheet from "remix-development-tools/index.css";
+import rdtStylesheet from 'remix-development-tools/index.css'
 import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
 import { z } from 'zod'
@@ -38,7 +38,12 @@ import { ReportPriceDial } from './components/price-dialog.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
 import { SearchBar } from './components/search-bar.tsx'
 import { EpicToaster } from './components/toaster.tsx'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion.tsx'
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from './components/ui/accordion.tsx'
 import { Button } from './components/ui/button.tsx'
 import {
 	DropdownMenu,
@@ -48,11 +53,27 @@ import {
 	DropdownMenuTrigger,
 } from './components/ui/dropdown-menu.tsx'
 import { Icon, href as iconsHref } from './components/ui/icon.tsx'
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from './components/ui/navigation-menu.tsx'
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './components/ui/sheet.tsx'
+import {
+	NavigationMenu,
+	NavigationMenuContent,
+	NavigationMenuItem,
+	NavigationMenuLink,
+	NavigationMenuList,
+	NavigationMenuTrigger,
+	navigationMenuTriggerStyle,
+} from './components/ui/navigation-menu.tsx'
+import {
+	Sheet,
+	SheetClose,
+	SheetContent,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from './components/ui/sheet.tsx'
 import fontStyleSheetUrl from './styles/font.css'
 import tailwindStyleSheetUrl from './styles/tailwind.css'
-import { authenticator, getUserId, logout } from './utils/auth.server.ts'
+import { getUserId, logout } from './utils/auth.server.ts'
 import { cache, cachified } from './utils/cache.server.ts'
 import { ClientHintCheck, getHints, useHints } from './utils/client-hints.tsx'
 import { getConfetti } from './utils/confetti.server.ts'
@@ -61,14 +82,18 @@ import { csrf } from './utils/csrf.server.ts'
 import { prisma } from './utils/db.server.ts'
 import { getEnv } from './utils/env.server.ts'
 import { honeypot } from './utils/honeypot.server.ts'
-import { cn, combineHeaders, getDomainUrl, getUserImgSrc } from './utils/misc.tsx'
+import {
+	cn,
+	combineHeaders,
+	getDomainUrl,
+	getUserImgSrc,
+} from './utils/misc.tsx'
 import { useNonce } from './utils/nonce-provider.ts'
 import { useRequestInfo } from './utils/request-info.ts'
 import { type Theme, setTheme, getTheme } from './utils/theme.server.ts'
 import { makeTimings, time } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
-
 
 export const links: LinksFunction = () => {
 	return [
@@ -95,8 +120,9 @@ export const links: LinksFunction = () => {
 		{ rel: 'stylesheet', href: fontStyleSheetUrl },
 		{ rel: 'stylesheet', href: tailwindStyleSheetUrl },
 		cssBundleHref ? { rel: 'stylesheet', href: cssBundleHref } : null,
-		...(process.env.NODE_ENV === "development" ? [{ rel: "stylesheet", href: rdtStylesheet }] : []),
-
+		...(process.env.NODE_ENV === 'development'
+			? [{ rel: 'stylesheet', href: rdtStylesheet }]
+			: []),
 	].filter(Boolean)
 }
 
@@ -106,7 +132,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 		{ name: 'description', content: `Your own captain's log` },
 	]
 }
-
 
 export async function loader({ request }: DataFunctionArgs) {
 	const timings = makeTimings('root loader')
@@ -118,26 +143,26 @@ export async function loader({ request }: DataFunctionArgs) {
 
 	const user = userId
 		? await time(
-			() =>
-				prisma.user.findUniqueOrThrow({
-					select: {
-						id: true,
-						name: true,
-						username: true,
-						image: { select: { id: true } },
-						roles: {
-							select: {
-								name: true,
-								permissions: {
-									select: { entity: true, action: true, access: true },
+				() =>
+					prisma.user.findUniqueOrThrow({
+						select: {
+							id: true,
+							name: true,
+							username: true,
+							image: { select: { id: true } },
+							roles: {
+								select: {
+									name: true,
+									permissions: {
+										select: { entity: true, action: true, access: true },
+									},
 								},
 							},
 						},
-					},
-					where: { id: userId },
-				}),
-			{ timings, type: 'find user', desc: 'find user in root' },
-		)
+						where: { id: userId },
+					}),
+				{ timings, type: 'find user', desc: 'find user in root' },
+		  )
 		: null
 	if (userId && !user) {
 		console.info('something weird happened')
@@ -145,7 +170,6 @@ export async function loader({ request }: DataFunctionArgs) {
 		// them in the database. Maybe they were deleted? Let's log them out.
 		await logout({ request, redirectTo: '/' })
 	}
-
 
 	const items = await cachified({
 		key: `root-loader-items`,
@@ -156,15 +180,14 @@ export async function loader({ request }: DataFunctionArgs) {
 		async getFreshValue() {
 			await new Promise(r => setTimeout(r, 3000))
 			const items = await prisma.item.findMany()
-			return items;
-		}
+			return items
+		},
 	})
 
 	const { toast, headers: toastHeaders } = await getToast(request)
 	const { confettiId, headers: confettiHeaders } = getConfetti(request)
 	const honeyProps = honeypot.getInputProps()
 	const [csrfToken, csrfCookieHeader] = await csrf.commitToken()
-
 
 	return json(
 		{
@@ -206,15 +229,11 @@ const ThemeFormSchema = z.object({
 	theme: z.enum(['system', 'light', 'dark']),
 })
 
-
 export async function action({ request }: DataFunctionArgs) {
 	const formData = await request.formData()
 	const submission = parse(formData, {
 		schema: ThemeFormSchema,
 	})
-
-
-
 
 	if (submission.intent !== 'submit') {
 		return json({ status: 'idle', submission } as const)
@@ -229,7 +248,6 @@ export async function action({ request }: DataFunctionArgs) {
 	}
 	return json({ success: true, submission }, responseInit)
 }
-
 
 function Document({
 	children,
@@ -277,8 +295,8 @@ const ListItem = React.forwardRef<
 				<Link
 					ref={ref}
 					className={cn(
-						"block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-						className
+						'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+						className,
 					)}
 					{...props}
 				>
@@ -291,7 +309,7 @@ const ListItem = React.forwardRef<
 		</li>
 	)
 })
-ListItem.displayName = "ListItem"
+ListItem.displayName = 'ListItem'
 
 function MobileMenu() {
 	const matches = useMatches()
@@ -308,11 +326,13 @@ function MobileMenu() {
 	}, [navigation])
 
 	return (
-		<Sheet open={isOpen} onOpenChange={(v) => setIsOpen(v)}>
+		<Sheet open={isOpen} onOpenChange={v => setIsOpen(v)}>
 			<SheetTrigger asChild>
-				<Button size="icon"><IconMenu2 /></Button>
+				<Button size="icon">
+					<IconMenu2 />
+				</Button>
 			</SheetTrigger>
-			<SheetContent side={"left"} className='flex flex-col h-screen'>
+			<SheetContent side={'left'} className="flex h-screen flex-col">
 				<SheetHeader>
 					<SheetTitle>CatArks</SheetTitle>
 					{/* <SheetDescription> */}
@@ -327,8 +347,10 @@ function MobileMenu() {
 
 						<AccordionContent asChild>
 							<ul>
-								{ITEM_TYPES.map((itemType) => (
-									<ListItem key={itemType} to={`/categories/${itemType}`}>{TYPE_TO_CATEGORY[itemType]}</ListItem>
+								{ITEM_TYPES.map(itemType => (
+									<ListItem key={itemType} to={`/categories/${itemType}`}>
+										{TYPE_TO_CATEGORY[itemType]}
+									</ListItem>
 								))}
 							</ul>
 						</AccordionContent>
@@ -342,13 +364,12 @@ function MobileMenu() {
 							</ul>
 						</AccordionContent>
 					</AccordionItem>
-
 				</Accordion>
 
-				<SheetFooter className='mt-auto w-full'>
+				<SheetFooter className="mt-auto w-full">
 					<SheetClose asChild>
 						<div className="flex items-center gap-10">
-							<div className='w-full'>
+							<div className="w-full">
 								{/* <Alert className='mb-2'>
 									<IconBrandDiscord className="h-4 w-4" />
 									<AlertTitle>Discordに参加しませんか？</AlertTitle>
@@ -365,13 +386,17 @@ function MobileMenu() {
 								{user ? (
 									<UserDropdown />
 								) : (
-									<Button asChild variant="default" size="sm" className='w-full'>
+									<Button
+										asChild
+										variant="default"
+										size="sm"
+										className="w-full"
+									>
 										<Link to="/login">Log In</Link>
 									</Button>
 								)}
 							</div>
 						</div>
-
 					</SheetClose>
 				</SheetFooter>
 			</SheetContent>
@@ -388,21 +413,23 @@ function App() {
 	const isOnSearchPage = matches.find(m => m.id === 'routes/users+/index')
 	const searchBar = isOnSearchPage ? null : <SearchBar status="idle" />
 
-
 	return (
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
 			<div className="flex h-screen flex-col justify-between">
-				<header className="flex justify-between p-4 h-16 border-b">
+				<header className="flex h-16 justify-between border-b p-4">
 					<NavigationMenu>
 						<NavigationMenuList>
 							<NavigationMenuItem>
-								<NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+								<NavigationMenuLink
+									className={navigationMenuTriggerStyle()}
+									asChild
+								>
 									<Link to="/">
 										<div className="font-bold">CatArks</div>
 									</Link>
 								</NavigationMenuLink>
 							</NavigationMenuItem>
-							<NavigationMenuItem className='sm:block hidden'>
+							<NavigationMenuItem className="hidden sm:block">
 								<NavigationMenuTrigger>CATEGORIES</NavigationMenuTrigger>
 								<NavigationMenuContent>
 									<ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -430,25 +457,27 @@ function App() {
 									</ul>
 								</NavigationMenuContent>
 							</NavigationMenuItem>
-							<NavigationMenuItem className='sm:block hidden'>
+							<NavigationMenuItem className="hidden sm:block">
 								<NavigationMenuTrigger>TOOLS</NavigationMenuTrigger>
 								<NavigationMenuContent>
 									<ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-										<ListItem to="/tools/calc/trade" title="トレード価格計算機" />
+										<ListItem
+											to="/tools/calc/trade"
+											title="トレード価格計算機"
+										/>
 									</ul>
 								</NavigationMenuContent>
 							</NavigationMenuItem>
 						</NavigationMenuList>
 					</NavigationMenu>
-					<NavigationMenu className='sm:block hidden'>
+					<NavigationMenu className="hidden sm:block">
 						<NavigationMenuList className="justify-between">
-							<NavigationMenuItem >
+							<NavigationMenuItem>
 								<div className="ml-auto hidden max-w-sm flex-1 sm:block">
 									{searchBar}
 								</div>
 							</NavigationMenuItem>
 							<NavigationMenuItem>
-
 								<div className="flex items-center gap-10">
 									{user ? (
 										<UserDropdown />
@@ -464,13 +493,13 @@ function App() {
 							</NavigationMenuItem>
 						</NavigationMenuList>
 					</NavigationMenu>
-					<NavigationMenu className='block sm:hidden'>
+					<NavigationMenu className="block sm:hidden">
 						<NavigationMenuList>
-							<NavigationMenuItem><MobileMenu /></NavigationMenuItem>
+							<NavigationMenuItem>
+								<MobileMenu />
+							</NavigationMenuItem>
 						</NavigationMenuList>
-
 					</NavigationMenu>
-
 				</header>
 
 				<div className="flex-1">
@@ -503,13 +532,12 @@ function AppWithProviders() {
 	)
 }
 
-let AppExport = AppWithProviders;
+let AppExport = AppWithProviders
 
 if (process.env.NODE_ENV === 'development') {
-	const { withDevTools } = await import("remix-development-tools");
-	AppExport = withDevTools(AppExport);
+	const { withDevTools } = await import('remix-development-tools')
+	AppExport = withDevTools(AppExport)
 }
-
 
 export default withSentry(AppExport)
 
@@ -520,7 +548,7 @@ function UserDropdown() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button asChild variant="secondary" className='w-full'>
+				<Button asChild variant="secondary" className="w-full">
 					<Link
 						to={`/users/${user.username}`}
 						// this is for progressive enhancement

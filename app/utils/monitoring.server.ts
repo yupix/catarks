@@ -6,5 +6,6 @@ export function init() {
 		dsn: ENV.SENTRY_DSN,
 		tracesSampleRate: 1,
 		environment: ENV.MODE,
-		integrations: [new Sentry.Integrations.Prisma({ client: prisma })],	})
+		integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
+	})
 }

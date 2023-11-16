@@ -3,7 +3,6 @@ import { requireUserId } from './auth.server.ts'
 import { prisma } from './db.server.ts'
 import { type useUser } from './user.ts'
 
-
 export async function requireUserWithPermission(
 	request: Request,
 	permission: PermissionString,
@@ -76,9 +75,6 @@ function parsePermissionString(permissionString: PermissionString) {
 		access: access ? (access.split(',') as Array<Access>) : undefined,
 	}
 }
-
-
-
 
 export function userHasPermission(
 	user: Pick<ReturnType<typeof useUser>, 'roles'> | null | undefined,

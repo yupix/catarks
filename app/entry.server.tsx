@@ -92,7 +92,6 @@ export async function handleDataRequest(response: Response) {
 	return response
 }
 
-
 export function handleError(
 	error: unknown,
 	{ request }: DataFunctionArgs,
