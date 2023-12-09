@@ -338,7 +338,7 @@ function MobileMenu() {
 
 				<Accordion type="single" collapsible>
 					<AccordionItem value="item-1">
-						<AccordionTrigger>CATEGORIES</AccordionTrigger>
+						<AccordionTrigger>ITEMS</AccordionTrigger>
 
 						<AccordionContent asChild>
 							<ul>
@@ -347,6 +347,7 @@ function MobileMenu() {
 										{TYPE_TO_CATEGORY[itemType]}
 									</ListItem>
 								))}
+								<ListItem to="/items/ranking">ランキング</ListItem>
 							</ul>
 						</AccordionContent>
 					</AccordionItem>
@@ -425,7 +426,7 @@ function App() {
 								</NavigationMenuLink>
 							</NavigationMenuItem>
 							<NavigationMenuItem className="hidden sm:block">
-								<NavigationMenuTrigger>CATEGORIES</NavigationMenuTrigger>
+								<NavigationMenuTrigger>ITEMS</NavigationMenuTrigger>
 								<NavigationMenuContent>
 									<ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
 										<li className="row-span-4">
@@ -449,6 +450,7 @@ function App() {
 										<ListItem to="/categories/weapon" title="武器" />
 										<ListItem to="/categories/armor" title="防具" />
 										<ListItem to="/categories/material" title="素材" />
+										<ListItem to="/items/ranking">ランキング</ListItem>
 									</ul>
 								</NavigationMenuContent>
 							</NavigationMenuItem>
