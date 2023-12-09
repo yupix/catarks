@@ -499,7 +499,7 @@ function App() {
 
 				<div className="flex-1">
 					<Outlet />
-					<ReportPriceDial />
+					{user ? <ReportPriceDial /> : null}
 				</div>
 
 				<div className="container flex justify-between pb-5">
