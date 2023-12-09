@@ -9,6 +9,7 @@ import { zfd } from 'zod-form-data'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { calcPrice } from '#app/utils/calc-price.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
+import { createToastHeaders } from '#app/utils/toast.server.ts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	return json({})
@@ -54,7 +55,6 @@ async function createItemPriceAction({
 		schema: createItemPriceFormSchema.superRefine(
 			async ({ price: originalPrice, useTax }, ctx) => {
 				const price = await calcPrice(originalPrice, useTax) // システム利用料10%を引く
-
 				if (price < 900) {
 					// 900円以下は正しくないので例外を返す
 					ctx.addIssue({
@@ -88,17 +88,23 @@ async function createItemPriceAction({
 
 	const price = await calcPrice(originalPrice, useTax) // システム利用料10%を引く
 
-	await prisma.itemPrice.create({
+	const createdPrice = await prisma.itemPrice.create({
 		data: {
 			itemId,
 			price,
 			ship,
 			reporterId: userId,
 		},
+		include: {item: true}
 	})
 
 	return json({
 		status: 'success',
 		submission,
-	} as const)
+	} as const, {
+		headers: await createToastHeaders({
+			description: `${createdPrice.item.name}の価格を報告しました`,
+			type: "success",
+		})
+	})
 }
