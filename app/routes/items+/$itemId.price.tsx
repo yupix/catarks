@@ -51,6 +51,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
 		include: {
 			reporter: { select: { name: true, username: true, image: true } },
 		},
+		orderBy: {
+			createdAt: "desc"
+		},
 	})
 	return json({ prices, itemId })
 }
