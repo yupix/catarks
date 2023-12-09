@@ -26,7 +26,7 @@ export const createItemPriceFormSchema = zfd.formData({
 	itemId: z.string(),
 	price: z.number().min(900),
 	ship: z.number().min(0).max(10),
-	useTax: z.string().transform(v => (v === 'true' ? true : false)),
+	useTax: z.string().nullable().transform(v => (v === 'on' ? true : false)),
 })
 
 export async function action({ request }: ActionFunctionArgs) {
