@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { AutoComplete } from '#app/components/auto-complete.tsx'
 import { Container } from '#app/components/container.tsx'
 import { ItemCard } from '#app/components/item.tsx'
+import { NIcon } from '#app/components/n-icon.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
 import { Button } from '#app/components/ui/button.tsx'
 import { ITEM_TYPES, ItemRarities, TYPE_TO_CATEGORY } from '#app/utils/const.ts'
@@ -39,9 +40,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 			where['item']['rarity'] = query.rarity
 		}
 
+        const sinceDate = new Date()
+        sinceDate.setDate(sinceDate.getDate() - 30)
+        const untilDate = new Date()
 		const items = await prisma.itemPriceAverage.findMany({
 			distinct: 'itemId',
-			where,
+			where: {
+                ...where,
+                createdAt: {
+                    gte: sinceDate,
+                    lt: untilDate
+                }
+            },
 			orderBy: { createdAt: 'desc' },
 			include: { item: true },
 		})
@@ -130,10 +140,10 @@ export default function ItemRankingLayout() {
 					<div className="mb-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 						{items.map((item, i) => {
 							return (
-								<Link key={item.id} to={`/items/${item.itemId}`}>
+								<Link key={item.id} to={`/items/${item.itemId}/price`}>
 									<div>
 										#{i + 1}
-										<ItemCard item={item.item} />
+										<ItemCard item={item.item} nowPrice={item.price}/>
 									</div>
 								</Link>
 							)
