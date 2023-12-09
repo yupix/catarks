@@ -104,11 +104,8 @@ export default function CreateItemPricePage() {
 	const updatePrice = (index: string, price: number, number: number) => {
 		dispatch({ type: 'UPDATE_PRICE', index, price, number: number })
 	}
-
-	const sales =
-		price -
-		shopPrice * 0.1 * createNumber -
-		(price - shopPrice * 0.1 * createNumber) * 0.1
+	const raw_shopPrice = shopPrice * createNumber
+	const sales = (raw_shopPrice -raw_shopPrice *0.1) - price
 
 	return (
 		<>
