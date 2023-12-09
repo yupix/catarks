@@ -8,8 +8,18 @@
 -- DropForeignKey
 ALTER TABLE "Item" DROP CONSTRAINT "Item_abilityName_fkey";
 
--- AlterTable
-ALTER TABLE "Ability" ADD COLUMN     "itemId" TEXT NOT NULL;
+-- 一度nullableで作り、データを移行した後にNotNullに変更する
+ALTER TABLE "Ability" ADD COLUMN     "itemId" TEXT;
+
+-- データを移行
+with cte as (SELECT id, name
+             from "Item"
+             WHERE "Item".name = (SELECT name from "Ability" WHERE name = "Item".name))
+update "Ability"
+SET "itemId" = cte.id FROM cte WHERE "Ability".name = cte.name;
+
+-- Nullを許容しないように変更
+ALTER TABLE "Ability" ALTER  COLUMN  "itemId" SET NOT NULL;
 
 -- AlterTable
 ALTER TABLE "Item" ADD COLUMN     "isSelling" BOOLEAN NOT NULL DEFAULT true;
