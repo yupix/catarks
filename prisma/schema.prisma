@@ -29,6 +29,7 @@ model User {
   ItemPrice   ItemPrice[]
 }
 
+
 model AbilityEffect {
   name      String    @id
   percent   Boolean
@@ -38,7 +39,8 @@ model AbilityEffect {
 
 model Ability {
   name    String          @id
-  items   Item[]
+  itemId  String          @unique
+  items   Item            @relation(fields: [itemId], references: [id])
   effects AbilityEffect[]
 }
 
@@ -75,12 +77,13 @@ model Item {
   fuzzyName        String             @unique
   rarity           Int
   type             ItemTypes
-  abilityName      String?
-  ability          Ability?           @relation(fields: [abilityName], references: [name])
+  ability          Ability?
   iconUrl          String
   prices           ItemPrice[]
   droparias        ItemDroparia[]
   ItemPriceAverage ItemPriceAverage[]
+  isSelling        Boolean            @default(true)
+  abilityName      String?
 }
 
 model Note {

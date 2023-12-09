@@ -3,7 +3,7 @@
   import { type Ability, type AbilityEffect, type Item, type ItemTypes, type PrismaClient } from "@prisma/client";
 import { prisma } from "#app/utils/db.server.ts";
 import { replaceFuzzyWord } from "#app/utils/text-convertor.ts";
-import { type IDropAria, SearchService, type TAbility, registerDropAria } from "#register/types/shared.ts";
+import { type IDropAria, type TAbility, registerDropAria } from "#register/types/shared.ts";
 import abilities from "../assets/ops.json";
   import { type BaseRegister } from "../types/register.ts";
   
@@ -100,7 +100,7 @@ import abilities from "../assets/ops.json";
       return effect_ids;
     }
   
-    async registerAbility(name: string, effects: IEffect[]) {
+    async registerAbility(name: string, effects: IEffect[], itemId: string) {
       let ability: Ability;
       const existsAbility = await this.orm.ability.findFirst({
         where: {
@@ -123,7 +123,8 @@ import abilities from "../assets/ops.json";
         });
       } else {
         ability = await this.orm.ability.create({
-          data,
+          data: {...data, itemId},
+          
         });
         ability.name = name;
       }
@@ -136,11 +137,7 @@ import abilities from "../assets/ops.json";
       rarity: number;
       type: ItemTypes;
       iconUrl: string;
-      ability: {
-          connect: {
-            name: string;
-        }
-      };
+
       droparias: {
         connect:  {
             name: string;
@@ -177,28 +174,30 @@ import abilities from "../assets/ops.json";
         const aria_ids = await registerDropAria(
           await this.getAriaNames(ability.arias)
         );
-        const ability_ids = await this.registerAbility(
-          ability.name,
-          ability.effects
-        );
         const data = {
           name: ability.name,
           fuzzyName: replaceFuzzyWord(ability.name),
           rarity: ability.rarity,
           type: "ability" as ItemTypes,
           iconUrl: `https://s3.akarinext.org/catarks/*/items/abilities/${ability.image_type}.webp`,
-          ability: { connect: ability_ids },
+          // ability: { connect: ability_ids },
           droparias: { connect: aria_ids },
         };
+
         const item = await this.registerOrUpdateItem(ability, data)
+        await this.registerAbility(
+          ability.name,
+          ability.effects,
+          item.id
+        );
         index_body.push(createDocument(item, ability));
       }
-      const abilityIndex = new SearchService("index_ops", {
-        SearchableAttributes: ["name"],
-        FilterableAttributes: ["type"],
-        sortableattributes: ["name", "createdAt"],
-      });
-      await abilityIndex.addDocument(index_body)
+      // const abilityIndex = new SearchService("index_ops", {
+      //   SearchableAttributes: ["name"],
+      //   FilterableAttributes: ["type"],
+      //   sortableattributes: ["name", "createdAt"],
+      // });
+      // await abilityIndex.addDocument(index_body)
     }
   }
   
