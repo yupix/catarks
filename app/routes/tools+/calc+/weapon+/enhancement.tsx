@@ -5,8 +5,7 @@ import {
 } from '#app/components/auto-complete.tsx'
 import { Label } from '#app/components/ui/label.tsx'
 import { Switch } from '#app/components/ui/switch.tsx'
-
-const weaponRarities = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const
+import { WEAPON_RARITIES } from '#app/utils/const.ts'
 
 const materialExpMap: { [key: string]: number }[] = [
 	{ 'シルヴァプリム+20': 2850 },
@@ -483,7 +482,7 @@ function Item({
 				<AutoComplete
 					label={'アイテムのレアリティ'}
 					placeholder="レアリティを選択"
-					options={weaponRarities.map(rarity => {
+					options={WEAPON_RARITIES.map(rarity => {
 						return {
 							label: rarity.toString(),
 							value: rarity.toString(),
