@@ -1,8 +1,9 @@
-import { Form, useFetcher, useRouteLoaderData } from '@remix-run/react'
+import { useFetcher, useRouteLoaderData } from '@remix-run/react'
 import { IconPencil } from '@tabler/icons-react'
 import { memo, useEffect, useMemo, useState } from 'react'
 import { useRemixForm } from 'remix-hook-form'
 import { AuthenticityTokenInput } from 'remix-utils/csrf/react'
+import { HoneypotInputs } from 'remix-utils/honeypot/react'
 import { type loader as RootLoader } from '#app/root.tsx'
 import { type loader as ItemIconLoader } from '#app/routes/items+/icon+/$itemId.tsx'
 import { createItemPriceActionIntent } from '#app/routes/items+/price.tsx'
@@ -162,6 +163,7 @@ const ReportPriceModal = memo(function ReportPriceModal() {
 		useTax: boolean
 	}
 
+
 	const remixForm = useRemixForm<FormData>({
 		criteriaMode: 'all',
 		defaultValues: {
@@ -192,6 +194,7 @@ const ReportPriceModal = memo(function ReportPriceModal() {
 		return (useTax ? _price * (1 - 0.1) : _price / (1 - 0.1)).toLocaleString()
 	}, [price, qty, useTax])
 
+
 	return (
 		<DialogContent>
 			<DialogHeader>
@@ -205,16 +208,13 @@ const ReportPriceModal = memo(function ReportPriceModal() {
 							/>
 						</div>
 						<div className="flex-1 p-6">
-							<Form
-								className="form-control w-full max-w-xs"
-								onSubmit={() => {
-									createItemPriceFetcher.submit(remixForm.getValues(), {
-										action: '/items/price',
-										method: 'POST',
-									})
-								}}
+							<createItemPriceFetcher.Form
+							{...remixForm}
+							action="/items/price"
+							method="POST"
 							>
 								<AuthenticityTokenInput />
+								<HoneypotInputs />
 								<AutoCompleteWithFormField<FormData>
 									name="itemId"
 									form={remixForm}
@@ -306,7 +306,7 @@ const ReportPriceModal = memo(function ReportPriceModal() {
 										送信
 									</Button>
 								</div>
-							</Form>
+							</createItemPriceFetcher.Form>
 						</div>
 					</div>
 				</DialogDescription>
