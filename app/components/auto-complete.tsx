@@ -68,7 +68,10 @@ export function calculateMatchScore(inputText: string, searchText: string) {
 export function AutoCompleteWithFormField<T extends FieldValues>(
 	props: AutoCompleteWithFormFieldProps<T>,
 ) {
+	const [value, setValue] = React.useState('')
 	return (
+		<>
+		<input type="hidden" name={props.name as Path<T>} value={value} />
 		<FormField
 			control={props.form.control}
 			name={props.name as Path<T>}
@@ -76,11 +79,15 @@ export function AutoCompleteWithFormField<T extends FieldValues>(
 				<AutoComplete
 					{...props}
 					onSelected={v =>
-						props.form.setValue(props.name, v.value as PathValue<T, Path<T>>)
+						{
+							setValue(v.value);
+							props.form.setValue(props.name, v.value as PathValue<T, Path<T>>)
+						}
 					}
 				/>
 			)}
 		/>
+		</>
 	)
 }
 
