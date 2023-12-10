@@ -19,6 +19,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
 				username: params.username,
 			},
 		},
+		orderBy: {
+			createdAt: 'desc',
+		},
 	})
 	return json(reports)
 }
