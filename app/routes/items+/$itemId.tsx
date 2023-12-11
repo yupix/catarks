@@ -1,15 +1,22 @@
-import { Outlet, useLoaderData } from '@remix-run/react'
-import { type LoaderFunctionArgs } from '@remix-run/server-runtime'
+import { Link, Outlet, useLoaderData, useSubmit } from '@remix-run/react'
+import {
+	ActionFunctionArgs,
+	json,
+	type LoaderFunctionArgs,
+} from '@remix-run/server-runtime'
 import { Container } from '#app/components/container.tsx'
 import { ItemCard } from '#app/components/item.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
 import {
 	Card,
 	CardContent,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from '#app/components/ui/card.tsx'
 import { prisma } from '#app/utils/db.server.ts'
+import { createToastHeaders } from '#app/utils/toast.server.ts'
+import { z } from 'zod'
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const item = await prisma.item.findUnique({
@@ -32,13 +39,48 @@ export async function loader({ params }: LoaderFunctionArgs) {
 	return item
 }
 
+const ItemCopyCompleteIntent = 'completeItemCopy'
+const ItemActionValidation = z.object({
+	intent: z.literal(ItemCopyCompleteIntent),
+})
+
+export async function action({ request }: ActionFunctionArgs) {
+	const form = await request.formData()
+	const requestData = ItemActionValidation.parse({ intent: form.get('intent') })
+	switch (requestData.intent) {
+		case ItemCopyCompleteIntent: {
+			return new Response('OK', {
+				headers: await createToastHeaders({
+					description: 'アイテム名をコピーしました',
+				}),
+				status: 200,
+			});
+		}
+		default: {
+			throw new Response(`Invalid intent "${requestData.intent}"`, {
+				status: 400,
+			})
+		}
+	}
+}
+
 export default function ItemRoute() {
 	const data = useLoaderData<typeof loader>()
+	const submit = useSubmit()
 	return (
 		<Container>
 			<Spacer size="xs" />
 			<section>
-				<ItemCard item={data} />
+				<ItemCard
+					item={data}
+					useCopy
+					copyHandler={item =>
+						submit(
+							{ intent: ItemCopyCompleteIntent },
+							{ method: 'POST', navigate: false },
+						)
+					}
+				/>
 			</section>
 
 			<Spacer size="4xs" />
