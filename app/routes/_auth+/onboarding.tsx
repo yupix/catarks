@@ -218,8 +218,7 @@ export default function SignupRoute() {
 					<CheckboxField
 						labelProps={{
 							htmlFor: fields.agreeToTermsOfServiceAndPrivacyPolicy.id,
-							children:
-								'Do you agree to our Terms of Service and Privacy Policy?',
+							children: <p><a href="https://gist.github.com/yupix/40f0e5d14418d11f0e8ba163d33022eb">利用規約</a>と<a href="https://gist.github.com/yupix/3d62625b7ccfae42650e1662635e0014">プライバシーポリシー</a>に同意しますか?</p>,
 						}}
 						buttonProps={conform.input(
 							fields.agreeToTermsOfServiceAndPrivacyPolicy,
