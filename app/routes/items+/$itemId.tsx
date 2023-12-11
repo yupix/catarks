@@ -53,10 +53,15 @@ export default function ItemRoute() {
 							{data.droparias.length === 0
 								? '入手方法は準備中です'
 								: data.droparias.map(aria => (
-										<li key={aria.name}>{aria.name}</li>
+										<Link to={`/items/aria/${aria.name}`} key={aria.name}>
+											<li>{aria.name}</li>
+										</Link>
 								  ))}
 						</ul>
 					</CardContent>
+					<CardFooter className="text-xs text-gray-700 dark:text-gray-400">
+						クリックすると、その場所で入手できるアイテムの一覧が閲覧できます
+					</CardFooter>
 				</Card>
 
 				{data.type === 'ability' && (
