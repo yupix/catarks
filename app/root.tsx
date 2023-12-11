@@ -504,11 +504,37 @@ function App() {
 					{user ? <ReportPriceDial /> : null}
 				</div>
 
-				<div className="container flex justify-between pb-5">
-					<Link to="/">
-						<div className="font-bold">CatArks</div>
-					</Link>
-					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
+				<div className="container pb-5">
+					<div className="flex justify-between border-b">
+						<Link to="/">
+							<div className="font-bold">CatArks</div>
+						</Link>
+						<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
+					</div>
+
+					<div className='flex gap-4 pt-2'>
+						<a
+							href="https://gist.github.com/yupix/40f0e5d14418d11f0e8ba163d33022eb"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							利用規約
+						</a>
+						<a
+							href="https://gist.github.com/yupix/3d62625b7ccfae42650e1662635e0014"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							プライバシーポリシー
+						</a>
+						<a
+							href="https://gist.github.com/yupix/9c85da875513936c262b11b5f9a322d4"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							クッキーポリシー
+						</a>
+					</div>
 				</div>
 			</div>
 			<EpicToaster toast={data.toast} />
