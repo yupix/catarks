@@ -38,7 +38,7 @@ export default function AriaRoute() {
 			</TopSection>
 			<Spacer size={'4xs'} />
 
-			<div className="grid grid-cols-3 gap-4">
+            <div className="mb-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 				{data.Items.map(item => (
 					<Link to={`/items/${item.id}/price`} key={item.id}>
 						<ItemCard item={item} key={item.id} />
