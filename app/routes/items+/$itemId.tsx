@@ -1,4 +1,10 @@
-import { Link, Outlet, useLoaderData, useSubmit } from '@remix-run/react'
+import {
+	Link,
+	MetaFunction,
+	Outlet,
+	useLoaderData,
+	useSubmit,
+} from '@remix-run/react'
 import {
 	ActionFunctionArgs,
 	json,
@@ -54,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
 					description: 'アイテム名をコピーしました',
 				}),
 				status: 200,
-			});
+			})
 		}
 		default: {
 			throw new Response(`Invalid intent "${requestData.intent}"`, {
@@ -62,6 +68,22 @@ export async function action({ request }: ActionFunctionArgs) {
 			})
 		}
 	}
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	if (data === null || data === undefined) {
+		return [{ title: 'Error | CatArks' }]
+	}
+	return [
+		{ title: `${data.name} | CatArks` },
+		{ name: 'og:url', content: `https://catarks.com/items/${data.id}/price` },
+		{
+			name: 'twitter:url',
+			content: `https://catarks.com/items/${data.id}/price`,
+		},
+		{ name: 'og:title', content: `${data.name} | CatArks` },
+		{ name: 'twitter:title', content: `${data.name} | CatArks` },
+	]
 }
 
 export default function ItemRoute() {

@@ -127,7 +127,7 @@ export const links: LinksFunction = () => {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
 		{ title: data ? 'CatArks' : 'Error | CatArks' },
-		{ name: 'description', content: `Your own captain's log` },
+		{ name: 'description', content: `PSO2 NGSの金策支援サイト` },
 	]
 }
 
