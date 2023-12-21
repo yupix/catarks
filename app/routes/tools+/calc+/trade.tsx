@@ -1,5 +1,9 @@
 import * as numeral from '@elastic/numeral'
-import { type LoaderFunctionArgs, json } from '@remix-run/server-runtime'
+import {
+	type LoaderFunctionArgs,
+	json,
+	ActionFunctionArgs,
+} from '@remix-run/server-runtime'
 import { useEffect, useReducer, useState } from 'react'
 import ItemTrade from '#app/assets/data/item_trade.json'
 import {
@@ -33,9 +37,46 @@ import {
 	TableRow,
 } from '#app/components/ui/table.tsx'
 import { cn } from '#app/utils/misc.tsx'
+import { Button } from '#app/components/ui/button.tsx'
+import { z } from 'zod'
+import { prisma } from '#app/utils/db.server.ts'
+import { useActionData, useSubmit } from '@remix-run/react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	return json({})
+}
+
+const getItemPriceIntent = 'getItemPriceIntent'
+
+const ActionVlidation = z.object({
+	intent: z.literal(getItemPriceIntent),
+	body: z.array(
+		z.string()
+	),
+})
+
+export async function action({ request }: ActionFunctionArgs) {
+	const form = await request.formData()
+	const requestData = ActionVlidation.parse({
+		intent: form.get('intent'),
+		body: form.get('body')?.toString().split(','),
+	})
+
+	const result: { [key: string]: number } = {}
+	switch (requestData.intent) {
+		case getItemPriceIntent:
+			for (const requestItem of requestData.body) {
+				const resultPrice = await prisma.itemPrice.findFirst({
+					where: { item: { name: requestItem } },
+					orderBy: { createdAt: 'desc' },
+				})
+				result[requestItem] = resultPrice?.price || 0
+			}
+			console.log(result)
+			return json(result)
+		default:
+			return new Response(null, { status: 400 })
+	}
 }
 
 // Stateの型定義
@@ -78,6 +119,21 @@ export default function CreateItemPricePage() {
 	const [shopPrice, setShopPrice] = useState<number>(0)
 	const [prices, dispatch] = useReducer(reducer, {})
 	const [price, setPrice] = useState<number>(0)
+	const data = useActionData<typeof action>()
+	const submit = useSubmit()
+
+	useEffect(() => {
+		if (data) {
+			for (const key of Object.keys(data)) {
+				dispatch({
+					type: 'UPDATE_PRICE',
+					index: key,
+					price: data[key],
+					number: 1,
+				})
+			}
+		}
+	}, [data])
 
 	useEffect(() => {
 		dispatch({ type: 'RESET' })
@@ -101,11 +157,26 @@ export default function CreateItemPricePage() {
 		)
 	}, [prices, createNumber])
 
+	const getPriceHandler = (name: string | { name: string }[]) => {
+		if (typeof name === "string") {
+			submit(
+				{ intent: getItemPriceIntent, body: name },
+				{ method: 'POST' },
+			)
+			return
+		} else {
+			const names = name.map(item => item.name).join(',')
+			submit({ intent: getItemPriceIntent, body: names }, { method: 'POST' })
+			return
+			
+		}
+	}
+
 	const updatePrice = (index: string, price: number, number: number) => {
 		dispatch({ type: 'UPDATE_PRICE', index, price, number: number })
 	}
 	const raw_shopPrice = shopPrice * createNumber
-	const sales = (raw_shopPrice -raw_shopPrice *0.1) - price
+	const sales = raw_shopPrice - raw_shopPrice * 0.1 - price
 
 	return (
 		<>
@@ -192,20 +263,25 @@ export default function CreateItemPricePage() {
 									<TableCell className="font-medium">{recipe.name}</TableCell>
 									<TableCell>{recipe.amount}</TableCell>
 									<TableCell>
-										<Input
-											type="number"
-											min={0}
-											step={100}
-											//   label="値段"
-											defaultValue={0}
-											onChange={target =>
-												updatePrice(
-													recipe.name,
-													Number(target.target.value),
-													Number(recipe.amount),
-												)
-											}
-										/>
+										<div className="flex justify-items-center">
+											<Input
+												type="number"
+												min={0}
+												step={100}
+												//   label="値段"
+												value={prices[recipe.name]?.price || 0}
+												onChange={target =>
+													updatePrice(
+														recipe.name,
+														Number(target.target.value),
+														Number(recipe.amount),
+													)
+												}
+											/>
+											<Button onClick={() => getPriceHandler(recipe.name)}>
+												価格を取得
+											</Button>
+										</div>
 									</TableCell>
 								</TableRow>
 							))}
@@ -242,15 +318,15 @@ export default function CreateItemPricePage() {
 								0 === sales
 									? ''
 									: sales > 0
-									? 'text-green-300'
-									: 'text-red-300',
+									  ? 'text-green-300'
+									  : 'text-red-300',
 							)}
 						>
 							{sales === 0
 								? sales
 								: sales > 0
-								? `+${sales.toLocaleString()}`
-								: sales.toLocaleString()}
+								  ? `+${sales.toLocaleString()}`
+								  : sales.toLocaleString()}
 							{sales > 1000 ? (
 								<> ({numeral.default(sales).format('0.0a')})</>
 							) : null}
