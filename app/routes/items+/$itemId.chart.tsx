@@ -35,6 +35,7 @@ import {
 import { prisma } from '#app/utils/db.server.ts'
 
 import 'chartjs-adapter-moment'
+import { Skeleton } from '#app/components/ui/skeleton.tsx'
 
 ChartJS.register(
 	CategoryScale,
@@ -59,7 +60,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 	let body: { [key in keyof typeof SHIPS_TYPE]: ItemPriceAverage[] } = {}
 	for (const ship of ChartShipTypes) {
 		ship as ShipType
-		const price = await prisma.itemPriceAverage.findMany({
+		const price = await prisma.itemPrice.findMany({
 			where: {
 				itemId,
 				ship,
@@ -146,7 +147,7 @@ export default function ItemPriceRoute() {
 						<CardTitle>チャート</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<ClientOnly>
+						<ClientOnly fallback={<Skeleton className='w-[100px] h-[20px]' />}>
 							{() => (
 								<Line
 									options={{
@@ -165,12 +166,6 @@ export default function ItemPriceRoute() {
 										interaction: {
 											mode: 'index' as const,
 											intersect: false,
-										},
-										plugins: {
-											title: {
-												display: true,
-												text: '平均価格の変動（毎日0時に更新）',
-											},
 										},
 									}}
 									data={{
