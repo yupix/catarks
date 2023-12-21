@@ -36,6 +36,7 @@ import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { userHasPermission } from '#app/utils/permissions.ts'
 import { useOptionalUser } from '#app/utils/user.ts'
+import { bento } from '#app/utils/bento-cache.server.ts'
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const itemId = params.itemId
@@ -44,17 +45,21 @@ export async function loader({ params }: LoaderFunctionArgs) {
 		throw new Error('item not found')
 	}
 
-	const prices = await prisma.itemPrice.findMany({
-		where: {
-			itemId,
-		},
-		include: {
-			reporter: { select: { name: true, username: true, image: true } },
-		},
-		orderBy: {
-			createdAt: "desc"
-		},
+	const prices = await bento.getOrSet(`item-price-${itemId}`, async () => {
+		return await prisma.itemPrice.findMany({
+			where: {
+				itemId,
+			},
+			include: {
+				reporter: { select: { name: true, username: true, image: true } },
+			},
+			orderBy: {
+				createdAt: "desc"
+			},
+		})
 	})
+
+
 	return json({ prices, itemId })
 }
 
