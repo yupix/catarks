@@ -57,7 +57,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 				createdAt: "desc"
 			},
 		})
-	})
+	}, {ttl: "1m"})
 
 
 	return json({ prices, itemId })
