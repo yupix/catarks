@@ -122,14 +122,34 @@ export default function CreateItemPricePage() {
 	const data = useActionData<typeof action>()
 	const submit = useSubmit()
 
+	const itemRecies = ItemTrade[selectedItem?.label as ItemTradeKeys]
+	
+	function getRecipeRequirements() {
+		if (selectedItem) {
+			return itemRecies[selectedRecipe]['requirements']
+		}
+		return []
+	}
+
+	function getRquireAmount(itemName: string) {
+		
+		return getRecipeRequirements().map(requirement => {
+			if (requirement.name === itemName) {
+				return requirement.amount
+			}
+		}).filter(v => v !== undefined)[0]
+	}
+
 	useEffect(() => {
 		if (data) {
 			for (const key of Object.keys(data)) {
 				dispatch({
 					type: 'UPDATE_PRICE',
 					index: key,
+
+					// @ts-ignore
 					price: data[key],
-					number: 1,
+					number: getRquireAmount(key) || 1,
 				})
 			}
 		}
