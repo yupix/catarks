@@ -72,7 +72,6 @@ export async function action({ request }: ActionFunctionArgs) {
 				})
 				result[requestItem] = resultPrice?.price || 0
 			}
-			console.log(result)
 			return json(result)
 		default:
 			return new Response(null, { status: 400 })
@@ -148,7 +147,7 @@ export default function CreateItemPricePage() {
 					index: key,
 
 					// @ts-ignore
-					price: data[key],
+					price: data[key] / 0.9,
 					number: getRquireAmount(key) || 1,
 				})
 			}
