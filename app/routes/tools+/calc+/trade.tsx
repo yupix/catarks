@@ -279,7 +279,7 @@ export default function CreateItemPricePage() {
 								'requirements'
 							].map((recipe, i) => (
 								<TableRow key={`${recipe.name}${selectedRecipe}${i}`}>
-									<TableCell className="font-medium">{recipe.name}</TableCell>
+									<TableCell className="font-medium">{String(recipe.name).startsWith('C/') ? <span className='flex items-center gap-1'><img src="https://s3.akarinext.org/catarks/*/assets/ability.jpeg" height={14} width={14}/>{recipe.name}</span> : recipe.name}</TableCell>
 									<TableCell>{recipe.amount}</TableCell>
 									<TableCell>
 										<div className="flex justify-items-center">
