@@ -6,10 +6,7 @@ import {
 } from '@remix-run/server-runtime'
 import { useEffect, useReducer, useState } from 'react'
 import ItemTrade from '#app/assets/data/item_trade.json'
-import {
-	AutoComplete,
-	type AutoCompleteItem,
-} from '#app/components/auto-complete.tsx'
+import { AutoComplete } from '#app/components/auto-complete.tsx'
 import { NIcon } from '#app/components/n-icon.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
 import {
@@ -48,16 +45,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const getItemPriceIntent = 'getItemPriceIntent'
 
-const ActionVlidation = z.object({
+const ActionValidation = z.object({
 	intent: z.literal(getItemPriceIntent),
-	body: z.array(
-		z.string()
-	),
+	body: z.array(z.string()),
 })
 
 export async function action({ request }: ActionFunctionArgs) {
 	const form = await request.formData()
-	const requestData = ActionVlidation.parse({
+	const requestData = ActionValidation.parse({
 		intent: form.get('intent'),
 		body: form.get('body')?.toString().split(','),
 	})
@@ -110,35 +105,81 @@ function reducer(state: State, action: Action): State {
 	}
 }
 
+type ItemState = {
+	name?: string // 作成するアイテム名
+	useRecipeIndex: number // 使用するレシピのインデックス
+	createNumber: number // 作成する個数
+	shopPrice: number // マイショップでの価格
+	recipe: { [key: string]: { number: number } } // 素材名: 必要な個数
+}
+
+type ItemAction =
+	| {
+			type: 'SET_ITEM'
+			body: {
+				name: string
+			}
+	  }
+	| {
+			type: 'UPDATE_USE_RECIPE_INDEX'
+			body: {
+				useRecipeIndex: number
+			}
+	  }
+	| {
+			type: 'UPDATE_SHOP_PRICE'
+			body: {
+				shopPrice: number
+			}
+	  }
+	| {
+			type: 'UPDATE_CREATE_NUMBER'
+			body: {
+				createNumber: number
+			}
+	  }
+	| {
+			type: 'UPDATE_RECIPE'
+			body: {
+				recipe: NonNullable<ItemState['recipe']>
+			}
+	  }
+
+function itemReducer(state: ItemState, action: ItemAction) {
+	switch (action.type) {
+		case 'SET_ITEM':
+			return {
+				name: action.body.name,
+				createNumber: 1,
+				shopPrice: 1000,
+				useRecipeIndex: 0,
+				recipe: {},
+			}
+		case 'UPDATE_USE_RECIPE_INDEX':
+			return { ...state, useRecipeIndex: action.body.useRecipeIndex }
+		case 'UPDATE_SHOP_PRICE':
+			return { ...state, shopPrice: action.body.shopPrice }
+		case 'UPDATE_CREATE_NUMBER':
+			return { ...state, createNumber: action.body.createNumber }
+		case 'UPDATE_RECIPE':
+			return { ...state, recipe: action.body.recipe }
+		default:
+			return state
+	}
+}
+
 export default function CreateItemPricePage() {
 	const keys = Object.keys(ItemTrade)
-	const [selectedItem, setSelectedItem] = useState<AutoCompleteItem>()
-	const [selectedRecipe, setSelectedRecipe] = useState<number>(0)
-	const [createNumber, setCreateNumber] = useState<number>(1)
-	const [shopPrice, setShopPrice] = useState<number>(0)
 	const [prices, dispatch] = useReducer(reducer, {})
-	const [price, setPrice] = useState<number>(0)
+	const [item, itemDispatch] = useReducer(itemReducer, {
+		createNumber: 1,
+		shopPrice: 1000,
+		useRecipeIndex: 0,
+		recipe: {},
+	})
+	const [price, setPrice] = useState<number>(0) // リアクティブにするための物だから必要
 	const data = useActionData<typeof action>()
 	const submit = useSubmit()
-
-	const itemRecies = ItemTrade[selectedItem?.label as ItemTradeKeys]
-	
-	function getRecipeRequirements() {
-		if (selectedItem) {
-			return itemRecies[selectedRecipe]['requirements']
-		}
-		return []
-	}
-
-	function getRquireAmount(itemName: string) {
-		
-		return getRecipeRequirements().map(requirement => {
-			if (requirement.name === itemName) {
-				return requirement.amount
-			}
-		}).filter(v => v !== undefined)[0]
-	}
-
 	useEffect(() => {
 		if (data) {
 			for (const key of Object.keys(data)) {
@@ -148,7 +189,7 @@ export default function CreateItemPricePage() {
 
 					// @ts-ignore
 					price: data[key] / 0.9,
-					number: getRquireAmount(key) || 1,
+					number: item.recipe[key] === undefined ? 0 : item.recipe[key].number,
 				})
 			}
 		}
@@ -156,11 +197,28 @@ export default function CreateItemPricePage() {
 
 	useEffect(() => {
 		dispatch({ type: 'RESET' })
-	}, [selectedItem])
-
-	useEffect(() => {
-		setCreateNumber(1)
-	}, [selectedRecipe])
+		if (ItemTrade[item.name] === undefined) return
+		console.log(
+			item.name,
+			ItemTrade[item.name][item.useRecipeIndex]['requirements'].map(
+				requirement => {
+					return { [requirement.name]: requirement.amount }
+				},
+			),
+		)
+		itemDispatch({
+			type: 'UPDATE_RECIPE',
+			body: {
+				recipe: {
+					...ItemTrade[item.name][item.useRecipeIndex]['requirements'].map(
+						requirement => {
+							return { [requirement.name]: requirement.amount }
+						},
+					),
+				},
+			},
+		})
+	}, [item.name])
 
 	useEffect(() => {
 		setPrice(
@@ -171,30 +229,26 @@ export default function CreateItemPricePage() {
 						.map(key => {
 							return prices[key]['price'] * prices[key]['number']
 						})
-						.reduce((a, b) => a + b) * createNumber
+						.reduce((a, b) => a + b) * item.createNumber
 				: 0,
 		)
-	}, [prices, createNumber])
+	}, [prices, item.createNumber])
 
 	const getPriceHandler = (name: string | { name: string }[]) => {
-		if (typeof name === "string") {
-			submit(
-				{ intent: getItemPriceIntent, body: name },
-				{ method: 'POST' },
-			)
+		if (typeof name === 'string') {
+			submit({ intent: getItemPriceIntent, body: name }, { method: 'POST' })
 			return
 		} else {
 			const names = name.map(item => item.name).join(',')
 			submit({ intent: getItemPriceIntent, body: names }, { method: 'POST' })
 			return
-			
 		}
 	}
 
 	const updatePrice = (index: string, price: number, number: number) => {
 		dispatch({ type: 'UPDATE_PRICE', index, price, number: number })
 	}
-	const raw_shopPrice = shopPrice * createNumber
+	const raw_shopPrice = item.shopPrice * item.createNumber
 	const sales = raw_shopPrice - raw_shopPrice * 0.1 - price
 
 	return (
@@ -205,7 +259,12 @@ export default function CreateItemPricePage() {
 					<AutoComplete
 						id={'createItem'}
 						label="アイテムを選択"
-						onCustomSelected={option => setSelectedItem(option)}
+						onCustomSelected={option => {
+							itemDispatch({
+								type: 'SET_ITEM',
+								body: { name: option.value },
+							})
+						}}
 						options={keys.map(key => {
 							return { label: key, value: key }
 						})}
@@ -220,34 +279,47 @@ export default function CreateItemPricePage() {
 						type="number"
 						max={9999999999}
 						id="shopPrice"
-						value={shopPrice}
-						onChange={v => setShopPrice(Number(v.target.value))}
+						value={item.shopPrice}
+						onChange={v => {
+							itemDispatch({
+								type: 'UPDATE_SHOP_PRICE',
+								body: {
+									shopPrice: Number(v.target.value),
+								},
+							})
+						}}
 					/>
 				</div>
 			</div>
 
-			{selectedItem && (
+			{item.name && (
 				<div className="rounded-md border p-4">
 					<div className="flex justify-between">
 						<div className="grid w-full max-w-sm items-center gap-1.5">
-							<Label htmlFor="selectRecipe">作成個数</Label>
+							<Label htmlFor="selectRecipe">レシピ</Label>
 							<Select
 								name="selectRecipe"
 								defaultValue={String(0)}
-								onValueChange={v => setSelectedRecipe(Number(v))}
+								onValueChange={v => {
+									itemDispatch({
+										type: 'UPDATE_USE_RECIPE_INDEX',
+										body: {
+											useRecipeIndex: Number(v),
+										},
+									})
+									dispatch({ type: 'RESET' })
+								}}
 							>
 								<SelectTrigger className="w-[180px]">
 									<SelectValue placeholder="使用するレシピ" />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectGroup>
-										{ItemTrade[selectedItem?.label as ItemTradeKeys].map(
-											(recipe, i) => (
-												<SelectItem key={i} value={String(i)}>
-													レシピ {i + 1}
-												</SelectItem>
-											),
-										)}
+										{ItemTrade[item.name].map((recipe, i) => (
+											<SelectItem key={i} value={String(i)}>
+												レシピ {i + 1}
+											</SelectItem>
+										))}
 									</SelectGroup>
 								</SelectContent>
 							</Select>
@@ -261,8 +333,13 @@ export default function CreateItemPricePage() {
 								type="number"
 								max={999}
 								id="createNumber"
-								value={createNumber}
-								onChange={v => setCreateNumber(Number(v.target.value))}
+								value={item.createNumber}
+								onChange={v => {
+									itemDispatch({
+										type: 'UPDATE_CREATE_NUMBER',
+										body: { createNumber: Number(v.target.value) },
+									})
+								}}
 							/>
 						</div>
 					</div>
@@ -275,35 +352,49 @@ export default function CreateItemPricePage() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{ItemTrade[selectedItem?.label as ItemTradeKeys][selectedRecipe][
-								'requirements'
-							].map((recipe, i) => (
-								<TableRow key={`${recipe.name}${selectedRecipe}${i}`}>
-									<TableCell className="font-medium">{String(recipe.name).startsWith('C/') ? <span className='flex items-center gap-1'><img src="https://s3.akarinext.org/catarks/*/assets/ability.jpeg" height={14} width={14}/>{recipe.name}</span> : recipe.name}</TableCell>
-									<TableCell>{recipe.amount}</TableCell>
-									<TableCell>
-										<div className="flex justify-items-center">
-											<Input
-												type="number"
-												min={0}
-												step={100}
-												//   label="値段"
-												value={prices[recipe.name]?.price || 0}
-												onChange={target =>
-													updatePrice(
-														recipe.name,
-														Number(target.target.value),
-														Number(recipe.amount),
-													)
-												}
-											/>
-											<Button onClick={() => getPriceHandler(recipe.name)}>
-												価格を取得
-											</Button>
-										</div>
-									</TableCell>
-								</TableRow>
-							))}
+							{ItemTrade[item.name][item.useRecipeIndex]['requirements'].map(
+								(recipe, i) => (
+									<TableRow key={`${recipe.name}${item.useRecipeIndex}${i}`}>
+										<TableCell className="font-medium">
+											{String(recipe.name).startsWith('C/') ? (
+												<span className="flex items-center gap-1">
+													<img
+														src="https://s3.akarinext.org/catarks/*/assets/ability.jpeg"
+														height={14}
+														width={14}
+													/>
+													{recipe.name}
+												</span>
+											) : (
+												recipe.name
+											)}
+										</TableCell>
+										<TableCell>{recipe.amount}</TableCell>
+										<TableCell>
+											<div className="flex justify-items-center">
+												<Input
+													type="number"
+													min={0}
+													step={100}
+													//   label="値段"
+													value={prices[recipe.name]?.price || 0}
+													onChange={target =>
+														updatePrice(
+															recipe.name,
+															Number(target.target.value),
+															Number(recipe.amount),
+														)
+													}
+												/>
+
+												<Button onClick={() => getPriceHandler(recipe.name)}>
+													価格を取得
+												</Button>
+											</div>
+										</TableCell>
+									</TableRow>
+								),
+							)}
 						</TableBody>
 					</Table>
 				</div>
