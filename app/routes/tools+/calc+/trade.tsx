@@ -110,7 +110,7 @@ type ItemState = {
 	useRecipeIndex: number // 使用するレシピのインデックス
 	createNumber: number // 作成する個数
 	shopPrice: number // マイショップでの価格
-	recipe: { [key: string]: { number: number } } // 素材名: 必要な個数
+	recipe: { [key: string]: number } // 素材名: 必要な個数
 }
 
 type ItemAction =
@@ -189,7 +189,7 @@ export default function CreateItemPricePage() {
 
 					// @ts-ignore
 					price: data[key] / 0.9,
-					number: item.recipe[key] === undefined ? 0 : item.recipe[key].number,
+					number: item.recipe[key] === undefined ? 0 : item.recipe[key],
 				})
 			}
 		}
@@ -209,13 +209,11 @@ export default function CreateItemPricePage() {
 		itemDispatch({
 			type: 'UPDATE_RECIPE',
 			body: {
-				recipe: {
-					...ItemTrade[item.name][item.useRecipeIndex]['requirements'].map(
+				recipe: ItemTrade[item.name][item.useRecipeIndex]['requirements'].map(
 						requirement => {
 							return { [requirement.name]: requirement.amount }
 						},
-					),
-				},
+					).reduce((l, r) => Object.assign(l, r), {}),
 			},
 		})
 	}, [item.name])
