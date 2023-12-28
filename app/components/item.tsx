@@ -37,7 +37,7 @@ export function ItemCard({ item, nowPrice, useCopy, copyHandler }: Props) {
 						{item.name}
 					</p>
 					{nowPrice ? (
-						<p className="-center flex">
+						<p className="items-center flex">
 							<NIcon />
 							{nowPrice}
 						</p>
