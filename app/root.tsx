@@ -36,13 +36,13 @@ import { ErrorList } from './components/forms.tsx'
 import { ReportPriceDial } from './components/price-dialog.tsx'
 import { EpicProgress } from './components/progress-bar.tsx'
 import { SearchBar } from './components/search-bar.tsx'
-import { EpicToaster } from './components/toaster.tsx'
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from './components/ui/accordion.tsx'
+import { useToast } from './components/toaster.tsx'
 import { Button } from './components/ui/button.tsx'
 import {
 	DropdownMenu,
@@ -71,6 +71,7 @@ import {
 	SheetTrigger,
 } from './components/ui/sheet.tsx'
 import fontStyleSheetUrl from './styles/font.css'
+import { EpicToaster } from './components/ui/sonner.tsx'
 import tailwindStyleSheetUrl from './styles/tailwind.css'
 import { getUserId, logout } from './utils/auth.server.ts'
 import { cache, cachified } from './utils/cache.server.ts'
@@ -406,6 +407,7 @@ function App() {
 	const matches = useMatches()
 	const isOnSearchPage = matches.find(m => m.id === 'routes/users+/index')
 	const searchBar = isOnSearchPage ? null : <SearchBar status="idle" />
+	useToast(data.toast)
 
 	return (
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
@@ -535,7 +537,7 @@ function App() {
 					</div>
 				</div>
 			</div>
-			<EpicToaster toast={data.toast} />
+			<EpicToaster closeButton position="top-center" theme={theme} />
 			<EpicProgress />
 		</Document>
 	)
