@@ -207,9 +207,9 @@ export default function ItemPriceRoute() {
 								{data.prices.map(price => (
 									<TableRow key={price.id}>
 										<TableCell className="font-medium">
-											{price.price / (1 - 0.1)}
+											{(price.price / (1 - 0.1)).toLocaleString()}
 										</TableCell>
-										<TableCell>{price.price}</TableCell>
+										<TableCell>{price.price.toLocaleString()}</TableCell>
 										<TableCell>{price.ship}</TableCell>
 										<TableCell>{price.reporter.name}</TableCell>
 										{user ? (

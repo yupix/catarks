@@ -39,7 +39,7 @@ export function ItemCard({ item, nowPrice, useCopy, copyHandler }: Props) {
 					{nowPrice ? (
 						<p className="items-center flex">
 							<NIcon />
-							{nowPrice}
+							{nowPrice.toLocaleString()}
 						</p>
 					) : null}
 				</div>
